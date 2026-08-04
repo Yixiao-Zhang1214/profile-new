@@ -310,6 +310,41 @@ main {
   grid-template-columns: minmax(300px, 35%) minmax(0, 65%);
 }
 
+.identity-stage-left {
+  position: relative;
+  overflow: hidden;
+}
+
+.identity-stage-traveler {
+  position: absolute;
+  right: 6%;
+  bottom: 8svh;
+  left: 6%;
+  width: 88%;
+  height: 70svh;
+  object-fit: contain;
+  object-position: center bottom;
+  opacity: 0;
+  filter: saturate(0.92);
+  transition:
+    opacity 320ms ease,
+    transform 700ms cubic-bezier(0.22, 0.72, 0.2, 1);
+  will-change: opacity, transform;
+}
+
+.identity-stage-traveler.is-active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.identity-stage-traveler.is-below {
+  transform: translateY(72svh);
+}
+
+.identity-stage-traveler.is-above {
+  transform: translateY(-72svh);
+}
+
 .identity-stage-right {
   position: relative;
   height: 100%;
@@ -1037,6 +1072,10 @@ footer a {
     scroll-snap-align: start;
     scroll-snap-stop: normal;
   }
+
+  .identity-character-traveler > img {
+    visibility: hidden;
+  }
 }
 
 @media (max-width: 1020px) {
@@ -1305,6 +1344,10 @@ footer a {
   }
 
   .identity-stage-panel {
+    transition: none;
+  }
+
+  .identity-stage-traveler {
     transition: none;
   }
 

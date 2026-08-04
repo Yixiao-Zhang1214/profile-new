@@ -100,6 +100,8 @@ function IdentityCharacter({ identity, index }: { identity: Identity; index: num
 export default function IdentityShowcase({ identities }: { identities: Identity[] }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const triggerRefs = useRef<Array<HTMLElement | null>>([]);
+  const travelerIndex = identities.findIndex((identity) => identity.name === "旅行家");
+  const traveler = travelerIndex >= 0 ? identities[travelerIndex] : null;
 
   useEffect(() => {
     const desktopQuery = window.matchMedia("(min-width: 1021px)");
@@ -176,7 +178,21 @@ export default function IdentityShowcase({ identities }: { identities: Identity[
 
       <div className="identity-desktop-stage">
         <div className="identity-desktop-sticky">
-          <div aria-hidden="true" />
+          <div className="identity-stage-left" aria-hidden="true">
+            {traveler?.character ? (
+              <img
+                className={`identity-stage-traveler${
+                  activeIndex === travelerIndex
+                    ? " is-active"
+                    : activeIndex < travelerIndex
+                      ? " is-below"
+                      : " is-above"
+                }`}
+                src={traveler.character}
+                alt=""
+              />
+            ) : null}
+          </div>
           <div className="identity-stage-right">
             {identities.map((identity, index) => {
               const isActive = index === activeIndex;
