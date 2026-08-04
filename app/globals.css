@@ -112,7 +112,7 @@ main {
   position: relative;
   min-height: 100svh;
   overflow: hidden;
-  background: #cbd0b9;
+  background: #f0dda1;
   isolation: isolate;
 }
 
@@ -144,12 +144,11 @@ main {
   bottom: -5vh;
   left: 50%;
   z-index: 0;
-  width: min(52vw, 760px);
-  height: 102svh;
+  width: min(88vw, 1240px);
+  height: 96svh;
   object-fit: contain;
   object-position: center bottom;
-  filter: saturate(0.84) contrast(1.02);
-  mix-blend-mode: multiply;
+  filter: saturate(0.92) contrast(1.02);
   transform: translateX(-50%);
 }
 
@@ -317,8 +316,7 @@ main {
   height: 96svh;
   object-fit: contain;
   object-position: center bottom;
-  filter: saturate(0.88);
-  mix-blend-mode: multiply;
+  filter: saturate(0.92);
 }
 
 .scene-index {
@@ -756,9 +754,9 @@ footer a {
   }
 
   .hero-character {
-    bottom: 2%;
-    width: 104vw;
-    height: 94svh;
+    bottom: 3%;
+    width: 142vw;
+    height: 88svh;
   }
 
   .hero-meta {

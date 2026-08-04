@@ -6,7 +6,7 @@ const identities = [
     intro:
       "采访、观察与写作，让我习惯从真实的人出发。它们也是我理解用户、梳理问题和组织表达的起点。",
     skills: "采访研究 / 内容策划 / 叙事表达",
-    character: "/personas/journalist.png",
+    character: "/personas/journalist-cutout.png",
     tone: "sage",
     projects: [
       {
@@ -199,8 +199,8 @@ export default function Home() {
 
         <img
           className="hero-character"
-          src="/personas/journalist.png"
-          alt="手持录音笔、笔记本和相机的新闻传播角色形象"
+          src="/personas/hero-laughing-cutout.png"
+          alt="开怀大笑的个人卡通形象"
         />
 
         <div className="hero-message">
