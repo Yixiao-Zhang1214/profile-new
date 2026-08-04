@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import JournalismExperience from "./journalism-experience";
 import TravelerExperience from "./traveler-experience";
 
 type IdentityProject = {
@@ -55,6 +56,10 @@ function ProjectModule({ project }: { project: IdentityProject }) {
 }
 
 function IdentityDetails({ identity }: { identity: Identity }) {
+  if (identity.name === "新闻与传播学生") {
+    return <JournalismExperience identity={identity} />;
+  }
+
   if (identity.name === "旅行家") {
     return <TravelerExperience identity={identity} />;
   }
@@ -76,6 +81,12 @@ function IdentityDetails({ identity }: { identity: Identity }) {
       </div>
     </>
   );
+}
+
+function getPanelClass(identity: Identity) {
+  if (identity.name === "新闻与传播学生") return " journalism-panel";
+  if (identity.name === "旅行家") return " traveler-panel";
+  return "";
 }
 
 function IdentityCharacter({ identity, index }: { identity: Identity; index: number }) {
@@ -167,9 +178,7 @@ export default function IdentityShowcase({ identities }: { identities: Identity[
         >
           <IdentityCharacter identity={identity} index={index} />
           <div
-            className={`identity-content identity-mobile-content${
-              identity.name === "旅行家" ? " traveler-panel" : ""
-            }`}
+            className={`identity-content identity-mobile-content${getPanelClass(identity)}`}
           >
             <IdentityDetails identity={identity} />
           </div>
@@ -198,9 +207,9 @@ export default function IdentityShowcase({ identities }: { identities: Identity[
               const isActive = index === activeIndex;
               return (
                 <div
-                  className={`identity-content identity-stage-panel${
-                    identity.name === "旅行家" ? " traveler-panel" : ""
-                  }${isActive ? " is-active" : ""}`}
+                  className={`identity-content identity-stage-panel${getPanelClass(identity)}${
+                    isActive ? " is-active" : ""
+                  }`}
                   key={identity.name}
                   aria-hidden={!isActive}
                 >

@@ -8,7 +8,7 @@ const identities = [
     intro:
       "采访、观察与写作，让我习惯从真实的人出发。它们也是我理解用户、梳理问题和组织表达的起点。",
     skills: "采访研究 / 内容策划 / 叙事表达",
-    character: "/personas/journalist-cutout.png",
+    character: "/personas/news-interviewer-transparent.png",
     tone: "sage",
     projects: [
       {
@@ -32,7 +32,7 @@ const identities = [
     intro:
       "我连接用户问题、模型能力与业务目标，把不确定的想法拆成可以验证、交付和持续迭代的产品。",
     skills: "用户洞察 / 产品策略 / 方案交付",
-    character: null,
+    character: "/personas/ai-product-manager-transparent.png",
     tone: "sand",
     projects: [
       {
@@ -80,7 +80,7 @@ const identities = [
     intro:
       "镜头训练我注意情绪、节奏与微小变化。摄影也是另一种研究方式：不急于解释，先认真地看。",
     skills: "视觉叙事 / 纪实摄影 / 编辑策展",
-    character: null,
+    character: "/personas/photographer-transparent.png",
     tone: "blue",
     projects: [
       {
