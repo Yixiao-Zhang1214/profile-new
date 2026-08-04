@@ -112,6 +112,7 @@ Each identity scene contains:
 - A small identity label, oversized statement, and short self-introduction on the right.
 - Two project modules nested under the introduction. Each module has a cover slot, project name, type, short result, and disabled placeholder link.
 - A small skill line and scene index for orientation.
+- All five identity scenes share the same warm ivory background as the hero; role distinction comes from the character, copy, and projects rather than different full-page colors.
 
 Role order:
 
