@@ -124,10 +124,12 @@ Role order:
 
 Desktop behavior:
 
-- Each identity scene is at least one viewport tall and stacks with a restrained sticky-card transition.
-- The left character remains the dominant anchor while the right side carries the readable evidence.
-- Transitions use opacity and small vertical movement; there is no scroll trapping.
-- Full-screen sections use vertical CSS scroll snapping on desktop so the viewport settles cleanly on the hero, identity transition, each of the five identity scenes, personal note, and contact scene.
+- The identity area is one continuous five-viewport scroll track rather than five sticky cards.
+- Each left-side character occupies one viewport trigger and moves naturally from bottom to center to top as the visitor scrolls; reversing scroll reverses the character direction.
+- The right side is one sticky stage that remains fixed for the full five-character sequence.
+- An Intersection Observer selects the trigger with the greatest visible ratio as the active identity.
+- Right-side identity copy and its two project modules are layered in the same position and crossfade with a 700 ms ease-in-out opacity transition. They do not move vertically with the character.
+- Full-screen sections use vertical CSS scroll snapping on desktop so the viewport settles cleanly on the hero, identity transition, each character trigger, personal note, and contact scene.
 
 Mobile behavior:
 
@@ -135,6 +137,7 @@ Mobile behavior:
 - Text and project modules follow below in one column.
 - All information stays readable without animation or hover.
 - Scroll snapping is disabled on narrow screens so variable-height mobile content remains naturally scrollable.
+- The sticky right-side stage and crossfade are disabled; each identity renders once in linear reading order.
 
 ### 4.5 Projects inside identities
 
