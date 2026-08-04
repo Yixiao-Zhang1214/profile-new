@@ -85,13 +85,14 @@ Purpose: state the candidate's professional promise within seconds.
 Composition:
 
 - One supplied 3D character is centered and fills most of the viewport height.
-- The background is pale warm yellow with subtle grain.
+- The background is warm ivory (`#F6F1E5`) with only a slight yellow cast and subtle grain.
 - The hero uses the supplied laughing head-and-shoulders 3D character, extracted onto a transparent background so the page color remains uninterrupted.
 - Small name/discipline metadata sits in the upper-left; portfolio/year metadata sits in the upper-right.
 - A large `ABOUT ME` placeholder title crosses the character's lower torso without covering the face.
 - A short centered positioning statement sits below the title.
 - A small scroll cue anchors the bottom edge.
 - No split hero, floating UI card, prominent button cluster, or boxed image frame.
+- The bottom edge dissolves into a short white gradient before the identity transition; there is no hard color cut between the first two sections.
 
 ### 4.3 Identity transition
 
@@ -125,12 +126,14 @@ Desktop behavior:
 - Each identity scene is at least one viewport tall and stacks with a restrained sticky-card transition.
 - The left character remains the dominant anchor while the right side carries the readable evidence.
 - Transitions use opacity and small vertical movement; there is no scroll trapping.
+- Full-screen sections use vertical CSS scroll snapping on desktop so the viewport settles cleanly on the hero, identity transition, each of the five identity scenes, personal note, and contact scene.
 
 Mobile behavior:
 
 - Character appears first and occupies roughly 55 to 65 percent of the viewport height.
 - Text and project modules follow below in one column.
 - All information stays readable without animation or hover.
+- Scroll snapping is disabled on narrow screens so variable-height mobile content remains naturally scrollable.
 
 ### 4.5 Projects inside identities
 
