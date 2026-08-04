@@ -118,7 +118,7 @@ main {
 }
 
 .poster-hero::before,
-.identity-scene::after {
+.identity-trigger::after {
   position: absolute;
   inset: 0;
   z-index: 5;
@@ -271,11 +271,11 @@ main {
 
 .identity-list {
   position: relative;
+  background: var(--warm-ivory);
 }
 
-.identity-scene {
-  position: sticky;
-  top: 0;
+.identity-trigger {
+  position: relative;
   display: grid;
   min-height: 100svh;
   grid-template-columns: minmax(360px, 43%) minmax(0, 57%);
@@ -289,6 +289,50 @@ main {
 .identity-blue,
 .identity-ink {
   background: var(--warm-ivory);
+}
+
+.identity-mobile-content {
+  display: none;
+}
+
+.identity-desktop-stage {
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  pointer-events: none;
+}
+
+.identity-desktop-sticky {
+  position: sticky;
+  top: 0;
+  display: grid;
+  width: 100%;
+  height: 100svh;
+  grid-template-columns: minmax(360px, 43%) minmax(0, 57%);
+}
+
+.identity-stage-right {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  border-left: 1px solid rgba(32, 33, 28, 0.12);
+  background: var(--warm-ivory);
+}
+
+.identity-stage-panel {
+  position: absolute !important;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  transform: none;
+  transition: opacity 700ms ease-in-out;
+  will-change: opacity;
+}
+
+.identity-stage-panel.is-active {
+  z-index: 2;
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .identity-character,
@@ -657,46 +701,6 @@ footer a {
   color: var(--paper-bright);
 }
 
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .identity-heading,
-    .identity-projects {
-      animation: reveal-up linear both;
-      animation-range: entry 10% cover 34%;
-      animation-timeline: view();
-    }
-
-    .identity-character > img,
-    .character-slot {
-      animation: character-arrive linear both;
-      animation-range: entry 8% cover 32%;
-      animation-timeline: view();
-    }
-  }
-}
-
-@keyframes reveal-up {
-  from {
-    opacity: 0;
-    transform: translateY(40px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes character-arrive {
-  from {
-    opacity: 0.46;
-    transform: translateY(35px) scale(0.96);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
 @media (min-width: 1021px) {
   html {
     scroll-snap-type: y mandatory;
@@ -704,7 +708,7 @@ footer a {
 
   .poster-hero,
   .identity-intro,
-  .identity-scene,
+  .identity-trigger,
   .personal-note,
   .contact-section {
     min-height: 100svh;
@@ -722,8 +726,16 @@ footer a {
     display: none;
   }
 
-  .identity-scene {
+  .identity-trigger {
     grid-template-columns: minmax(300px, 42%) minmax(0, 58%);
+  }
+
+  .identity-desktop-stage {
+    display: none;
+  }
+
+  .identity-mobile-content {
+    display: grid;
   }
 
   .identity-content {
@@ -802,7 +814,7 @@ footer a {
     font-size: clamp(52px, 16vw, 78px);
   }
 
-  .identity-scene {
+  .identity-trigger {
     position: relative;
     display: block;
     min-height: auto;
@@ -880,5 +892,9 @@ footer a {
 
   .capability-track {
     animation: none;
+  }
+
+  .identity-stage-panel {
+    transition: none;
   }
 }

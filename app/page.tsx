@@ -1,3 +1,5 @@
+import IdentityShowcase from "./identity-showcase";
+
 const identities = [
   {
     name: "新闻与传播学生",
@@ -130,43 +132,6 @@ const capabilities = [
   "RAPID BUILDING",
 ];
 
-function CharacterSlot({ index }: { index: number }) {
-  return (
-    <div className="character-slot" role="img" aria-label={`第 ${index} 个角色形象占位`}>
-      <div className="character-silhouette" aria-hidden="true">
-        <span className="silhouette-head" />
-        <span className="silhouette-body" />
-      </div>
-      <div className="character-slot-label">
-        <span>PERSONA {String(index).padStart(2, "0")}</span>
-        <strong>放置角色形象</strong>
-        <small>建议透明底 · 竖版全身</small>
-      </div>
-    </div>
-  );
-}
-
-function ProjectModule({
-  project,
-}: {
-  project: { type: string; title: string; result: string; media: string };
-}) {
-  return (
-    <article className="identity-project">
-      <div className="project-cover" role="img" aria-label={`图片占位：${project.media}`}>
-        <span>{project.media}</span>
-        <small>替换图片 · 16 : 10</small>
-      </div>
-      <div className="project-details">
-        <p>{project.type}</p>
-        <h3>{project.title}</h3>
-        <span>{project.result}</span>
-        <small>CASE STUDY · 待添加</small>
-      </div>
-    </article>
-  );
-}
-
 export default function Home() {
   return (
     <main>
@@ -231,43 +196,7 @@ export default function Home() {
         </span>
       </section>
 
-      <section className="identity-list" id="identities" aria-label="我的五个身份">
-        {identities.map((identity, index) => (
-          <article
-            className={`identity-scene identity-${identity.tone}`}
-            key={identity.name}
-          >
-            <div className="identity-character">
-              {identity.character ? (
-                <img src={identity.character} alt={`${identity.name}角色形象`} />
-              ) : (
-                <CharacterSlot index={index + 1} />
-              )}
-              <div className="scene-index" aria-hidden="true">
-                <span>{String(index + 1).padStart(2, "0")}</span>
-                <i />
-                <span>05</span>
-              </div>
-            </div>
-
-            <div className="identity-content">
-              <div className="identity-heading">
-                <p>{identity.english}</p>
-                <h2>{identity.name}</h2>
-                <h3>{identity.statement}</h3>
-                <span>{identity.intro}</span>
-                <small>{identity.skills}</small>
-              </div>
-
-              <div className="identity-projects" aria-label={`${identity.name}项目`}>
-                {identity.projects.map((project) => (
-                  <ProjectModule project={project} key={project.title} />
-                ))}
-              </div>
-            </div>
-          </article>
-        ))}
-      </section>
+      <IdentityShowcase identities={identities} />
 
       <section className="capability-strip" aria-label="能力关键词">
         <div className="capability-track">
