@@ -290,7 +290,7 @@ main {
   background: var(--warm-ivory);
 }
 
-.identity-mobile-content {
+.identity-content.identity-mobile-content {
   display: none;
 }
 
@@ -1478,7 +1478,7 @@ footer a {
     display: none;
   }
 
-  .identity-mobile-content {
+  .identity-content.identity-mobile-content {
     display: grid;
   }
 
