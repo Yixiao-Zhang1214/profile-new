@@ -85,7 +85,8 @@ Purpose: state the candidate's professional promise within seconds.
 Composition:
 
 - One supplied 3D character is centered and fills most of the viewport height.
-- The background is warm cream with a muted sage cast and subtle grain.
+- The background is pale warm yellow with subtle grain.
+- The hero uses the supplied laughing head-and-shoulders 3D character, extracted onto a transparent background so the page color remains uninterrupted.
 - Small name/discipline metadata sits in the upper-left; portfolio/year metadata sits in the upper-right.
 - A large `ABOUT ME` placeholder title crosses the character's lower torso without covering the face.
 - A short centered positioning statement sits below the title.
@@ -106,7 +107,7 @@ Purpose: serve as the central storytelling device.
 
 Each identity scene contains:
 
-- A large full-height 3D character on the left, occupying roughly 42 percent of the desktop viewport.
+- A large full-height 3D character on the left, occupying roughly 42 percent of the desktop viewport. Supplied character art is extracted to transparent PNG before placement so no source-image rectangle interrupts the scene background.
 - A small identity label, oversized statement, and short self-introduction on the right.
 - Two project modules nested under the introduction. Each module has a cover slot, project name, type, short result, and disabled placeholder link.
 - A small skill line and scene index for orientation.
