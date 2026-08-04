@@ -112,7 +112,7 @@ main {
   position: relative;
   min-height: 100svh;
   overflow: hidden;
-  background: #f0dda1;
+  background: #f6f1e5;
   isolation: isolate;
 }
 
@@ -133,10 +133,16 @@ main {
   position: absolute;
   inset: auto 0 0;
   z-index: 1;
-  height: 34%;
+  height: 18%;
   pointer-events: none;
   content: "";
-  background: linear-gradient(to top, rgba(43, 48, 37, 0.34), transparent);
+  background: linear-gradient(
+    to top,
+    var(--paper-bright) 0%,
+    rgba(250, 247, 240, 0.94) 18%,
+    rgba(250, 247, 240, 0.48) 52%,
+    transparent 100%
+  );
 }
 
 .hero-character {
@@ -158,7 +164,7 @@ main {
   z-index: 8;
   display: grid;
   gap: 5px;
-  color: rgba(255, 255, 246, 0.76);
+  color: rgba(32, 33, 28, 0.62);
   font-family: var(--font-geist-mono), monospace;
   font-size: 10px;
   letter-spacing: 0.15em;
@@ -220,7 +226,7 @@ main {
   display: grid;
   justify-items: center;
   gap: 10px;
-  color: rgba(255, 255, 246, 0.66);
+  color: rgba(32, 33, 28, 0.54);
   font-family: var(--font-geist-mono), monospace;
   font-size: 9px;
   letter-spacing: 0.12em;
@@ -239,7 +245,7 @@ main {
   min-height: 72svh;
   padding: clamp(100px, 14vw, 200px) clamp(22px, 7vw, 110px);
   align-content: center;
-  background: var(--paper);
+  background: linear-gradient(to bottom, var(--paper-bright) 0%, var(--paper) 22%);
 }
 
 .identity-intro > p {
@@ -699,6 +705,22 @@ footer a {
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
+  }
+}
+
+@media (min-width: 1021px) {
+  html {
+    scroll-snap-type: y mandatory;
+  }
+
+  .poster-hero,
+  .identity-intro,
+  .identity-scene,
+  .personal-note,
+  .contact-section {
+    min-height: 100svh;
+    scroll-snap-align: start;
+    scroll-snap-stop: normal;
   }
 }
 
