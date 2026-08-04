@@ -89,6 +89,11 @@ function getPanelClass(identity: Identity) {
   return "";
 }
 
+function getStageState(index: number, activeIndex: number) {
+  if (index === activeIndex) return " is-active";
+  return index < activeIndex ? " is-above" : " is-below";
+}
+
 function IdentityCharacter({ identity, index }: { identity: Identity; index: number }) {
   const isTraveler = identity.name === "旅行家";
 
@@ -111,8 +116,6 @@ function IdentityCharacter({ identity, index }: { identity: Identity; index: num
 export default function IdentityShowcase({ identities }: { identities: Identity[] }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const triggerRefs = useRef<Array<HTMLElement | null>>([]);
-  const travelerIndex = identities.findIndex((identity) => identity.name === "旅行家");
-  const traveler = travelerIndex >= 0 ? identities[travelerIndex] : null;
 
   useEffect(() => {
     const desktopQuery = window.matchMedia("(min-width: 1021px)");
@@ -188,19 +191,20 @@ export default function IdentityShowcase({ identities }: { identities: Identity[
       <div className="identity-desktop-stage">
         <div className="identity-desktop-sticky">
           <div className="identity-stage-left" aria-hidden="true">
-            {traveler?.character ? (
-              <img
-                className={`identity-stage-traveler${
-                  activeIndex === travelerIndex
-                    ? " is-active"
-                    : activeIndex < travelerIndex
-                      ? " is-below"
-                      : " is-above"
-                }`}
-                src={traveler.character}
-                alt=""
-              />
-            ) : null}
+            {identities.map((identity, index) => (
+              <div
+                className={`identity-stage-persona${
+                  identity.name === "旅行家" ? " identity-stage-persona-traveler" : ""
+                }${getStageState(index, activeIndex)}`}
+                key={identity.name}
+              >
+                {identity.character ? (
+                  <img src={identity.character} alt="" />
+                ) : (
+                  <CharacterSlot index={index + 1} />
+                )}
+              </div>
+            ))}
           </div>
           <div className="identity-stage-right">
             {identities.map((identity, index) => {

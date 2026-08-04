@@ -315,34 +315,49 @@ main {
   overflow: hidden;
 }
 
-.identity-stage-traveler {
+.identity-stage-persona {
   position: absolute;
-  right: 6%;
-  bottom: 8svh;
-  left: 6%;
-  width: 88%;
-  height: 70svh;
-  object-fit: contain;
-  object-position: center bottom;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
   opacity: 0;
-  filter: saturate(0.92);
+  pointer-events: none;
+  transform: translateY(16svh) scale(0.985);
   transition:
-    opacity 320ms ease,
-    transform 700ms cubic-bezier(0.22, 0.72, 0.2, 1);
+    opacity 620ms ease,
+    transform 850ms cubic-bezier(0.22, 0.8, 0.25, 1);
   will-change: opacity, transform;
 }
 
-.identity-stage-traveler.is-active {
+.identity-stage-persona > img {
+  width: min(82%, 500px);
+  height: 78svh;
+  margin-bottom: 7svh;
+  object-fit: contain;
+  object-position: center bottom;
+  filter: saturate(0.92);
+}
+
+.identity-stage-persona-traveler > img {
+  width: min(88%, 470px);
+  height: 70svh;
+  margin-bottom: 8svh;
+}
+
+.identity-stage-persona.is-active {
+  z-index: 3;
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
 }
 
-.identity-stage-traveler.is-below {
-  transform: translateY(72svh);
+.identity-stage-persona.is-below {
+  transform: translateY(16svh) scale(0.985);
 }
 
-.identity-stage-traveler.is-above {
-  transform: translateY(-72svh);
+.identity-stage-persona.is-above {
+  transform: translateY(-16svh) scale(0.985);
 }
 
 .identity-stage-right {
@@ -357,15 +372,21 @@ main {
   inset: 0;
   opacity: 0;
   pointer-events: none;
-  transform: none;
-  transition: opacity 700ms ease-in-out;
-  will-change: opacity;
+  transform: translateY(6px);
+  transition:
+    opacity 480ms ease,
+    transform 480ms ease;
+  will-change: opacity, transform;
 }
 
 .identity-stage-panel.is-active {
   z-index: 2;
   opacity: 1;
   pointer-events: auto;
+  transform: translateY(0);
+  transition:
+    opacity 560ms ease 100ms,
+    transform 560ms ease 100ms;
 }
 
 .identity-character,
@@ -1456,7 +1477,7 @@ footer a {
     scroll-snap-stop: normal;
   }
 
-  .identity-character-traveler > img {
+  .identity-trigger > .identity-character {
     visibility: hidden;
   }
 }
@@ -1866,12 +1887,18 @@ footer a {
     animation: none;
   }
 
-  .identity-stage-panel {
+  .identity-stage-panel,
+  .identity-stage-panel.is-active {
     transition: none;
+    transform: none;
   }
 
-  .identity-stage-traveler {
+  .identity-stage-persona,
+  .identity-stage-persona.is-active,
+  .identity-stage-persona.is-above,
+  .identity-stage-persona.is-below {
     transition: none;
+    transform: none;
   }
 
   .travel-photo-track {
