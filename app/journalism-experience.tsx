@@ -8,37 +8,34 @@ type JournalismIdentity = {
 
 const education = [
   {
-    school: "华中科技大学",
-    logo: "/education/hust-crest.jpg",
-    logoClass: "is-crest",
-    program: "新闻与传播 A- · 硕士",
-    dates: "2024.09 — 2027.07",
-    badges: ["985", "双一流"],
-    details: [
-      "绩点 3.64 / 4 · 教育部大数据与国家传播战略实验室成员",
-      "研究生学业一等奖学金 · 科技创新奖学金",
-    ],
-  },
-  {
+    period: "2020—2024",
     school: "华东师范大学",
     logo: "/education/ecnu-logo.svg",
     logoClass: "is-ecnu",
-    program: "播音与主持艺术 A+ · 学士",
-    dates: "2020.09 — 2024.07",
-    badges: ["985", "双一流"],
+    program: "播音与主持艺术",
     details: [
       "学业成绩 90.31（1 / 25）· 推荐免试攻读硕士学位研究生",
       "校优秀毕业生 · 优秀学生 · 校特等奖学金 · “圆梦浙里”奖学金",
     ],
   },
   {
-    school: "德国亚琛工业大学",
+    period: "2024—2027",
+    school: "华中科技大学",
+    logo: "/education/hust-crest.jpg",
+    logoClass: "is-crest",
+    program: "新闻与传播",
+    details: [
+      "教育部大数据与国家传播战略实验室成员",
+      "研究生学业一等奖学金 · 科技创新奖学金",
+    ],
+  },
+  {
+    period: "2025",
+    school: "亚琛工业大学",
     logo: "/education/rwth-aachen-logo.png",
     logoClass: "is-rwth",
-    program: "Cognitive, Digital and Empirical · 硕士学期交流",
-    dates: "2025.03 — 2025.08",
-    badges: ["QS 105"],
-    details: ["跨文化学习交流 · 主修人机交互课程"],
+    program: "学期交流",
+    details: ["以人机交互课程补充产品与跨文化研究视角。"],
   },
 ];
 
@@ -95,32 +92,31 @@ export default function JournalismExperience({ identity }: { identity: Journalis
         <section className="education-section" aria-labelledby="education-title">
           <div className="section-kicker">
             <p id="education-title">EDUCATION · 学历背景</p>
-            <span>2020 — 2027</span>
+            <span>2020—2027</span>
           </div>
 
-          <div className="education-list">
+          <div className="education-timeline">
             {education.map((item) => (
-              <article className="education-item" key={item.school}>
+              <article
+                className="education-timeline-item"
+                key={`${item.period}-${item.school}`}
+              >
+                <time>{item.period}</time>
                 <div className={`education-logo ${item.logoClass}`}>
                   <img src={item.logo} alt={`${item.school}校徽`} />
                 </div>
-                <div className="education-main">
-                  <div className="education-school-line">
-                    <h4>{item.school}</h4>
-                    <div className="education-badges" aria-label="学校标签">
-                      {item.badges.map((badge) => (
-                        <span key={badge}>{badge}</span>
-                      ))}
-                    </div>
-                  </div>
-                  <p>{item.program}</p>
-                  <ul>
+                <div className="education-timeline-copy">
+                  <h4>
+                    {item.school}
+                    <span aria-hidden="true"> · </span>
+                    <span>{item.program}</span>
+                  </h4>
+                  <div className="education-timeline-details">
                     {item.details.map((detail) => (
-                      <li key={detail}>{detail}</li>
+                      <p key={detail}>{detail}</p>
                     ))}
-                  </ul>
+                  </div>
                 </div>
-                <time>{item.dates}</time>
               </article>
             ))}
           </div>
