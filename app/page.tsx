@@ -1,135 +1,169 @@
-const roles = [
+const identities = [
   {
-    label: "新闻与传播学生",
-    headline: "先理解人，\n再定义问题。",
-    body: "我练习采访、观察与叙事，也把这些方法带进产品工作。",
-    media: "人物或校园纪实照片",
-    ratio: "4 : 5",
-    artifact: "采访稿、研究报告或内容作品",
-    note: "观察 / 提问 / 表达",
+    name: "新闻与传播学生",
+    english: "JOURNALISM & COMMUNICATION",
+    statement: "先看见人，\n再讲好故事。",
+    intro:
+      "采访、观察与写作，让我习惯从真实的人出发。它们也是我理解用户、梳理问题和组织表达的起点。",
+    skills: "采访研究 / 内容策划 / 叙事表达",
+    character: "/personas/journalist.png",
+    tone: "sage",
+    projects: [
+      {
+        type: "人物报道 · 示例项目",
+        title: "一座校园里的十二种生活",
+        result: "从深度访谈到专题策划，完成一组可替换的融合报道案例。",
+        media: "报道封面 / 采访现场",
+      },
+      {
+        type: "传播研究 · 示例项目",
+        title: "年轻人的 AI 信息习惯",
+        result: "预留研究背景、方法、核心发现与最终产出的位置。",
+        media: "研究报告 / 数据图表",
+      },
+    ],
   },
   {
-    label: "AI 产品经理",
-    headline: "把模糊需求，\n变成清晰路径。",
-    body: "从用户问题出发，连接模型能力、产品体验与真实业务结果。",
-    media: "产品界面或工作现场",
-    ratio: "16 : 10",
-    artifact: "PRD、用户旅程或产品案例",
-    note: "洞察 / 策略 / 交付",
+    name: "AI 产品经理",
+    english: "AI PRODUCT MANAGER",
+    statement: "把模糊需求，\n变成清晰路径。",
+    intro:
+      "我连接用户问题、模型能力与业务目标，把不确定的想法拆成可以验证、交付和持续迭代的产品。",
+    skills: "用户洞察 / 产品策略 / 方案交付",
+    character: null,
+    tone: "sand",
+    projects: [
+      {
+        type: "AI 产品 · 示例项目",
+        title: "个人知识共创助手",
+        result: "这里放问题定义、关键决策、产品方案与验证结果。",
+        media: "产品界面 / 原型演示",
+      },
+      {
+        type: "产品策略 · 示例项目",
+        title: "从机会判断到 MVP",
+        result: "这里放你的角色、协作过程、指标与最终影响。",
+        media: "用户旅程 / PRD 摘要",
+      },
+    ],
   },
   {
-    label: "旅行家",
-    headline: "换一个坐标，\n也换一种判断。",
-    body: "陌生环境让我持续校准偏见，理解不同生活方式如何塑造需求。",
-    media: "旅途中的横幅照片",
-    ratio: "3 : 2",
-    artifact: "旅行笔记、地图或目的地故事",
-    note: "探索 / 适应 / 连接",
+    name: "旅行家",
+    english: "TRAVELER",
+    statement: "换一个坐标，\n也换一种判断。",
+    intro:
+      "陌生环境不断校准我的偏见。旅行不是打卡，而是观察不同的人如何生活、选择，并与世界建立关系。",
+    skills: "田野观察 / 跨文化感知 / 旅行书写",
+    character: null,
+    tone: "clay",
+    projects: [
+      {
+        type: "旅行叙事 · 示例项目",
+        title: "在地图之外认识一座城",
+        result: "用路线、文字与影像，讲述目的地里具体的人和生活。",
+        media: "旅行照片 / 路线地图",
+      },
+      {
+        type: "内容专题 · 示例项目",
+        title: "陌生人的一日提案",
+        result: "预留旅途见闻、编辑思路和发布结果的位置。",
+        media: "专题封面 / 手记",
+      },
+    ],
   },
   {
-    label: "摄影师",
-    headline: "留住没被说出\n口的细节。",
-    body: "我用画面组织信息，也用构图训练对情绪、节奏与细节的感知。",
-    media: "个人摄影代表作",
-    ratio: "4 : 5",
-    artifact: "摄影系列、出版物或展览页面",
-    note: "构图 / 情绪 / 记录",
+    name: "摄影师",
+    english: "PHOTOGRAPHER",
+    statement: "留住那些，\n没被说出口的。",
+    intro:
+      "镜头训练我注意情绪、节奏与微小变化。摄影也是另一种研究方式：不急于解释，先认真地看。",
+    skills: "视觉叙事 / 纪实摄影 / 编辑策展",
+    character: null,
+    tone: "blue",
+    projects: [
+      {
+        type: "摄影系列 · 示例项目",
+        title: "经过这里的人",
+        result: "放置一组代表作品、创作说明与展览或发布信息。",
+        media: "摄影作品 / 系列封面",
+      },
+      {
+        type: "影像记录 · 示例项目",
+        title: "城市的安静时刻",
+        result: "预留横版、竖版照片和项目背景的灵活组合。",
+        media: "照片组图 / 出版物",
+      },
+    ],
   },
   {
-    label: "AI Builder",
-    headline: "从一张空白页，\n做到可以使用。",
-    body: "我用 AI 与代码快速搭建原型，让想法尽早接受真实反馈。",
-    media: "原型演示或构建过程",
-    ratio: "16 : 10",
-    artifact: "可交互原型、代码仓库或演示视频",
-    note: "原型 / 验证 / 迭代",
-  },
-];
-
-const projects = [
-  {
-    className: "project-card project-card-green",
-    title: "校园信息体验重构",
-    type: "用户研究与产品设计",
-    summary: "从访谈与观察出发，重新组织学生获取重要信息的路径。",
-    media: "研究过程与方案图",
-  },
-  {
-    className: "project-card project-card-blue",
-    title: "AI 行程共创助手",
-    type: "AI 产品案例",
-    summary: "把模糊的旅行愿望，转化为可以讨论和调整的计划。",
-    media: "产品封面或演示画面",
-  },
-  {
-    className: "project-card project-card-ink",
-    title: "旅途中看见的人",
-    type: "摄影与叙事",
-    summary: "用影像和短文记录不同城市里真实而具体的生活。",
-    media: "摄影项目封面",
-  },
-  {
-    className: "project-card project-card-violet",
-    title: "一周一个 AI 原型",
-    type: "独立构建实验",
-    summary: "用短周期验证交互方式、模型边界与真实使用价值。",
-    media: "原型合集封面",
+    name: "AI Builder",
+    english: "AI BUILDER",
+    statement: "让想法尽早，\n成为真实体验。",
+    intro:
+      "我用 AI、设计和代码快速做出可交互原型，让假设离开文档，尽早接受真实使用与反馈。",
+    skills: "AI 原型 / 快速开发 / 实验迭代",
+    character: null,
+    tone: "ink",
+    projects: [
+      {
+        type: "独立构建 · 示例项目",
+        title: "一周一个 AI 原型",
+        result: "放置可体验链接、构建过程、技术选择与学习结论。",
+        media: "产品演示 / 代码仓库",
+      },
+      {
+        type: "交互实验 · 示例项目",
+        title: "与模型一起思考",
+        result: "记录一次新交互方式从想法到被使用的完整路径。",
+        media: "交互录屏 / 实验数据",
+      },
+    ],
   },
 ];
 
 const capabilities = [
-  ["/产品策略", "把机会、约束与目标整理成可以行动的方向。"],
-  ["/用户研究", "用访谈、观察与数据找到值得解决的问题。"],
-  ["/AI 原型", "快速搭建可交互版本，尽早验证关键假设。"],
-  ["/内容叙事", "把复杂信息组织成清晰、有记忆点的表达。"],
-  ["/摄影", "用视觉记录情绪、场景和没有说出口的信息。"],
-  ["/快速构建", "连接设计、代码与 AI，把想法做成可用体验。"],
+  "USER RESEARCH",
+  "PRODUCT STRATEGY",
+  "AI PROTOTYPING",
+  "STORYTELLING",
+  "PHOTOGRAPHY",
+  "RAPID BUILDING",
 ];
 
-const journey = [
-  {
-    time: "现在",
-    title: "寻找 AI 产品机会",
-    body: "持续研究真实需求，练习把模型能力转化为可靠、易用的产品体验。",
-  },
-  {
-    time: "在校期间",
-    title: "新闻与传播学习",
-    body: "通过采访、写作与视觉表达，训练观察问题和理解人的基本功。",
-  },
-  {
-    time: "持续进行",
-    title: "旅行、摄影与独立构建",
-    body: "在不同场景中积累素材，也用小型作品检验自己的判断。",
-  },
-];
+function CharacterSlot({ index }: { index: number }) {
+  return (
+    <div className="character-slot" role="img" aria-label={`第 ${index} 个角色形象占位`}>
+      <div className="character-silhouette" aria-hidden="true">
+        <span className="silhouette-head" />
+        <span className="silhouette-body" />
+      </div>
+      <div className="character-slot-label">
+        <span>PERSONA {String(index).padStart(2, "0")}</span>
+        <strong>放置角色形象</strong>
+        <small>建议透明底 · 竖版全身</small>
+      </div>
+    </div>
+  );
+}
 
-const faq = [
-  ["你正在寻找什么机会？", "以 AI 产品经理为核心，也愿意参与早期产品探索、用户研究和 AI 原型构建。"],
-  ["这些内容是真实简历吗？", "当前页面使用示例内容搭建结构。真实经历、项目成果与媒体素材可在同一位置直接替换。"],
-  ["可以放哪些项目？", "适合放产品案例、研究报告、内容作品、摄影系列、旅行记录和可交互原型。"],
-  ["需要准备哪些图片？", "建议准备一张个人主视觉、五张角色图片、三到五张项目封面，以及一张个人故事横幅。"],
-  ["如何联系你？", "替换页面中的示例邮箱与社交链接后，访客可以直接通过页尾联系区找到你。"],
-];
-
-function MediaSlot({
-  label,
-  ratio,
-  inverse = false,
+function ProjectModule({
+  project,
 }: {
-  label: string;
-  ratio: string;
-  inverse?: boolean;
+  project: { type: string; title: string; result: string; media: string };
 }) {
   return (
-    <div
-      className={`media-slot${inverse ? " media-slot-inverse" : ""}`}
-      role="img"
-      aria-label={`图片占位：${label}，建议比例 ${ratio}`}
-    >
-      <span>{label}</span>
-      <small>替换图片 · {ratio}</small>
-    </div>
+    <article className="identity-project">
+      <div className="project-cover" role="img" aria-label={`图片占位：${project.media}`}>
+        <span>{project.media}</span>
+        <small>替换图片 · 16 : 10</small>
+      </div>
+      <div className="project-details">
+        <p>{project.type}</p>
+        <h3>{project.title}</h3>
+        <span>{project.result}</span>
+        <small>CASE STUDY · 待添加</small>
+      </div>
+    </article>
   );
 }
 
@@ -138,200 +172,141 @@ export default function Home() {
     <main>
       <header className="site-header">
         <a className="wordmark" href="#top" aria-label="返回首页">
-          <span className="wordmark-mark">Y</span>
-          <span>Your Name</span>
+          <strong>Your Name</strong>
+          <span>Creative Technologist</span>
         </a>
 
         <nav className="desktop-nav" aria-label="主要导航">
-          <a href="#about">关于</a>
-          <a href="#roles">角色</a>
-          <a href="#work">项目</a>
-          <a href="#journey">经历</a>
+          <a href="#about">About</a>
+          <a href="#identities">Five Sides</a>
+          <a href="#contact">Contact</a>
         </nav>
 
-        <div className="header-actions">
-          <a className="text-link" href="#contact">联系我</a>
-          <span className="button button-disabled" aria-disabled="true">
-            下载简历
+        <a className="header-year" href="#identities">
+          Portfolio — 2026
+        </a>
+      </header>
+
+      <section className="poster-hero" id="top">
+        <div className="hero-meta hero-meta-left">
+          <span>Your Name</span>
+          <span>AI Product Manager</span>
+        </div>
+        <div className="hero-meta hero-meta-right">
+          <span>Portfolio</span>
+          <span>Shanghai · 2026</span>
+        </div>
+
+        <img
+          className="hero-character"
+          src="/personas/journalist.png"
+          alt="手持录音笔、笔记本和相机的新闻传播角色形象"
+        />
+
+        <div className="hero-message">
+          <p>HELLO, I AM</p>
+          <h1>ABOUT ME</h1>
+          <span>
+            新闻与传播学生，也是 AI 产品经理、旅行家、摄影师和 AI Builder。
+            <br />
+            我在观察、表达与创造之间，寻找自己的答案。
           </span>
         </div>
 
-        <details className="mobile-nav">
-          <summary>菜单</summary>
-          <div className="mobile-nav-panel">
-            <a href="#about">关于</a>
-            <a href="#roles">角色</a>
-            <a href="#work">项目</a>
-            <a href="#journey">经历</a>
-            <a href="#contact">联系我</a>
-          </div>
-        </details>
-      </header>
-
-      <section className="hero" id="top">
-        <div className="hero-copy">
-          <h1>
-            把观察，变成产品。
-            <span>把想法，做成现实。</span>
-          </h1>
-          <p>新闻传播背景的 AI 产品经理，也是一名旅行者、摄影师和独立构建者。</p>
-          <div className="hero-actions">
-            <a className="button button-primary" href="#work">
-              查看项目
-            </a>
-            <a className="button button-secondary" href="#roles">
-              认识我
-            </a>
-          </div>
-        </div>
-
-        <div className="hero-visual">
-          <div className="hero-photo">
-            <MediaSlot label="个人主视觉或短视频" ratio="4 : 5" />
-          </div>
-          <div className="hero-note" aria-hidden="true">
-            <span>当前关注</span>
-            <strong>AI 如何帮助人们更好地理解、选择与创造？</strong>
-          </div>
-        </div>
+        <a className="scroll-cue" href="#about">
+          <span>向下认识我</span>
+          <i aria-hidden="true" />
+        </a>
       </section>
 
       <section className="identity-intro" id="about">
-        <p>认识我。</p>
+        <p>ONE PERSON · FIVE PERSPECTIVES</p>
         <h2>
           五个身份，
           <br />
           同一个好奇的人。
         </h2>
+        <span>
+          每个身份都不是标签，而是一种理解世界、解决问题和创造作品的方式。
+        </span>
       </section>
 
-      <section className="roles" id="roles" aria-label="我的五个角色">
-        {roles.map((role, index) => (
-          <article className={`role-panel role-panel-${index + 1}`} key={role.label}>
-            <div className="role-copy">
-              <p className="role-label">{role.label}</p>
-              <h3>{role.headline}</h3>
-              <p className="role-body">{role.body}</p>
-              <span className="role-note">{role.note}</span>
+      <section className="identity-list" id="identities" aria-label="我的五个身份">
+        {identities.map((identity, index) => (
+          <article
+            className={`identity-scene identity-${identity.tone}`}
+            key={identity.name}
+          >
+            <div className="identity-character">
+              {identity.character ? (
+                <img src={identity.character} alt={`${identity.name}角色形象`} />
+              ) : (
+                <CharacterSlot index={index + 1} />
+              )}
+              <div className="scene-index" aria-hidden="true">
+                <span>{String(index + 1).padStart(2, "0")}</span>
+                <i />
+                <span>05</span>
+              </div>
             </div>
 
-            <div className="role-media">
-              <MediaSlot label={role.media} ratio={role.ratio} />
-            </div>
+            <div className="identity-content">
+              <div className="identity-heading">
+                <p>{identity.english}</p>
+                <h2>{identity.name}</h2>
+                <h3>{identity.statement}</h3>
+                <span>{identity.intro}</span>
+                <small>{identity.skills}</small>
+              </div>
 
-            <div className="artifact-slot" role="img" aria-label={`内容占位：${role.artifact}`}>
-              <span>内容插槽</span>
-              <strong>{role.artifact}</strong>
-              <small>替换文字、链接或媒体</small>
+              <div className="identity-projects" aria-label={`${identity.name}项目`}>
+                {identity.projects.map((project) => (
+                  <ProjectModule project={project} key={project.title} />
+                ))}
+              </div>
             </div>
           </article>
         ))}
       </section>
 
-      <section className="work-section" id="work">
-        <div className="section-heading">
-          <h2>把角色，变成作品。</h2>
-          <p>这里预留了四种项目类型。替换封面与文字后，就能组成你的案例入口。</p>
-        </div>
-
-        <div className="project-stack" aria-label="精选项目">
-          {projects.map((project, index) => (
-            <article className={project.className} key={project.title}>
-              <div className="project-topline">
-                <span>{project.type}</span>
-                <span>示例内容</span>
-              </div>
-              <div className="project-media">
-                <MediaSlot label={project.media} ratio="16 : 10" inverse={index > 1} />
-              </div>
-              <div className="project-copy">
-                <h3>{project.title}</h3>
-                <p>{project.summary}</p>
-                <span className="project-link" aria-disabled="true">
-                  案例链接待添加
-                </span>
-              </div>
-            </article>
+      <section className="capability-strip" aria-label="能力关键词">
+        <div className="capability-track">
+          {[...capabilities, ...capabilities].map((capability, index) => (
+            <span key={`${capability}-${index}`}>
+              {capability}
+              <i aria-hidden="true" />
+            </span>
           ))}
         </div>
       </section>
 
-      <section className="capabilities-section" aria-labelledby="capability-title">
-        <h2 id="capability-title">我如何参与一个项目</h2>
-        <div className="capability-rail">
-          {capabilities.map(([title, body]) => (
-            <article className="capability-card" key={title}>
-              <h3>{title}</h3>
-              <p>{body}</p>
-            </article>
-          ))}
-        </div>
-        <a className="button button-outline" href="#contact">
-          联系我
-        </a>
-      </section>
-
-      <section className="journey-section" id="journey">
-        <div className="journey-media">
-          <MediaSlot label="个人故事横幅、短片或旅行影像" ratio="16 : 9" />
-        </div>
-        <div className="journey-copy">
-          <h2>我的路径不是直线，方向却越来越清楚。</h2>
-          <p className="journey-intro">
-            传播让我理解人，旅行让我保持开放，摄影让我看见细节，AI 产品让我把这些能力连接起来。
-          </p>
-          <div className="timeline">
-            {journey.map((item) => (
-              <article className="timeline-item" key={item.title}>
-                <span>{item.time}</span>
-                <div>
-                  <h3>{item.title}</h3>
-                  <p>{item.body}</p>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="contact-wrap" id="contact">
-        <div className="contact-panel">
-          <div className="contact-symbol" aria-hidden="true">
-            Y
-          </div>
-          <div>
-            <h2>一起做点值得记住的事。</h2>
-            <p>正在寻找 AI 产品相关机会，也欢迎研究、内容、旅行与摄影方向的合作。</p>
-            <a className="button button-light" href="mailto:hello@example.com">
-              hello@example.com
-            </a>
-          </div>
-        </div>
-      </section>
-
-      <section className="faq-section" aria-labelledby="faq-title">
-        <h2 id="faq-title">你可能想知道</h2>
-        <div className="faq-list">
-          {faq.map(([question, answer]) => (
-            <details key={question}>
-              <summary>{question}</summary>
-              <p>{answer}</p>
-            </details>
-          ))}
-        </div>
-      </section>
-
-      <footer className="site-footer">
+      <section className="personal-note">
         <div>
-          <strong>Your Name</strong>
-          <p>AI 产品经理，持续观察、表达与构建。</p>
+          <p>MY PATH</p>
+          <h2>路径不是直线，视角却越来越完整。</h2>
         </div>
-        <div className="footer-links">
-          <a href="mailto:hello@example.com">邮箱</a>
-          <span aria-disabled="true">LinkedIn 待添加</span>
-          <span aria-disabled="true">摄影主页待添加</span>
+        <div>
+          <p>
+            传播让我理解人，旅行让我保持开放，摄影让我看见细节，产品与构建让我把这些能力连接起来。
+          </p>
+          <span>这里可以继续替换为个人经历、教育背景与当前关注。</span>
         </div>
-        <p className="copyright">© 2026 Your Name</p>
+      </section>
+
+      <section className="contact-section" id="contact">
+        <p>LET&apos;S MAKE SOMETHING MEANINGFUL</p>
+        <h2>一起做点值得记住的事。</h2>
+        <span>正在寻找 AI 产品相关机会，也欢迎研究、内容、旅行与摄影方向的合作。</span>
+        <a href="mailto:hello@example.com">hello@example.com</a>
+      </section>
+
+      <footer>
+        <span>Your Name · Portfolio 2026</span>
+        <div>
+          <a href="mailto:hello@example.com">Email</a>
+          <span>LinkedIn · 待添加</span>
+          <span>Photography · 待添加</span>
+        </div>
       </footer>
     </main>
   );
