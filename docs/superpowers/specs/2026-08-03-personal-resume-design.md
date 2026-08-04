@@ -1,7 +1,7 @@
 # Sidekick-Inspired Personal Resume Website Design
 
 Date: 2026-08-03
-Status: Approved direction, awaiting written-spec review
+Status: Revised and approved through visual references
 
 ## 1. Product Goal
 
@@ -30,13 +30,14 @@ These are presented as five connected facets of one person, not five unrelated b
 
 ### Chosen approach
 
-Use a high-fidelity structural adaptation of the reference page:
+Use a character-led, high-fidelity structural adaptation of the reference page:
 
-- Large, cinematic opening viewport.
-- Generous vertical whitespace and oversized typography.
-- A long, scroll-led role sequence with a persistent visual composition.
-- Overlapping project cards and a horizontally moving capability rail.
-- A strong closing call to action and accordion-style practical information.
+- The person is the visual stage, not a supporting photo inside a card.
+- The opening viewport is a full-screen editorial poster with one oversized 3D character.
+- Five full-screen identity scenes use the same repeated composition: character on the left; identity statement and related projects on the right.
+- Large type, minimal corner metadata, warm paper colors, and subtle texture create the cinematic atmosphere.
+- Projects live inside the identity they prove instead of in a separate generic project wall.
+- A restrained closing profile and contact area completes the page without breaking the character-led narrative.
 
 ### Alternatives considered
 
@@ -49,21 +50,21 @@ The chosen approach keeps the reference site's pacing while ensuring essential r
 
 - Primary background: warm white, approximately `#F4F0E8`.
 - Primary text: near-black, approximately `#171714`.
-- Accent: muted ultraviolet, approximately `#6E56CF`.
-- Secondary surfaces: soft stone and light lavender.
+- Accent: muted moss and deep brown-green, approximately `#6F765C` and `#31372B`.
+- Secondary surfaces: warm sage, sand, and faded clay.
 - Typography: modern sans-serif with light display weights, large headlines, and compact supporting copy.
-- Corners: generous radii on cards and image frames.
-- Decoration: restrained gradients, shadows, and CSS shapes; no copied Shopify assets or branding.
+- Corners: large radii on project modules; character artwork itself remains unframed and visually dominant.
+- Decoration: subtle paper grain, fine rules, quiet shadows, and CSS shapes; no copied Shopify assets or branding.
 
 ## 4. Page Architecture
 
-### 4.1 Sticky navigation
+### 4.1 Minimal overlay navigation
 
 Purpose: keep the page usable as a resume while preserving the landing-page atmosphere.
 
 Contents:
 
-- Placeholder personal wordmark or name.
+- Placeholder personal name and discipline in the upper-left corner.
 - About.
 - Roles.
 - Selected work.
@@ -73,42 +74,42 @@ Contents:
 
 Behavior:
 
-- Transparent or warm-white overlay at the top.
-- Remains visible while scrolling.
+- Transparent overlay on the hero; warm-white overlay after the hero.
+- Uses small editorial typography so it never competes with the character.
 - Collapses into a compact mobile menu on narrow screens.
 
 ### 4.2 Full-screen hero
 
 Purpose: state the candidate's professional promise within seconds.
 
-Contents:
+Composition:
 
-- Large two-line placeholder headline.
-- Short positioning statement oriented toward AI product work.
-- Primary action: view selected work.
-- Secondary action: download resume.
-- Large portrait, motion loop, or editorial image slot.
-- Optional floating interface card to echo the Sidekick composition without copying it.
+- One supplied 3D character is centered and fills most of the viewport height.
+- The background is warm cream with a muted sage cast and subtle grain.
+- Small name/discipline metadata sits in the upper-left; portfolio/year metadata sits in the upper-right.
+- A large `ABOUT ME` placeholder title crosses the character's lower torso without covering the face.
+- A short centered positioning statement sits below the title.
+- A small scroll cue anchors the bottom edge.
+- No split hero, floating UI card, prominent button cluster, or boxed image frame.
 
-### 4.3 Identity introduction
+### 4.3 Identity transition
 
 Purpose: introduce the five-role structure.
 
 Suggested heading: “Meet the five sides of me. One curious builder.”
 
-The section uses an oversized heading and significant whitespace before the interactive role sequence begins.
+The transition is compact. It introduces the idea that one person contains five connected ways of seeing and making, then immediately hands off to the first identity scene.
 
 ### 4.4 Five-role scroll sequence
 
 Purpose: serve as the central storytelling device.
 
-Each role panel contains:
+Each identity scene contains:
 
-- Small role label.
-- One declarative headline.
-- Two or three lines of sample copy.
-- A portrait, photograph, project screenshot, or video placeholder.
-- An optional supporting artifact card such as a product document, prototype, article, photo series, or travel note.
+- A large full-height 3D character on the left, occupying roughly 42 percent of the desktop viewport.
+- A small identity label, oversized statement, and short self-introduction on the right.
+- Two project modules nested under the introduction. Each module has a cover slot, project name, type, short result, and disabled placeholder link.
+- A small skill line and scene index for orientation.
 
 Role order:
 
@@ -120,34 +121,28 @@ Role order:
 
 Desktop behavior:
 
-- The storytelling area remains visually persistent while the text and media transition as the user scrolls.
-- Transitions use opacity, scale, and position changes with restrained timing.
+- Each identity scene is at least one viewport tall and stacks with a restrained sticky-card transition.
+- The left character remains the dominant anchor while the right side carries the readable evidence.
+- Transitions use opacity and small vertical movement; there is no scroll trapping.
 
 Mobile behavior:
 
-- Roles become stacked editorial cards.
-- No scroll trapping.
-- All information stays readable without animation.
+- Character appears first and occupies roughly 55 to 65 percent of the viewport height.
+- Text and project modules follow below in one column.
+- All information stays readable without animation or hover.
 
-### 4.5 Selected work card stack
+### 4.5 Projects inside identities
 
-Purpose: convert the role narrative into evidence.
+Purpose: make every identity credible at the exact point it is introduced.
 
-Contents:
+- The separate selected-work card stack is removed.
+- Each identity owns two replaceable project modules on its right side.
+- Replacing a project requires only its cover, title, type, one-line result, and link.
+- Projects remain keyboard reachable and linear on mobile.
 
-- Three to five replaceable project cards.
-- Each card includes a cover-image slot, project title, role, one-line outcome, and case-study link.
-- Sample projects should span an AI product, a communication or research project, a travel or photography story, and a small AI-built tool.
+### 4.6 Compact capability statement
 
-Behavior:
-
-- Cards overlap or fan across the viewport on desktop.
-- Cards become a swipeable or horizontally scrollable row on mobile.
-- Each project remains keyboard reachable.
-
-### 4.6 Capability rail
-
-Purpose: echo the reference page's prompt-card section while summarizing practical skills.
+Purpose: summarize cross-identity strengths without introducing another competing card system.
 
 Example cards:
 
@@ -158,7 +153,7 @@ Example cards:
 - `/photography`
 - `/rapid-building`
 
-Each card contains a short, outcome-oriented description and uses sample text that can be replaced independently.
+Capabilities render as a simple typographic rail rather than large cards.
 
 ### 4.7 Personal story and journey
 
@@ -228,9 +223,9 @@ Missing media should render a designed placeholder showing the recommended asset
 - `Hero`: opening statement and hero media composition.
 - `IdentityIntro`: transition into the five-role story.
 - `RoleShowcase`: role data orchestration and responsive layout.
-- `RolePanel`: one reusable role presentation.
-- `ProjectStack`: selected-work composition.
-- `CapabilityRail`: horizontally moving or scrollable skill cards.
+- `IdentityScene`: one reusable left-character/right-content presentation.
+- `IdentityProject`: compact project evidence module inside an identity.
+- `CapabilityRail`: compact typographic skill strip.
 - `JourneySection`: personal statement and timeline.
 - `ContactPanel`: final contact action.
 - `FaqAccordion`: accessible disclosure controls.
