@@ -164,7 +164,7 @@ export default function Home() {
 
         <img
           className="hero-character"
-          src="/personas/hero-laughing-cutout.png"
+          src="/personas/hero-laughing-wide.png"
           alt="开怀大笑的个人卡通形象"
         />
 
