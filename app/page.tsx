@@ -104,7 +104,7 @@ const identities = [
     intro:
       "我用 AI、设计和代码快速做出可交互原型，让假设离开文档，尽早接受真实使用与反馈。",
     skills: "AI 原型 / 快速开发 / 实验迭代",
-    character: null,
+    character: "/personas/ai-builder-transparent.png",
     tone: "ink",
     projects: [
       {

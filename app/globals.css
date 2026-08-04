@@ -1,9 +1,9 @@
 @import "tailwindcss";
 
 :root {
-  --paper: #f3efe6;
-  --paper-bright: #faf7f0;
-  --warm-ivory: #f6f1e5;
+  --paper: #f7f7f4;
+  --paper-bright: #fdfdfb;
+  --warm-ivory: #fafaf7;
   --ink: #20211c;
   --muted: #65665d;
   --moss: #6f765c;
@@ -139,8 +139,8 @@ main {
   background: linear-gradient(
     to top,
     var(--paper-bright) 0%,
-    rgba(250, 247, 240, 0.94) 18%,
-    rgba(250, 247, 240, 0.48) 52%,
+    rgba(253, 253, 251, 0.94) 18%,
+    rgba(253, 253, 251, 0.48) 52%,
     transparent 100%
   );
 }
@@ -466,7 +466,7 @@ main {
   left: 50%;
   display: block;
   border: 1px dashed currentColor;
-  background: rgba(250, 247, 240, 0.32);
+  background: rgba(253, 253, 251, 0.32);
   transform: translateX(-50%);
 }
 
@@ -565,7 +565,7 @@ main {
   overflow: hidden;
   border: 1px solid rgba(32, 33, 28, 0.14);
   border-radius: 18px;
-  background: rgba(250, 247, 240, 0.56);
+  background: rgba(253, 253, 251, 0.56);
   box-shadow: 0 18px 45px rgba(57, 51, 38, 0.07);
 }
 
@@ -740,7 +740,7 @@ main {
   padding: clamp(8px, 1.1vh, 12px) 13px;
   border: 1px solid rgba(32, 33, 28, 0.1);
   border-radius: 13px;
-  background: rgba(255, 253, 248, 0.38);
+  background: rgba(253, 253, 251, 0.38);
 }
 
 .education-logo {
@@ -1158,7 +1158,7 @@ main {
   padding: 7px 10px;
   border: 1px solid rgba(32, 33, 28, 0.12);
   border-radius: 999px;
-  background: rgba(250, 247, 240, 0.76);
+  background: rgba(253, 253, 251, 0.76);
   font-family: var(--font-geist-mono), monospace;
   font-size: 7px;
   letter-spacing: 0.1em;
