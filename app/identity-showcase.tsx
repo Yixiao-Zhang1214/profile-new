@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import TravelerExperience from "./traveler-experience";
 
 type IdentityProject = {
   type: string;
@@ -54,6 +55,10 @@ function ProjectModule({ project }: { project: IdentityProject }) {
 }
 
 function IdentityDetails({ identity }: { identity: Identity }) {
+  if (identity.name === "旅行家") {
+    return <TravelerExperience identity={identity} />;
+  }
+
   return (
     <>
       <div className="identity-heading">
@@ -74,8 +79,10 @@ function IdentityDetails({ identity }: { identity: Identity }) {
 }
 
 function IdentityCharacter({ identity, index }: { identity: Identity; index: number }) {
+  const isTraveler = identity.name === "旅行家";
+
   return (
-    <div className="identity-character">
+    <div className={`identity-character${isTraveler ? " identity-character-traveler" : ""}`}>
       {identity.character ? (
         <img src={identity.character} alt={`${identity.name}角色形象`} />
       ) : (
@@ -157,7 +164,11 @@ export default function IdentityShowcase({ identities }: { identities: Identity[
           aria-label={identity.name}
         >
           <IdentityCharacter identity={identity} index={index} />
-          <div className="identity-content identity-mobile-content">
+          <div
+            className={`identity-content identity-mobile-content${
+              identity.name === "旅行家" ? " traveler-panel" : ""
+            }`}
+          >
             <IdentityDetails identity={identity} />
           </div>
         </article>
@@ -172,8 +183,8 @@ export default function IdentityShowcase({ identities }: { identities: Identity[
               return (
                 <div
                   className={`identity-content identity-stage-panel${
-                    isActive ? " is-active" : ""
-                  }`}
+                    identity.name === "旅行家" ? " traveler-panel" : ""
+                  }${isActive ? " is-active" : ""}`}
                   key={identity.name}
                   aria-hidden={!isActive}
                 >

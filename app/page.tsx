@@ -56,7 +56,7 @@ const identities = [
     intro:
       "陌生环境不断校准我的偏见。旅行不是打卡，而是观察不同的人如何生活、选择，并与世界建立关系。",
     skills: "田野观察 / 跨文化感知 / 旅行书写",
-    character: null,
+    character: "/personas/traveler-hiking-boots-transparent.png",
     tone: "clay",
     projects: [
       {
