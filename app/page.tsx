@@ -9,7 +9,7 @@ const identities = [
     intro:
       "采访、观察与写作，让我习惯从真实的人出发。它们也是我理解用户、梳理问题和组织表达的起点。",
     skills: "采访研究 / 内容策划 / 叙事表达",
-    character: "/personas/news-interviewer-transparent.png",
+    character: "/personas/news-interviewer-camera-transparent.png",
     tone: "sage",
     projects: [
       {

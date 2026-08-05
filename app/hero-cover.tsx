@@ -59,7 +59,7 @@ export default function HeroCover() {
       <div className="hero-depth-plane">
         <img
           className="hero-character"
-          src="/personas/hero-laughing-wide.png"
+          src="/personas/hero-laughing-person-cutout.png"
           alt="开怀大笑的个人卡通形象"
         />
       </div>

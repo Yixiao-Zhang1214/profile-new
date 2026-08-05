@@ -13,6 +13,7 @@ const education = [
     logo: "/education/ecnu-logo.svg",
     logoClass: "is-ecnu",
     program: "播音与主持艺术",
+    badges: ["985", "双一流"],
     details: [
       "学业成绩 90.31（1 / 25）· 推荐免试攻读硕士学位研究生",
       "校优秀毕业生 · 优秀学生 · 校特等奖学金 · “圆梦浙里”奖学金",
@@ -24,6 +25,7 @@ const education = [
     logo: "/education/hust-crest.jpg",
     logoClass: "is-crest",
     program: "新闻与传播",
+    badges: ["985", "双一流"],
     details: [
       "教育部大数据与国家传播战略实验室成员",
       "研究生学业一等奖学金 · 科技创新奖学金",
@@ -35,6 +37,7 @@ const education = [
     logo: "/education/rwth-aachen-logo.png",
     logoClass: "is-rwth",
     program: "学期交流",
+    badges: ["QS 105"],
     details: ["以人机交互课程补充产品与跨文化研究视角。"],
   },
 ];
@@ -106,11 +109,18 @@ export default function JournalismExperience({ identity }: { identity: Journalis
                   <img src={item.logo} alt={`${item.school}校徽`} />
                 </div>
                 <div className="education-timeline-copy">
-                  <h4>
-                    {item.school}
-                    <span aria-hidden="true"> · </span>
-                    <span>{item.program}</span>
-                  </h4>
+                  <div className="education-heading-row">
+                    <h4>
+                      {item.school}
+                      <span aria-hidden="true"> · </span>
+                      <span>{item.program}</span>
+                    </h4>
+                    <div className="education-badges" aria-label="学校标签">
+                      {item.badges.map((badge) => (
+                        <span key={badge}>{badge}</span>
+                      ))}
+                    </div>
+                  </div>
                   <div className="education-timeline-details">
                     {item.details.map((detail) => (
                       <p key={detail}>{detail}</p>
