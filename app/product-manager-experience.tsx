@@ -14,6 +14,7 @@ type ProductManagerIdentity = {
 type ProductExperience = {
   id: string;
   company: string;
+  logo: string;
   team: string;
   role: string;
   period: string;
@@ -32,6 +33,7 @@ const experiences: ProductExperience[] = [
   {
     id: "bytedance-ai-commerce",
     company: "字节跳动",
+    logo: "/companies/bytedance.svg",
     team: "中国电商 AI 应用",
     role: "AI 应用产品经理实习",
     period: "2026.06 - 至今",
@@ -63,6 +65,7 @@ const experiences: ProductExperience[] = [
   {
     id: "douyin-selected",
     company: "字节跳动",
+    logo: "/companies/bytedance.svg",
     team: "抖音精选",
     role: "AI 产品经理实习",
     period: "2026.01 - 2026.06",
@@ -99,6 +102,7 @@ const experiences: ProductExperience[] = [
   {
     id: "xiaomi-xiaoai",
     company: "小米科技",
+    logo: "/companies/xiaomi.svg",
     team: "小爱",
     role: "大模型产品经理实习",
     period: "2025.08 - 2026.01",
@@ -186,9 +190,12 @@ function ExperienceDialog({
         onPointerDown={(event) => event.stopPropagation()}
       >
         <header className="pm-dialog-header">
-          <div>
-            <p>{experience.company}</p>
-            <span>{experience.team}</span>
+          <div className="pm-dialog-company">
+            <img src={experience.logo} alt="" />
+            <div>
+              <p>{experience.company}</p>
+              <span>{experience.team}</span>
+            </div>
           </div>
           <button ref={closeButtonRef} type="button" onClick={onClose}>
             关闭
@@ -265,9 +272,12 @@ export default function ProductManagerExperience({
             >
               <time>{experience.period}</time>
               <div className="pm-role-copy">
-                <div>
-                  <h4>{experience.company}</h4>
-                  <span>{experience.team}</span>
+                <div className="pm-company-line">
+                  <img src={experience.logo} alt="" />
+                  <div>
+                    <h4>{experience.company}</h4>
+                    <span>{experience.team}</span>
+                  </div>
                 </div>
                 <strong>{experience.role}</strong>
                 <p>{experience.summary}</p>
