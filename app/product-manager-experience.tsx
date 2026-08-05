@@ -18,7 +18,10 @@ type ProductExperience = {
   role: string;
   period: string;
   summary: string;
-  metrics: string[];
+  metrics: Array<{
+    value: string;
+    label: string;
+  }>;
   details: Array<{
     title: string;
     body: string;
@@ -34,7 +37,11 @@ const experiences: ProductExperience[] = [
     period: "2026.06 - 至今",
     summary:
       "负责 AI 小应的直播选品与 AI 话术生成能力，参与产品设计、实验验证、效果评测与迭代优化。",
-    metrics: ["DAU +7.48%", "直播 GMV +3%", "人均选品率 +20%"],
+    metrics: [
+      { value: "+7.48%", label: "DAU" },
+      { value: "+3%", label: "直播 GMV" },
+      { value: "+20%", label: "人均选品率" },
+    ],
     details: [
       {
         title: "AI 直播选品 Skill",
@@ -61,7 +68,11 @@ const experiences: ProductExperience[] = [
     period: "2026.01 - 2026.06",
     summary:
       "从 0 到 1 搭建抖音精选首个全局 AI Agent，落地交互式推荐与个性化主题播单。",
-    metrics: ["入口点击率 4 倍", "执行渗透 4 倍", "相关性 50% → 73%"],
+    metrics: [
+      { value: "4×", label: "入口点击率" },
+      { value: "4×", label: "执行渗透" },
+      { value: "73%", label: "推荐相关性" },
+    ],
     details: [
       {
         title: "交互式推荐",
@@ -93,7 +104,11 @@ const experiences: ProductExperience[] = [
     period: "2025.08 - 2026.01",
     summary:
       "负责翻译与闹钟两大高流量垂域的云端 AI 交互架构、模型优化与策略迭代。",
-    metrics: ["满足率 +14.27%", "Agent 替代 46% → 95%", "P00 解决率 +23%"],
+    metrics: [
+      { value: "+14.27%", label: "整体满足率" },
+      { value: "95%", label: "Agent 替代逻辑" },
+      { value: "+23%", label: "P00 解决率" },
+    ],
     details: [
       {
         title: "理想态建设",
@@ -122,31 +137,53 @@ function ExperienceDialog({
   onClose: () => void;
 }) {
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
+    const previousActiveElement = document.activeElement as HTMLElement | null;
     document.body.style.overflow = "hidden";
     closeButtonRef.current?.focus();
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") onClose();
+
+      if (event.key === "Tab" && dialogRef.current) {
+        const focusableElements = Array.from(
+          dialogRef.current.querySelectorAll<HTMLElement>(
+            "button, a[href], input, select, textarea, [tabindex]:not([tabindex='-1'])",
+          ),
+        );
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements.at(-1);
+
+        if (event.shiftKey && document.activeElement === firstElement) {
+          event.preventDefault();
+          lastElement?.focus();
+        } else if (!event.shiftKey && document.activeElement === lastElement) {
+          event.preventDefault();
+          firstElement?.focus();
+        }
+      }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => {
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", handleKeyDown);
+      previousActiveElement?.focus();
     };
   }, [onClose]);
 
   return (
-    <div className="pm-dialog-backdrop" onMouseDown={onClose}>
-      <section
+    <div className="pm-dialog-backdrop" onPointerDown={onClose}>
+      <aside
+        ref={dialogRef}
         className="pm-dialog"
         role="dialog"
         aria-modal="true"
         aria-labelledby={`${experience.id}-title`}
-        onMouseDown={(event) => event.stopPropagation()}
+        onPointerDown={(event) => event.stopPropagation()}
       >
         <header className="pm-dialog-header">
           <div>
@@ -159,18 +196,19 @@ function ExperienceDialog({
         </header>
 
         <div className="pm-dialog-title-row">
-          <div>
-            <h2 id={`${experience.id}-title`}>{experience.role}</h2>
-            <p>{experience.period}</p>
-          </div>
-          <div className="pm-dialog-metrics" aria-label="关键结果">
-            {experience.metrics.map((metric) => (
-              <span key={metric}>{metric}</span>
-            ))}
-          </div>
+          <p>{experience.period}</p>
+          <h2 id={`${experience.id}-title`}>{experience.role}</h2>
+          <p className="pm-dialog-summary">{experience.summary}</p>
         </div>
 
-        <p className="pm-dialog-summary">{experience.summary}</p>
+        <div className="pm-dialog-metrics" aria-label="关键结果">
+          {experience.metrics.map((metric) => (
+            <div key={metric.label}>
+              <strong>{metric.value}</strong>
+              <span>{metric.label}</span>
+            </div>
+          ))}
+        </div>
 
         <div className="pm-dialog-details">
           {experience.details.map((detail, index) => (
@@ -183,7 +221,7 @@ function ExperienceDialog({
             </article>
           ))}
         </div>
-      </section>
+      </aside>
     </div>
   );
 }
@@ -203,46 +241,46 @@ export default function ProductManagerExperience({
     <div className="product-manager-experience">
       <header className="pm-copy">
         <div className="pm-copy-meta">
-          <div>
-            <p>{identity.english}</p>
-            <h2>{identity.name}</h2>
-          </div>
-          <small>{identity.skills}</small>
+          <h2>{identity.name}</h2>
+          <span>{identity.english}</span>
         </div>
         <h3>{identity.statement.replace("\n", " ")}</h3>
-        <span>{identity.intro}</span>
+        <p>{identity.intro}</p>
       </header>
 
       <section className="pm-experience-section" aria-label="产品实习经历">
         <div className="pm-section-heading">
           <h3>实习经历</h3>
-          <span>点击卡片查看项目方法与结果</span>
+          <span>选择一段经历，查看项目方法与结果</span>
         </div>
 
-        <div className="pm-experience-grid">
+        <div className="pm-experience-list">
           {experiences.map((experience) => (
             <button
-              className="pm-experience-card"
+              className="pm-experience-row"
               type="button"
               key={experience.id}
               aria-haspopup="dialog"
               onClick={() => setSelectedExperience(experience)}
             >
-              <div className="pm-card-topline">
-                <span>{experience.period}</span>
-                <i aria-hidden="true">展开</i>
+              <time>{experience.period}</time>
+              <div className="pm-role-copy">
+                <div>
+                  <h4>{experience.company}</h4>
+                  <span>{experience.team}</span>
+                </div>
+                <strong>{experience.role}</strong>
+                <p>{experience.summary}</p>
               </div>
-              <div className="pm-card-company">
-                <h4>{experience.company}</h4>
-                <p>{experience.team}</p>
-              </div>
-              <strong>{experience.role}</strong>
-              <p className="pm-card-summary">{experience.summary}</p>
-              <div className="pm-card-metrics" aria-label="关键结果">
+              <div className="pm-row-metrics" aria-label="关键结果">
                 {experience.metrics.map((metric) => (
-                  <span key={metric}>{metric}</span>
+                  <span key={metric.label}>
+                    <strong>{metric.value}</strong>
+                    <small>{metric.label}</small>
+                  </span>
                 ))}
               </div>
+              <span className="pm-row-action">查看</span>
             </button>
           ))}
         </div>
