@@ -110,11 +110,20 @@ main {
 }
 
 .poster-hero {
+  --hero-copy-x: 0px;
+  --hero-copy-y: 0px;
+  --hero-plane-x: 0px;
+  --hero-plane-y: 0px;
+  --hero-rotate-x: 0deg;
+  --hero-rotate-y: 0deg;
   position: relative;
   min-height: 100svh;
   overflow: hidden;
-  background: var(--warm-ivory);
+  background:
+    radial-gradient(circle at 50% 44%, rgba(208, 218, 221, 0.2), transparent 38%),
+    var(--warm-ivory);
   isolation: isolate;
+  perspective: 1400px;
 }
 
 .poster-hero::before {
@@ -145,14 +154,44 @@ main {
   );
 }
 
-.hero-character {
+.hero-depth-plane {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 0;
+  width: min(88vw, 145svh, 1480px);
+  aspect-ratio: 1663 / 946;
+  border-radius: 20px;
+  box-shadow: 0 34px 90px rgba(73, 75, 66, 0.14);
+  overflow: hidden;
+  transform: translate3d(
+      calc(-50% + var(--hero-plane-x)),
+      calc(-50% + var(--hero-plane-y)),
+      0
+    )
+    rotateX(var(--hero-rotate-x)) rotateY(var(--hero-rotate-y));
+  transform-style: preserve-3d;
+  transition: transform 520ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 520ms ease;
+  will-change: transform;
+}
+
+.hero-depth-plane::after {
   position: absolute;
   inset: 0;
-  z-index: 0;
+  pointer-events: none;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: inherit;
+  background: linear-gradient(120deg, rgba(255, 255, 255, 0.12), transparent 30%);
+  content: "";
+  transform: translateZ(24px);
+}
+
+.hero-character {
+  display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: center top;
+  object-fit: contain;
+  object-position: center;
   filter: saturate(0.96) contrast(1.01);
 }
 
@@ -186,6 +225,9 @@ main {
   width: min(430px, 31vw);
   color: var(--deep-moss);
   text-align: left;
+  transform: translate3d(var(--hero-copy-x), var(--hero-copy-y), 36px);
+  transition: transform 620ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
 }
 
 .hero-message > p,
@@ -1525,9 +1567,17 @@ footer a {
   }
 
   .hero-character {
-    width: 100%;
-    height: 100%;
-    object-position: center top;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .hero-depth-plane {
+    top: 43%;
+    width: calc(100vw - 24px);
+    height: 66svh;
+    aspect-ratio: auto;
+    border-radius: 16px;
+    transform: translate3d(-50%, -50%, 0);
   }
 
   .hero-meta {
@@ -1845,6 +1895,16 @@ footer a {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  .hero-depth-plane {
+    transition: none;
+    transform: translate3d(-50%, -50%, 0);
+  }
+
+  .hero-message {
+    transition: none;
+    transform: none;
   }
 
   .capability-track {

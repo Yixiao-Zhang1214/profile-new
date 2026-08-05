@@ -1,3 +1,4 @@
+import HeroCover from "./hero-cover";
 import IdentityShowcase from "./identity-showcase";
 
 const identities = [
@@ -152,37 +153,7 @@ export default function Home() {
         </a>
       </header>
 
-      <section className="poster-hero" id="top">
-        <div className="hero-meta hero-meta-left">
-          <span>Your Name</span>
-          <span>AI Product Manager</span>
-        </div>
-        <div className="hero-meta hero-meta-right">
-          <span>Portfolio</span>
-          <span>Shanghai · 2026</span>
-        </div>
-
-        <img
-          className="hero-character"
-          src="/personas/hero-laughing-wide.png"
-          alt="开怀大笑的个人卡通形象"
-        />
-
-        <div className="hero-message">
-          <p>HELLO, I AM</p>
-          <h1>ABOUT ME</h1>
-          <span>
-            新闻与传播学生，也是 AI 产品经理、旅行家、摄影师和 AI Builder。
-            <br />
-            我在观察、表达与创造之间，寻找自己的答案。
-          </span>
-        </div>
-
-        <a className="scroll-cue" href="#about">
-          <span>向下认识我</span>
-          <i aria-hidden="true" />
-        </a>
-      </section>
+      <HeroCover />
 
       <section className="identity-intro" id="about">
         <p>ONE PERSON · FIVE PERSPECTIVES</p>
