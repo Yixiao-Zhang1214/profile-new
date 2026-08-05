@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import JournalismExperience from "./journalism-experience";
+import ProductManagerExperience from "./product-manager-experience";
 import TravelerExperience from "./traveler-experience";
 
 type IdentityProject = {
@@ -64,6 +65,10 @@ function IdentityDetails({ identity }: { identity: Identity }) {
     return <TravelerExperience identity={identity} />;
   }
 
+  if (identity.name === "AI 产品经理") {
+    return <ProductManagerExperience identity={identity} />;
+  }
+
   return (
     <>
       <div className="identity-heading">
@@ -86,6 +91,7 @@ function IdentityDetails({ identity }: { identity: Identity }) {
 function getPanelClass(identity: Identity) {
   if (identity.name === "新闻与传播学生") return " journalism-panel";
   if (identity.name === "旅行家") return " traveler-panel";
+  if (identity.name === "AI 产品经理") return " product-manager-panel";
   return "";
 }
 
@@ -216,6 +222,7 @@ export default function IdentityShowcase({ identities }: { identities: Identity[
                   }`}
                   key={identity.name}
                   aria-hidden={!isActive}
+                  inert={!isActive}
                 >
                   <IdentityDetails identity={identity} />
                 </div>
