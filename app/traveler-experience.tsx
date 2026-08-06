@@ -257,7 +257,10 @@ export default function TravelerExperience({ identity }: { identity: TravelerIde
               <span><strong>16</strong> COUNTRIES</span>
             </div>
             <h3>{identity.statement}</h3>
-            <p>{identity.intro}</p>
+            <p>
+              去过 16 个国家，带领过 30+ 次旅行项目，也把旅途中观察到的真实需求，变成了一次成功的
+              <strong>旅行创业实践。</strong>
+            </p>
           </header>
 
           <div className="traveler-map-stage">

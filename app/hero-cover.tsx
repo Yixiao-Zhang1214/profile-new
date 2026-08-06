@@ -6,7 +6,7 @@ export default function HeroCover() {
   const heroRef = useRef<HTMLElement>(null);
   const animationFrameRef = useRef<number | null>(null);
 
-  const updateDepth = (x: number, y: number) => {
+  const updateDepth = (x: number, y: number, revealBrush = true) => {
     if (animationFrameRef.current !== null) {
       cancelAnimationFrame(animationFrameRef.current);
     }
@@ -21,6 +21,9 @@ export default function HeroCover() {
       hero.style.setProperty("--hero-rotate-y", `${x * 1.8}deg`);
       hero.style.setProperty("--hero-copy-x", `${x * -5}px`);
       hero.style.setProperty("--hero-copy-y", `${y * -3}px`);
+      hero.style.setProperty("--hero-brush-x", `${(x + 0.5) * 100}%`);
+      hero.style.setProperty("--hero-brush-y", `${(y + 0.5) * 100}%`);
+      hero.style.setProperty("--hero-brush-opacity", revealBrush ? "0.72" : "0");
     });
   };
 
@@ -75,8 +78,10 @@ export default function HeroCover() {
         const y = (event.clientY - bounds.top) / bounds.height - 0.5;
         updateDepth(x, y);
       }}
-      onPointerLeave={() => updateDepth(0, 0)}
+      onPointerLeave={() => updateDepth(0, 0, false)}
     >
+      <div className="hero-brush-reveal" aria-hidden="true" />
+
       <div className="hero-meta hero-meta-left">
         <span>Your Name</span>
         <span>AI Product Manager</span>

@@ -21,6 +21,7 @@ type ProductExperience = {
   role: string;
   period: string;
   summary: string;
+  tags: string[];
   metrics: Array<{
     value: string;
     label: string;
@@ -41,6 +42,7 @@ const experiences: ProductExperience[] = [
     period: "2026.06 - 至今",
     summary:
       "负责 AI 小应的直播选品与 AI 话术生成能力，参与产品设计、实验验证、效果评测与迭代优化。",
+    tags: ["达人直播+AI", "Agent 基建"],
     metrics: [
       { value: "+7.48%", label: "DAU" },
       { value: "+3%", label: "直播 GMV" },
@@ -73,6 +75,7 @@ const experiences: ProductExperience[] = [
     period: "2026.01 - 2026.06",
     summary:
       "从 0 到 1 搭建抖音精选首个全局 AI Agent，落地交互式推荐与个性化主题播单。",
+    tags: ["C 端搜推+AI", "0-1 Agent 建设"],
     metrics: [
       { value: "4×", label: "入口点击率" },
       { value: "4×", label: "执行渗透" },
@@ -110,6 +113,7 @@ const experiences: ProductExperience[] = [
     period: "2025.08 - 2026.01",
     summary:
       "负责翻译与闹钟两大高流量垂域的云端 AI 交互架构、模型优化与策略迭代。",
+    tags: ["C 端大模型策略"],
     metrics: [
       { value: "+14.27%", label: "整体满足率" },
       { value: "95%", label: "Agent 替代逻辑" },
@@ -285,7 +289,14 @@ export default function ProductManagerExperience({
                     <span>{experience.team}</span>
                   </div>
                 </div>
-                <strong>{experience.role}</strong>
+                <div className="pm-role-title-line">
+                  <strong>{experience.role}</strong>
+                  <div className="pm-experience-tags" aria-label="经历关键词">
+                    {experience.tags.map((tag) => (
+                      <span key={tag}>{tag}</span>
+                    ))}
+                  </div>
+                </div>
                 <p>{experience.summary}</p>
               </div>
               <span className="pm-row-action" aria-hidden="true">

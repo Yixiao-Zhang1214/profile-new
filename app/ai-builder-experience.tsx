@@ -13,6 +13,7 @@ type BuilderProject = {
   kind: string;
   title: string;
   summary: string;
+  tagline?: string;
   description: string;
   descriptionRich?: ReactNode;
   focus: string[];
@@ -23,6 +24,10 @@ type BuilderProject = {
   sections?: Array<{
     title: string;
     body: ReactNode;
+  }>;
+  reportTable?: Array<{
+    section: string;
+    question: string;
   }>;
   note?: string;
   preview?: "comment" | "memento";
@@ -46,6 +51,15 @@ type BuilderProject = {
     src: string;
     title: string;
   };
+  link?: {
+    href: string;
+    label: string;
+    installHref?: string;
+  };
+  flow?: Array<{
+    title: string;
+    detail: string;
+  }>;
 };
 
 const aigcGallery = [
@@ -243,10 +257,28 @@ const projectGroups: Array<{ title: string; english: string; projects: BuilderPr
         number: "04",
         kind: "INTERNAL SKILL",
         title: "解释 Skill 的 Skill",
-        summary: "把复杂机制转化为可理解、可执行的说明",
+        summary: "把陌生 Skill 变成看得懂的离线说明书",
+        tagline: "把一个陌生 Agent Skill，翻译成任何人都能看懂的可视化说明书。",
         description:
-          "把 Skill 的运行机制、输入输出与使用边界转化为更容易理解和执行的说明流程。",
-        focus: ["知识解释", "Skill 设计", "内部赋能"],
+          "Explain Skill 会安全地读取 Skill 的说明、脚本和参考文件，解释它能做什么、怎么工作、依赖什么、有哪些风险，以及应该如何使用，最后生成一份带证据、可离线打开的单文件 HTML 报告。",
+        reportTable: [
+          { section: "30 秒看懂", question: "这是什么，适合谁，输入和输出是什么？" },
+          { section: "怎么唤起它", question: "在当前应用里应该说什么？是否需要改造？" },
+          { section: "一次任务怎么走完", question: "Skill 会按什么顺序处理任务？" },
+          { section: "首次使用", question: "需要安装、授权或准备哪些内容？" },
+          { section: "它由什么构成", question: "SKILL.md、脚本、配置和参考文件分别负责什么？" },
+          { section: "它依赖什么", question: "哪些依赖是必须的，哪些只是可选增强？" },
+          { section: "Skill 设计体检", question: "有哪些亮点、风险和可复用的设计方法？" },
+          { section: "还有哪些选择", question: "有哪些竞品、替代方案或相邻工具？" },
+          { section: "证据与覆盖范围", question: "结论来自哪里，还有哪些内容没有验证？" },
+        ],
+        focus: ["看懂能力", "证据与边界", "离线说明书"],
+        link: {
+          href: "https://github.com/Yixiao-Zhang1214/silly-skill",
+          label: "查看 Explain Skill 代码仓 ↗",
+          installHref:
+            "请安装这个仓库中的 Explain Skill：\nhttps://github.com/Yixiao-Zhang1214/silly-skill\nSkill 位于 outputs/explain-skill。",
+        },
       },
       {
         number: "05",
@@ -414,6 +446,20 @@ function BuilderProjectDialog({
 }) {
   const dialogRef = useRef<HTMLElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const [copiedInstallLink, setCopiedInstallLink] = useState(false);
+
+  const handleCopyInstallLink = async () => {
+    const installHref = project.link?.installHref ?? project.link?.href;
+    if (!installHref) return;
+
+    try {
+      await navigator.clipboard.writeText(installHref);
+      setCopiedInstallLink(true);
+      window.setTimeout(() => setCopiedInstallLink(false), 1800);
+    } catch {
+      setCopiedInstallLink(false);
+    }
+  };
 
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
@@ -627,8 +673,62 @@ function BuilderProjectDialog({
           <>
             <div className="builder-dialog-copy">
               <h2 id="builder-dialog-title">{project.title}</h2>
+              {project.tagline && <p className="builder-dialog-tagline">{project.tagline}</p>}
               <p>{project.description}</p>
             </div>
+
+            {project.link && (
+              <div className="builder-dialog-repo-bar">
+                <div>
+                  <span>CODE REPOSITORY · INSTALL PATH</span>
+                  <a href={project.link.href} target="_blank" rel="noreferrer">
+                    {project.link.href.replace("https://", "")}
+                  </a>
+                </div>
+                <button type="button" onClick={handleCopyInstallLink}>
+                  {copiedInstallLink ? "已复制" : "复制安装地址"}
+                </button>
+              </div>
+            )}
+
+            {project.reportTable && (
+              <section className="builder-dialog-report-guide" aria-labelledby="builder-report-guide-title">
+                <h3 id="builder-report-guide-title">一份报告能告诉你什么</h3>
+                <p>生成的报告通常包含：</p>
+                <div className="builder-dialog-report-table-wrap">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th scope="col">章节</th>
+                        <th scope="col">回答的问题</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {project.reportTable.map((row) => (
+                        <tr key={row.section}>
+                          <th scope="row">{row.section}</th>
+                          <td>{row.question}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+            )}
+
+            {project.sections && project.sections.length > 0 && (
+              <div className="builder-dialog-explain-sections" aria-label="项目说明">
+                {project.sections.map((section, index) => (
+                  <section key={section.title}>
+                    <span>{String(index + 1).padStart(2, "0")}</span>
+                    <div>
+                      <h3>{section.title}</h3>
+                      <p>{section.body}</p>
+                    </div>
+                  </section>
+                ))}
+              </div>
+            )}
 
             <section className="builder-dialog-focus" aria-labelledby="builder-focus-title">
               <h3 id="builder-focus-title">能力侧重</h3>
@@ -638,6 +738,7 @@ function BuilderProjectDialog({
                 ))}
               </ul>
             </section>
+
           </>
         )}
 
