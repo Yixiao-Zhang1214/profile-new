@@ -36,8 +36,13 @@ yarn-error.log*
 
 # typescript
 next-env.d.ts
+*.tsbuildinfo
 /dist/
 /.wrangler/
 /outputs/
 /work/
+/tmp/
 /.superpowers/
+/docs/superpowers/
+/PRODUCT.md
+/public/travel/parchment-scroll.png

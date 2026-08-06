@@ -1,15 +1,19 @@
+import Image from "next/image";
 import HeroCover from "./hero-cover";
 import IdentityShowcase from "./identity-showcase";
+import PersonaParticleTransition from "./persona-particle-transition";
 
 const identities = [
   {
     name: "新闻与传播学生",
+    shortName: "新闻与传播",
     english: "JOURNALISM & COMMUNICATION",
     statement: "先看见人，\n再讲好故事。",
     intro:
       "采访、观察与写作，让我习惯从真实的人出发。它们也是我理解用户、梳理问题和组织表达的起点。",
     skills: "采访研究 / 内容策划 / 叙事表达",
     character: "/personas/news-interviewer-camera-transparent.png",
+    introCharacter: "/personas/clean/journalism-person.png",
     tone: "sage",
     projects: [
       {
@@ -28,12 +32,14 @@ const identities = [
   },
   {
     name: "AI 产品经理",
+    shortName: "AI 产品经理",
     english: "AI PRODUCT MANAGER",
-    statement: "把模糊需求，\n变成清晰路径。",
+    statement: "让 AI 从模型能力，\n走进真实使用。",
     intro:
-      "我连接用户问题、模型能力与业务目标，把不确定的想法拆成可以验证、交付和持续迭代的产品。",
+      "从小爱的 C 端大模型策略调优能力，到抖音精选的 AI + 推荐能力，再到电商直播的 AI + 业务场景，我持续把模型能力转化为用户可感知、业务可验证的产品体验。",
     skills: "用户洞察 / 产品策略 / 方案交付",
     character: "/personas/ai-product-manager-transparent.png",
+    introCharacter: "/personas/clean/product-manager-solo.png",
     tone: "sand",
     projects: [
       {
@@ -52,12 +58,14 @@ const identities = [
   },
   {
     name: "旅行家",
+    shortName: "旅行家",
     english: "TRAVELER",
-    statement: "换一个坐标，\n也换一种判断。",
+    statement: "换一个坐标，也换一种判断。",
     intro:
-      "陌生环境不断校准我的偏见。旅行不是打卡，而是观察不同的人如何生活、选择，并与世界建立关系。",
+      "去过 16 个国家，带领过 30+ 次旅行项目，也把旅途中观察到的真实需求，变成了一次成功的旅行创业实践。",
     skills: "田野观察 / 跨文化感知 / 旅行书写",
     character: "/personas/traveler-hiking-boots-transparent.png",
+    introCharacter: "/personas/clean/traveler-solo.png",
     tone: "clay",
     projects: [
       {
@@ -76,12 +84,14 @@ const identities = [
   },
   {
     name: "摄影师",
+    shortName: "摄影师",
     english: "PHOTOGRAPHER",
     statement: "留住那些，\n没被说出口的。",
     intro:
       "镜头训练我注意情绪、节奏与微小变化。摄影也是另一种研究方式：不急于解释，先认真地看。",
     skills: "视觉叙事 / 纪实摄影 / 编辑策展",
     character: "/personas/photographer-transparent.png",
+    introCharacter: "/personas/clean/photographer-solo.png",
     tone: "blue",
     projects: [
       {
@@ -100,12 +110,14 @@ const identities = [
   },
   {
     name: "AI Builder",
+    shortName: "AI Builder",
     english: "AI BUILDER",
-    statement: "让想法尽早，\n成为真实体验。",
+    statement: "把 AI 做成\n能被使用的东西。",
     intro:
-      "我用 AI、设计和代码快速做出可交互原型，让假设离开文档，尽早接受真实使用与反馈。",
+      "从面向真实用户的 App、可复用 Skill，到团队协作系统，我用 AI、设计与代码把想法变成真实体验。",
     skills: "AI 原型 / 快速开发 / 实验迭代",
     character: "/personas/ai-builder-transparent.png",
+    introCharacter: "/personas/clean/ai-builder-solo.png",
     tone: "ink",
     projects: [
       {
@@ -155,16 +167,45 @@ export default function Home() {
 
       <HeroCover />
 
+      <PersonaParticleTransition
+        source="/personas/hero-laughing-person-cutout.png"
+        targets={identities.map((identity) => identity.introCharacter)}
+      />
+
       <section className="identity-intro" id="about">
-        <p>ONE PERSON · FIVE PERSPECTIVES</p>
-        <h2>
-          五个身份，
-          <br />
-          同一个好奇的人。
-        </h2>
-        <span>
-          每个身份都不是标签，而是一种理解世界、解决问题和创造作品的方式。
-        </span>
+        <div className="identity-intro-copy">
+          <p>ONE PERSON · FIVE PERSPECTIVES</p>
+          <h2>
+            五个身份，
+            <br />
+            同一个好奇的人。
+          </h2>
+          <span>
+            每个身份都不是标签，而是一种理解世界、解决问题和创造作品的方式。
+          </span>
+        </div>
+        <nav className="identity-intro-personas" aria-label="选择一个身份继续浏览">
+          {identities.map((identity) => (
+            <a
+              href={`#identity-${identity.tone}`}
+              aria-label={`查看${identity.name}`}
+              key={identity.name}
+            >
+              <Image
+                src={identity.introCharacter}
+                alt={`${identity.name}人物形象`}
+                width={520}
+                height={820}
+                unoptimized
+                sizes="(max-width: 720px) 34vw, 17vw"
+              />
+              <span>
+                {identity.shortName}
+                <i aria-hidden="true">↘</i>
+              </span>
+            </a>
+          ))}
+        </nav>
       </section>
 
       <IdentityShowcase identities={identities} />

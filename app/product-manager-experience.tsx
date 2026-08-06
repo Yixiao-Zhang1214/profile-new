@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 
 type ProductManagerIdentity = {
@@ -10,6 +10,8 @@ type ProductManagerIdentity = {
   intro: string;
   skills: string;
 };
+
+const subscribeToNothing = () => () => {};
 
 type ProductExperience = {
   id: string;
@@ -240,9 +242,11 @@ export default function ProductManagerExperience({
 }) {
   const [selectedExperience, setSelectedExperience] =
     useState<ProductExperience | null>(null);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => setMounted(true), []);
+  const mounted = useSyncExternalStore(
+    subscribeToNothing,
+    () => true,
+    () => false,
+  );
 
   return (
     <div className="product-manager-experience">
@@ -270,10 +274,12 @@ export default function ProductManagerExperience({
               aria-haspopup="dialog"
               onClick={() => setSelectedExperience(experience)}
             >
+              <span className="pm-timeline-logo" aria-hidden="true">
+                <img src={experience.logo} alt="" />
+              </span>
               <time>{experience.period}</time>
               <div className="pm-role-copy">
                 <div className="pm-company-line">
-                  <img src={experience.logo} alt="" />
                   <div>
                     <h4>{experience.company}</h4>
                     <span>{experience.team}</span>
@@ -282,15 +288,10 @@ export default function ProductManagerExperience({
                 <strong>{experience.role}</strong>
                 <p>{experience.summary}</p>
               </div>
-              <div className="pm-row-metrics" aria-label="关键结果">
-                {experience.metrics.map((metric) => (
-                  <span key={metric.label}>
-                    <strong>{metric.value}</strong>
-                    <small>{metric.label}</small>
-                  </span>
-                ))}
-              </div>
-              <span className="pm-row-action">查看</span>
+              <span className="pm-row-action" aria-hidden="true">
+                <span>详情</span>
+                <i>→</i>
+              </span>
             </button>
           ))}
         </div>

@@ -1,0 +1,1423 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>大家补充了什么｜交互演示</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  background:#f5f5f5;
+  min-height:100vh;
+  font-family:-apple-system,'SF Pro Text','Helvetica Neue','PingFang SC',sans-serif;
+}
+
+/* ===== Tab Navigation ===== */
+.tab-nav{
+  display:flex;
+  background:#fff;
+  border-bottom:1px solid #eee;
+  position:sticky;
+  top:0;
+  z-index:100;
+}
+.tab-btn{
+  flex:1;
+  padding:14px 0;
+  font-size:15px;
+  font-weight:500;
+  color:#666;
+  background:none;
+  border:none;
+  cursor:pointer;
+  position:relative;
+  transition:color .2s;
+}
+.tab-btn.active{
+  color:#ff2442;
+  font-weight:600;
+}
+.tab-btn.active::after{
+  content:'';
+  position:absolute;
+  bottom:0;
+  left:50%;
+  transform:translateX(-50%);
+  width:40px;
+  height:3px;
+  background:#ff2442;
+  border-radius:2px 2px 0 0;
+}
+
+/* ===== Tab Content ===== */
+.tab-content{
+  display:none;
+  padding:20px;
+}
+.tab-content.active{
+  display:block;
+}
+
+/* ===== Demo Tab ===== */
+.demo-container{
+  max-width:360px;
+  margin:0 auto;
+}
+
+/* ===== Demo Layout ===== */
+.demo-layout{
+  display:flex;
+  flex-direction:row;
+  align-items:flex-start;
+  justify-content:center;
+  gap:24px;
+  max-width:900px;
+  margin:0 auto;
+  padding:20px 0;
+}
+.demo-guide-bar{
+  display:flex;
+  justify-content:center;
+}
+/* Guide Steps - 左侧栏 */
+.guide-steps{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  min-width:170px;
+  max-width:190px;
+  flex-shrink:0;
+  position:sticky;
+  top:20px;
+}
+.guide-step{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  padding:10px 14px;
+  background:#fff;
+  border-radius:10px;
+  font-size:13px;
+  color:#666;
+  line-height:1.5;
+  border:2px solid transparent;
+  transition:all .3s;
+  cursor:pointer;
+}
+.guide-step:focus-visible{outline:3px solid rgba(255,36,66,.35);outline-offset:2px;}
+.guide-step.active{
+  border-color:#ff2442;
+  color:#333;
+  font-weight:500;
+  box-shadow:0 2px 8px rgba(255,36,66,0.15);
+}
+.guide-step.done{
+  border-color:#52c41a;
+  color:#999;
+  background:#f6ffed;
+}
+.guide-step-num{
+  width:22px;
+  height:22px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:11px;
+  font-weight:600;
+  flex-shrink:0;
+  background:#f0f0f0;
+  color:#999;
+}
+.guide-step.active .guide-step-num{
+  background:#ff2442;
+  color:#fff;
+}
+.guide-step.done .guide-step-num{
+  background:#52c41a;
+  color:#fff;
+}
+.guide-skip{
+  font-size:11px;
+  color:#bbb;
+  cursor:pointer;
+  text-align:center;
+  margin-top:4px;
+}
+.guide-skip:hover{
+  color:#999;
+}
+.demo-container-outer{
+  flex-shrink:0;
+  width:360px;
+}
+.demo-iframe{
+  width:100%;
+  height:700px;
+  border:none;
+  border-radius:12px;
+  background:#e8e8ed;
+}
+
+/* ===== API Test Tab ===== */
+.api-test-container{
+  max-width:600px;
+  margin:0 auto;
+}
+.api-test-card{
+  background:#fff;
+  border-radius:12px;
+  padding:20px;
+  margin-bottom:20px;
+}
+.local-runtime-help{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  margin:-8px 0 16px;
+  padding:10px 12px;
+  border:1px solid #e9e9ec;
+  border-radius:10px;
+  background:#fafafa;
+  color:#85858b;
+  font-size:12px;
+}
+.local-runtime-help[hidden]{display:none}
+.local-runtime-stop{
+  flex:0 0 auto;
+  padding:5px 10px;
+  border:1px solid #d9d9dd;
+  border-radius:8px;
+  background:#fff;
+  color:#66666c;
+  cursor:pointer;
+}
+.local-runtime-stop:disabled{cursor:default;opacity:.55}
+
+/* ===== Input Section ===== */
+.input-group{
+  margin-bottom:16px;
+}
+.input-label{
+  display:block;
+  font-size:14px;
+  font-weight:500;
+  color:#333;
+  margin-bottom:8px;
+}
+.input-hint{
+  font-size:12px;
+  color:#999;
+  margin-top:6px;
+}
+
+.url-input{
+  width:100%;
+  padding:12px 14px;
+  font-size:14px;
+  border:1.5px solid #e5e5e5;
+  border-radius:10px;
+  outline:none;
+  transition:border-color .2s;
+}
+.url-input:focus{
+  border-color:#ff2442;
+}
+.content-input{
+  width:100%;
+  min-height:150px;
+  resize:vertical;
+  padding:10px 12px;
+  border:1.5px solid #e5e5e5;
+  border-radius:8px;
+  font:13px/1.6 -apple-system,'SF Pro Text','Helvetica Neue','PingFang SC',sans-serif;
+  outline:none;
+}
+.content-input:focus{border-color:#ff2442;}
+.url-input::placeholder{
+  color:#ccc;
+}
+
+.run-btn{
+  width:100%;
+  padding:13px;
+  font-size:15px;
+  font-weight:600;
+  color:#fff;
+  background:linear-gradient(135deg,#ff2442,#ff6b81);
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  transition:opacity .2s,transform .1s;
+}
+.run-btn:hover{opacity:.9;}
+.run-btn:active{transform:scale(.98);}
+.run-btn:disabled{
+  background:#ccc;
+  cursor:not-allowed;
+}
+
+/* ===== Result Area ===== */
+.result-area{
+  background:#fff;
+  border-radius:12px;
+  padding:20px;
+  min-height:200px;
+}
+.result-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:12px;
+  padding-bottom:12px;
+  border-bottom:1px solid #f0f0f0;
+}
+.result-title{
+  font-size:14px;
+  font-weight:600;
+  color:#333;
+}
+.result-status{
+  font-size:12px;
+  padding:3px 10px;
+  border-radius:10px;
+}
+.result-status.success{background:#e8f5e9;color:#2e7d32;}
+.result-status.error{background:#ffebee;color:#c62828;}
+.result-status.loading{background:#fff3e0;color:#ef6c00;}
+
+.result-content{
+  font-size:14px;
+  line-height:1.7;
+  color:#333;
+  white-space:pre-wrap;
+  word-break:break-word;
+}
+.result-content.placeholder{
+  color:#999;
+  text-align:center;
+  padding:60px 0;
+}
+
+.error-detail{
+  margin-top:12px;
+  padding:12px;
+  background:#fff5f5;
+  border-radius:8px;
+  font-size:13px;
+  color:#c62828;
+}
+
+/* ===== Loading Spinner ===== */
+.spinner{
+  display:inline-block;
+  width:16px;
+  height:16px;
+  border:2px solid #fff;
+  border-top-color:transparent;
+  border-radius:50%;
+  animation:spin .8s linear infinite;
+  margin-right:6px;
+  vertical-align:middle;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ===== Skill Badge ===== */
+.skill-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  font-size:11px;
+  padding:3px 8px;
+  background:#f0f7ff;
+  color:#1565c0;
+  border-radius:10px;
+  margin-left:8px;
+  vertical-align:middle;
+}
+
+/* ===== Stream Animation ===== */
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
+.streaming-cursor{
+  display:inline-block;
+  width:2px;
+  height:1em;
+  background:#ff2442;
+  margin-left:2px;
+  vertical-align:text-bottom;
+  animation:blink 1s infinite;
+}
+
+/* ===== Interface acceptance workspace ===== */
+.api-test-container{
+  max-width:1040px;
+  margin:0 auto;
+  padding:38px 28px 72px;
+}
+.acceptance-hero{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:24px;
+  margin-bottom:22px;
+}
+.acceptance-eyebrow{
+  margin:0 0 7px;
+  color:#8a8a8f;
+  font-size:12px;
+  font-weight:600;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.acceptance-hero h1{
+  margin:0;
+  color:#17171a;
+  font-size:28px;
+  line-height:1.25;
+  letter-spacing:-.03em;
+}
+.acceptance-hero p{
+  max-width:540px;
+  margin:9px 0 0;
+  color:#737378;
+  font-size:14px;
+  line-height:1.65;
+}
+.environment-strip{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  padding:11px 12px;
+  border:1px solid #ececef;
+  border-radius:13px;
+  background:#fff;
+  box-shadow:0 1px 0 rgba(0,0,0,.02);
+}
+.env-pill{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  min-height:30px;
+  padding:0 11px;
+  border-radius:999px;
+  background:#f6f6f7;
+  color:#66666b;
+  font-size:12px;
+  white-space:nowrap;
+}
+.env-dot{width:7px;height:7px;border-radius:50%;background:#c5c5ca}
+.env-pill.ok .env-dot{background:#25a55f}
+.env-pill.warn .env-dot{background:#e2a327}
+.env-pill.bad .env-dot{background:#cf4c58}
+.env-action{
+  border:0;
+  background:transparent;
+  color:#55555a;
+  font:inherit;
+  cursor:pointer;
+  text-decoration:underline;
+  text-underline-offset:3px;
+}
+.acceptance-panel{
+  border:1px solid #e9e9ec;
+  border-radius:18px;
+  background:#fff;
+  box-shadow:0 10px 30px rgba(20,20,25,.045);
+}
+.acceptance-input{
+  padding:26px;
+}
+.acceptance-label{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:10px;
+  color:#222226;
+  font-size:14px;
+  font-weight:650;
+}
+.limit-note{color:#aaaab0;font-size:12px;font-weight:400}
+.acceptance-input-row{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:10px;
+}
+.acceptance-url{
+  width:100%;
+  min-width:0;
+  height:48px;
+  padding:0 15px;
+  border:1px solid #dadade;
+  border-radius:12px;
+  outline:none;
+  background:#fafafa;
+  color:#222226;
+  font-size:14px;
+  transition:border-color .16s,box-shadow .16s,background .16s;
+}
+.acceptance-url:focus{
+  border-color:#9d9da4;
+  background:#fff;
+  box-shadow:0 0 0 3px rgba(40,40,45,.06);
+}
+.acceptance-run{
+  height:48px;
+  padding:0 22px;
+  border:0;
+  border-radius:12px;
+  background:#27272b;
+  color:#fff;
+  font-size:14px;
+  font-weight:650;
+  cursor:pointer;
+}
+.acceptance-run:hover{background:#111114}
+.acceptance-run:disabled{cursor:not-allowed;opacity:.55}
+.acceptance-hint{
+  margin:10px 0 0;
+  color:#98989e;
+  font-size:12px;
+  line-height:1.55;
+}
+.acceptance-progress{
+  display:none;
+  margin-top:16px;
+  padding:22px 24px;
+}
+.acceptance-progress.visible{display:block}
+.progress-heading{
+  display:flex;
+  justify-content:space-between;
+  gap:18px;
+  margin-bottom:18px;
+}
+.progress-heading strong{font-size:14px}
+.progress-heading span{color:#8c8c92;font-size:12px}
+.progress-track{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+}
+.progress-stage{
+  position:relative;
+  padding-top:11px;
+  border-top:3px solid #ededf0;
+  color:#aaaab0;
+  font-size:12px;
+}
+.progress-stage.active{border-color:#55555b;color:#303034}
+.progress-stage.done{border-color:#242428;color:#242428}
+.progress-stage strong{display:block;margin-bottom:3px;font-size:12px}
+.progress-stage span{font-size:11px;color:#aaaab0}
+.acceptance-error{
+  display:none;
+  margin-top:16px;
+  padding:18px 20px;
+  border:1px solid #ead9db;
+  border-radius:14px;
+  background:#fffafa;
+}
+.acceptance-error.visible{display:block}
+.acceptance-error strong{display:block;margin-bottom:5px;color:#8f303b;font-size:14px}
+.acceptance-error p{margin:0;color:#76666a;font-size:13px;line-height:1.55}
+.acceptance-error.notice{border-color:#dddde2;background:#fafafa}
+.acceptance-error.notice strong{color:#333338}
+.acceptance-error.notice p{color:#67676d}
+.inline-actions{display:flex;gap:8px;margin-top:12px}
+.quiet-btn,.primary-btn{
+  min-height:38px;
+  padding:0 14px;
+  border-radius:10px;
+  font-size:13px;
+  font-weight:600;
+  cursor:pointer;
+}
+.quiet-btn{border:1px solid #dddddf;background:#fff;color:#45454a}
+.primary-btn{border:0;background:#ff2442;color:#fff}
+.acceptance-result{
+  display:none;
+  margin-top:16px;
+  overflow:hidden;
+}
+.acceptance-result.visible{display:block}
+.result-overview{
+  display:grid;
+  grid-template-columns:minmax(0,1.4fr) repeat(3,minmax(110px,.5fr));
+  gap:0;
+  border-bottom:1px solid #ededf0;
+}
+.note-overview,.scope-stat{padding:21px 22px}
+.note-overview h2{
+  overflow:hidden;
+  margin:0 0 6px;
+  color:#252529;
+  font-size:16px;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.note-overview p,.scope-stat span{margin:0;color:#9b9ba1;font-size:12px}
+.result-provider-note{
+  margin:0;
+  padding:11px 22px;
+  border-bottom:1px solid #ededf0;
+  background:#fafafa;
+  color:#77777d;
+  font-size:12px;
+}
+.result-provider-note[hidden]{display:none}
+.scope-stat{border-left:1px solid #ededf0}
+.scope-stat strong{display:block;margin-bottom:5px;color:#29292d;font-size:20px}
+.result-directory{padding:5px 22px 0}
+.result-category{border-bottom:1px solid #eeeeef;padding:18px 0}
+.result-category:last-child{border-bottom:0}
+.category-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:9px;
+}
+.category-title{display:flex;align-items:center;gap:8px;color:#28282c;font-size:15px;font-weight:700}
+.category-count{color:#aaaab0;font-size:12px}
+.result-point{padding:8px 0}
+.point-button{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  width:100%;
+  padding:0;
+  border:0;
+  background:transparent;
+  color:#4e4e54;
+  text-align:left;
+  cursor:pointer;
+}
+.point-copy{font-size:14px;line-height:1.55}
+.point-copy strong{color:#2e2e32}
+.point-chevron{padding-left:16px;color:#c1c1c6}
+.representatives{display:none;margin:9px 0 2px 12px;padding-left:12px;border-left:2px solid #eeeeef}
+.result-point.open .representatives{display:block}
+.representative{display:flex;gap:9px;padding:7px 0}
+.representative img,.representative-avatar{
+  width:26px;height:26px;flex:0 0 26px;border-radius:50%;object-fit:cover;background:#efeff1
+}
+.representative-copy{min-width:0;color:#6e6e74;font-size:12px;line-height:1.5}
+.representative-copy strong{display:block;color:#505056;font-weight:600}
+.empty-category{color:#b0b0b5;font-size:13px;padding:3px 0 5px}
+.result-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:9px;
+  padding:17px 22px;
+  border-top:1px solid #ededf0;
+  background:#fafafa;
+}
+@media(max-width:760px){
+  .api-test-container{padding:24px 14px 52px}
+  .acceptance-hero{display:block}
+  .environment-strip{margin-top:16px}
+  .acceptance-input-row{grid-template-columns:1fr}
+  .result-overview{grid-template-columns:1fr 1fr}
+  .note-overview{grid-column:1/-1;border-bottom:1px solid #ededf0}
+  .scope-stat:nth-child(2){border-left:0}
+  .progress-stage span{display:none}
+}
+
+/* 独立演示包只展示已经完成的交互 Demo，不连接本地采集后端。 */
+body.demo-package .tab-nav,
+body.demo-package #tab-api{
+  display:none !important;
+}
+body.demo-package #tab-demo{
+  display:block;
+}
+</style>
+</head>
+<body class="demo-package">
+
+<!-- Tab Navigation -->
+<nav class="tab-nav">
+  <button class="tab-btn active" data-tab="demo">Demo 体验</button>
+  <button class="tab-btn" data-tab="api">接口测试</button>
+</nav>
+
+<!-- Tab: Demo 体验 -->
+<div class="tab-content active" id="tab-demo">
+    <div class="demo-layout">
+      <div class="guide-steps" id="guideSteps">
+        <div class="guide-step active" data-step="0" role="button" tabindex="0" aria-label="跳转到第 1 步：下滑页面">
+          <div class="guide-step-num">1</div>
+          <div>下滑页面，查看更多内容</div>
+        </div>
+        <div class="guide-step" data-step="1" role="button" tabindex="0" aria-label="跳转到第 2 步：展开大家补充卡片">
+          <div class="guide-step-num">2</div>
+          <div>点击「大家补充了什么」入口</div>
+        </div>
+        <div class="guide-step" data-step="2" role="button" tabindex="0" aria-label="跳转到第 3 步：跳转到对应评论">
+          <div class="guide-step-num">3</div>
+          <div>点击感兴趣的内容，跳转到对应评论</div>
+        </div>
+        <div class="guide-step" data-step="3" role="button" tabindex="0" aria-label="跳转到第 4 步：回到补充卡片">
+          <div class="guide-step-num">4</div>
+          <div>点击「↑ 回到补充」，返回继续浏览</div>
+        </div>
+        <div class="guide-skip" onclick="skipGuide()">跳过引导</div>
+      </div>
+      <div class="demo-container-outer">
+        <iframe src="xhs-mockup.html" class="demo-iframe" id="demoIframe" scrolling="auto"></iframe>
+      </div>
+    </div>
+  </div>
+
+<!-- Tab: 接口测试 -->
+<div class="tab-content" id="tab-api">
+  <div class="api-test-container">
+
+    <header class="acceptance-hero">
+      <div>
+        <p class="acceptance-eyebrow">Product acceptance</p>
+        <h1>小红书链接验收</h1>
+        <p>粘贴完整分享链接，真实采集当前账号可访问的评论，并生成可追溯的四类社区观点。</p>
+      </div>
+      <div class="environment-strip" id="environmentStrip" aria-live="polite">
+        <span class="env-pill" id="collectorStatus"><i class="env-dot"></i>采集器检测中</span>
+        <span class="env-pill" id="loginStatus"><i class="env-dot"></i>登录态检测中</span>
+        <span class="env-pill" id="aiStatus"><i class="env-dot"></i>AI 检测中</span>
+      </div>
+    </header>
+
+    <div class="local-runtime-help" id="localRuntimeHelp" hidden>
+      <span>依赖修复、更新与卸载由 Codex 在获得许可后完成；本页面不接触 API Key。</span>
+      <button class="local-runtime-stop" id="stopRuntimeBtn" type="button" onclick="stopLocalRuntime()">停止本地服务</button>
+    </div>
+
+    <section class="acceptance-panel acceptance-input">
+      <label class="acceptance-label" for="xhsUrl">
+        <span>小红书分享链接</span>
+        <span class="limit-note">最多分析 200 条评论</span>
+      </label>
+      <div class="acceptance-input-row">
+        <input class="acceptance-url" id="xhsUrl" type="url"
+          placeholder="https://www.xiaohongshu.com/explore/…?xsec_token=…"
+          autocomplete="off" spellcheck="false">
+        <button class="acceptance-run" id="runBtn" type="button" onclick="startAcceptance()">开始验收</button>
+      </div>
+      <p class="acceptance-hint">请从小红书重新复制完整链接；签名、Cookie 和 API Key 都不会进入前端结果或日志。</p>
+    </section>
+
+    <section class="acceptance-panel acceptance-progress" id="progressPanel" aria-live="polite">
+      <div class="progress-heading">
+        <strong id="progressMessage">正在准备</strong>
+        <span id="progressPercent">0%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-stage" data-progress-stage="validating">
+          <strong>校验链接</strong><span>保留签名参数</span>
+        </div>
+        <div class="progress-stage" data-progress-stage="fetching_note">
+          <strong>获取笔记</strong><span>标题与正文</span>
+        </div>
+        <div class="progress-stage" data-progress-stage="fetching_comments">
+          <strong>采集评论</strong><span>主评与楼中楼</span>
+        </div>
+        <div class="progress-stage" data-progress-stage="analyzing">
+          <strong>AI 整理</strong><span>观点可追溯</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="acceptance-error" id="acceptanceError" role="alert">
+      <strong id="errorTitle">验收未完成</strong>
+      <p id="errorMessage"></p>
+      <div class="inline-actions" id="errorActions"></div>
+    </section>
+
+    <section class="acceptance-panel acceptance-result" id="acceptanceResult">
+      <div class="result-overview">
+        <div class="note-overview">
+          <h2 id="resultNoteTitle">—</h2>
+          <p id="resultNoteMeta">—</p>
+        </div>
+        <div class="scope-stat">
+          <strong id="capturedStat">0</strong>
+          <span>实际采集</span>
+        </div>
+        <div class="scope-stat">
+          <strong id="reportedStat">0</strong>
+          <span>原帖显示</span>
+        </div>
+        <div class="scope-stat">
+          <strong id="coverageStat">—</strong>
+          <span>采集范围</span>
+        </div>
+      </div>
+      <p class="result-provider-note" id="resultProviderNote" hidden>已使用你的 Codex 生成</p>
+      <div class="result-directory" id="resultDirectory"></div>
+      <div class="result-actions">
+        <button class="quiet-btn" type="button" onclick="resetAcceptance()">重新测试</button>
+        <button class="primary-btn" type="button" onclick="previewInDemo()">在手机 Demo 中预览</button>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script>
+let runtimeState = {
+  runtime_mode: 'standalone_zhipu',
+  csrf_token: null
+};
+
+async function loadRuntimeState() {
+  const response = await fetch('/api/runtime');
+  const data = await response.json();
+  if (!response.ok || !data.ok) throw new Error(readApiError(data));
+  runtimeState = data;
+  const runtimeHelp = document.getElementById('localRuntimeHelp');
+  if (runtimeHelp) runtimeHelp.hidden = data.runtime_mode !== 'codex_plugin';
+  return data;
+}
+
+async function apiFetch(url, options) {
+  const config = Object.assign({}, options || {});
+  const method = String(config.method || 'GET').toUpperCase();
+  const headers = new Headers(config.headers || {});
+  if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)) {
+    headers.set('Content-Type', 'application/json');
+    if (runtimeState.csrf_token) {
+      headers.set('X-XHS-CSRF', runtimeState.csrf_token);
+    }
+    if (config.body === undefined) config.body = JSON.stringify({});
+  }
+  config.headers = headers;
+  return fetch(url, config);
+}
+
+// ===== Tab Switching =====
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+  });
+});
+
+// ===== Login Status =====
+async function checkLoginStatus() {
+  try {
+    const resp = await fetch('/api/status');
+    const data = await resp.json();
+    renderEnvironmentStatus(data);
+    return data.logged_in;
+  } catch {
+    renderEnvironmentStatus({
+      collector_available: false,
+      bridge_connected: false,
+      logged_in: false,
+      ai_configured: false,
+      codex_installed: false,
+      codex_authenticated: false,
+      runtime_mode: runtimeState.runtime_mode
+    });
+    return false;
+  }
+}
+
+// Check login on page load
+document.addEventListener('DOMContentLoaded', async () => {
+  if (!document.body.classList.contains('demo-package')) {
+    try {
+      await loadRuntimeState();
+    } catch {
+      showAcceptanceError('本地会话不可用', '请从 Codex 重新打开此页面。');
+    }
+    checkLoginStatus();
+  }
+
+  // Guide: listen for postMessage from iframe
+  window.addEventListener('message', (e) => {
+    if (e.origin !== window.location.origin) return;
+    if (e.data && e.data.type === 'xhs-guide') {
+      advanceGuideStep(e.data.action);
+    }
+  });
+
+  document.querySelectorAll('.guide-step').forEach(stepEl => {
+    const go = () => navigateGuideStep(Number(stepEl.dataset.step));
+    stepEl.addEventListener('click', go);
+    stepEl.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        go();
+      }
+    });
+  });
+});
+
+// ===== Demo Guide Steps =====
+const GUIDE_KEY = 'xhs_demo_guide';
+let currentGuideStep = 0;
+const guideActions = ['scroll', 'click-supplement', 'click-bullet', 'click-back'];
+
+function initGuide() {
+  const saved = localStorage.getItem(GUIDE_KEY);
+  if (saved === 'done') {
+    markAllDone();
+    return;
+  }
+  currentGuideStep = parseInt(saved || '0', 10);
+  renderGuideSteps();
+}
+
+function renderGuideSteps() {
+  document.querySelectorAll('.guide-step').forEach(el => {
+    const step = parseInt(el.dataset.step, 10);
+    el.classList.remove('active', 'done');
+    if (step < currentGuideStep) el.classList.add('done');
+    else if (step === currentGuideStep) el.classList.add('active');
+  });
+}
+
+function advanceGuideStep(action) {
+  if (currentGuideStep >= guideActions.length) return;
+  if (action === guideActions[currentGuideStep]) {
+    currentGuideStep++;
+    if (currentGuideStep >= guideActions.length) {
+      localStorage.setItem(GUIDE_KEY, 'done');
+    } else {
+      localStorage.setItem(GUIDE_KEY, String(currentGuideStep));
+    }
+    renderGuideSteps();
+  }
+}
+
+function navigateGuideStep(step) {
+  const action = guideActions[step];
+  const demoIframe = document.getElementById('demoIframe');
+  if (!action || !demoIframe || !demoIframe.contentWindow) return;
+
+  // Clicking a guide card is a shortcut to the corresponding interaction in
+  // the embedded phone preview. The iframe confirms completion via postMessage.
+  currentGuideStep = step;
+  renderGuideSteps();
+  demoIframe.contentWindow.postMessage({ type: 'xhs-guide-navigate', action }, window.location.origin);
+}
+
+function markAllDone() {
+  currentGuideStep = guideActions.length;
+  document.querySelectorAll('.guide-step').forEach(el => {
+    el.classList.remove('active');
+    el.classList.add('done');
+  });
+}
+
+function skipGuide() {
+  localStorage.setItem(GUIDE_KEY, 'done');
+  markAllDone();
+}
+
+initGuide();
+
+// ===== Link acceptance flow =====
+let currentAcceptanceJob = null;
+let acceptancePollTimer = null;
+let latestAcceptancePayload = null;
+let loginLaunchJob = null;
+let pendingCodexAuthUrl = null;
+let codexLoginPolls = 0;
+
+function setEnvPill(id, label, state, action) {
+  const pill = document.getElementById(id);
+  if (!pill) return;
+  pill.className = 'env-pill ' + state;
+  const dot = document.createElement('i');
+  dot.className = 'env-dot';
+  pill.replaceChildren(dot, document.createTextNode(label));
+  if (action) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'env-action';
+    button.textContent = action.label;
+    button.addEventListener('click', action.handler);
+    pill.appendChild(button);
+  }
+}
+
+function renderEnvironmentStatus(data) {
+  const collectorOk = Boolean(data.collector_available && data.bridge_connected);
+  setEnvPill(
+    'collectorStatus',
+    collectorOk ? '本地采集器已连接' : (data.collector_available ? '需要连接 Chrome' : '未找到本地采集器'),
+    collectorOk ? 'ok' : 'bad'
+  );
+  setEnvPill(
+    'loginStatus',
+    data.logged_in ? ('小红书已登录' + (data.username ? ' · ' + data.username : '')) : '小红书未登录',
+    data.logged_in ? 'ok' : 'warn',
+    !data.logged_in && data.collector_available ? { label: '打开登录', handler: openXhsLogin } : null
+  );
+  const codexMode = (data.runtime_mode || runtimeState.runtime_mode) === 'codex_plugin';
+  if (codexMode) {
+    const codexReady = Boolean(data.codex_installed && data.codex_authenticated);
+    const codexLabel = codexReady
+      ? 'Codex 已连接'
+      : (data.codex_installed ? '需要登录 Codex' : '未找到 Codex');
+    setEnvPill(
+      'aiStatus',
+      codexLabel,
+      codexReady ? 'ok' : (data.codex_installed ? 'warn' : 'bad'),
+      data.codex_installed && !data.codex_authenticated
+        ? { label: '登录', handler: openCodexLogin }
+        : null
+    );
+  } else {
+    setEnvPill(
+      'aiStatus',
+      data.ai_configured ? 'AI 已配置' : 'AI 未配置',
+      data.ai_configured ? 'ok' : 'bad'
+    );
+  }
+}
+
+async function openCodexLogin() {
+  try {
+    const response = await apiFetch('/api/codex/login', { method: 'POST' });
+    const data = await response.json();
+    if (!response.ok || !data.ok) throw new Error(readApiError(data));
+    pendingCodexAuthUrl = data.auth_url;
+    const authWindow = window.open(
+      pendingCodexAuthUrl,
+      '_blank',
+      'noopener,noreferrer'
+    );
+    showAcceptanceNotice(
+      '请完成 Codex 登录',
+      authWindow
+        ? '已打开 OpenAI 官方登录页，完成后这里会自动刷新。'
+        : '浏览器拦截了新窗口，请点击下方按钮打开官方登录页。',
+      [
+        {
+          label: '打开官方登录页',
+          primary: !authWindow,
+          handler: () => window.open(
+            pendingCodexAuthUrl,
+            '_blank',
+            'noopener,noreferrer'
+          )
+        },
+        { label: '我已登录，刷新状态', handler: checkLoginStatus }
+      ]
+    );
+    codexLoginPolls = 0;
+    pollCodexLogin();
+  } catch (error) {
+    showAcceptanceError('无法开始 Codex 登录', error.message);
+  }
+}
+
+async function pollCodexLogin() {
+  codexLoginPolls += 1;
+  try {
+    const response = await fetch('/api/status');
+    const data = await response.json();
+    renderEnvironmentStatus(data);
+    if (data.codex_authenticated) {
+      pendingCodexAuthUrl = null;
+      hideAcceptanceError();
+      return;
+    }
+  } catch {
+    // A transient status failure should not discard an in-progress login.
+  }
+  if (codexLoginPolls < 80 && pendingCodexAuthUrl) {
+    window.setTimeout(pollCodexLogin, 1500);
+  }
+}
+
+async function openXhsLogin() {
+  try {
+    const data = await launchXhsLogin();
+    showAcceptanceNotice('已打开小红书登录页', data.message || '完成登录后，当前任务会自动继续。', [
+      { label: '我已登录，刷新状态', primary: true, handler: checkLoginStatus }
+    ]);
+  } catch (error) {
+    showAcceptanceError('无法打开登录页', error.message);
+  }
+}
+
+async function stopLocalRuntime() {
+  if (!window.confirm('停止后当前本地页面将无法继续使用。确认停止吗？')) return;
+  const button = document.getElementById('stopRuntimeBtn');
+  button.disabled = true;
+  button.textContent = '正在停止…';
+  try {
+    const response = await apiFetch('/api/runtime/stop', { method: 'POST' });
+    const data = await response.json();
+    if (!response.ok || !data.ok) throw new Error(readApiError(data));
+    showAcceptanceNotice('本地服务正在停止', '需要再次使用时，从 Codex 重新打开「大家补充了什么」。');
+  } catch (error) {
+    button.disabled = false;
+    button.textContent = '停止本地服务';
+    showAcceptanceError('无法停止本地服务', error.message);
+  }
+}
+
+async function launchXhsLogin() {
+  const response = await apiFetch('/api/login/open', { method: 'POST' });
+  const data = await response.json();
+  if (!response.ok || !data.ok) throw new Error(readApiError(data));
+  return data;
+}
+
+function readApiError(data) {
+  if (!data) return '请求失败';
+  if (typeof data.error === 'string') return data.error;
+  if (data.error && data.error.message) return data.error.message;
+  return data.message || '请求失败';
+}
+
+async function startAcceptance() {
+  const input = document.getElementById('xhsUrl');
+  const button = document.getElementById('runBtn');
+  const url = input.value.trim();
+  if (!url) {
+    showAcceptanceError('需要一个链接', '请粘贴带 xsec_token 的完整小红书分享链接。');
+    input.focus();
+    return;
+  }
+  clearTimeout(acceptancePollTimer);
+  latestAcceptancePayload = null;
+  loginLaunchJob = null;
+  hideAcceptanceError();
+  document.getElementById('acceptanceResult').classList.remove('visible');
+  document.getElementById('progressPanel').classList.add('visible');
+  button.disabled = true;
+  button.textContent = '正在验收…';
+  updateProgress({ status: 'queued', progress: 1, message: '正在创建采集任务' });
+  try {
+    const response = await apiFetch('/api/analysis-jobs', {
+      method: 'POST',
+      body: JSON.stringify({ url })
+    });
+    const data = await response.json();
+    if (!response.ok || !data.ok) throw new Error(readApiError(data));
+    currentAcceptanceJob = data.job.id;
+    await pollAcceptanceJob();
+  } catch (error) {
+    finishRunButton();
+    showAcceptanceError('无法开始验收', error.message, [
+      { label: '重新尝试', primary: true, handler: startAcceptance }
+    ]);
+  }
+}
+
+async function pollAcceptanceJob() {
+  if (!currentAcceptanceJob) return;
+  try {
+    const response = await fetch('/api/analysis-jobs/' + encodeURIComponent(currentAcceptanceJob));
+    const data = await response.json();
+    if (!response.ok || !data.ok) throw new Error(readApiError(data));
+    latestAcceptancePayload = data.job;
+    updateProgress(data.job);
+    if (data.job.status === 'waiting_for_login') {
+      await handleWaitingForLogin(data.job);
+      acceptancePollTimer = setTimeout(pollAcceptanceJob, 1000);
+      return;
+    }
+    if (loginLaunchJob === data.job.id) {
+      loginLaunchJob = null;
+      hideAcceptanceError();
+      checkLoginStatus();
+    }
+    if (data.job.status === 'ready') {
+      finishRunButton();
+      renderAcceptanceResult(data.job);
+      return;
+    }
+    if (data.job.status === 'failed') {
+      finishRunButton();
+      renderJobError(data.job);
+      return;
+    }
+    acceptancePollTimer = setTimeout(pollAcceptanceJob, 1000);
+  } catch (error) {
+    finishRunButton();
+    showAcceptanceError('任务状态读取失败', error.message, [
+      { label: '继续查询', primary: true, handler: pollAcceptanceJob }
+    ]);
+  }
+}
+
+async function handleWaitingForLogin(job, forceOpen) {
+  showAcceptanceNotice(
+    '请完成小红书登录',
+    '已为当前任务打开登录流程。请在 Chrome 中完成登录，成功后这里会自动继续，无需重新粘贴链接。',
+    [
+      {
+        label: '再次打开登录页',
+        primary: true,
+        handler: () => handleWaitingForLogin(job, true)
+      }
+    ]
+  );
+  if (!forceOpen && loginLaunchJob === job.id) return;
+  loginLaunchJob = job.id;
+  try {
+    await launchXhsLogin();
+  } catch (error) {
+    loginLaunchJob = null;
+    showAcceptanceError('无法打开登录页', error.message, [
+      {
+        label: '重新打开',
+        primary: true,
+        handler: () => handleWaitingForLogin(job, true)
+      }
+    ]);
+  }
+}
+
+function finishRunButton() {
+  const button = document.getElementById('runBtn');
+  button.disabled = false;
+  button.textContent = '开始验收';
+}
+
+function updateProgress(job) {
+  let normalized = job.status;
+  if (['checking_login', 'waiting_for_login'].includes(job.status)) {
+    normalized = 'validating';
+  } else if (['understanding_images', 'starting_codex'].includes(job.status)) {
+    normalized = 'analyzing';
+  }
+  const stages = ['validating', 'fetching_note', 'fetching_comments', 'analyzing'];
+  const activeIndex = normalized === 'ready' ? stages.length : stages.indexOf(normalized);
+  document.querySelectorAll('[data-progress-stage]').forEach((element, index) => {
+    element.classList.toggle('done', activeIndex >= stages.length || index < activeIndex);
+    element.classList.toggle('active', index === activeIndex);
+  });
+  document.getElementById('progressMessage').textContent = job.message || '正在处理';
+  document.getElementById('progressPercent').textContent = Math.max(0, Math.min(100, job.progress || 0)) + '%';
+}
+
+function renderJobError(job) {
+  const error = job.error || {};
+  const actions = [];
+  document.getElementById('progressPanel').classList.remove('visible');
+  if (error.code === 'login_required') {
+    actions.push({ label: '在 Chrome 打开登录', primary: true, handler: openXhsLogin });
+  }
+  if (error.code === 'codex_not_authenticated') {
+    actions.push({ label: '登录 Codex', primary: true, handler: openCodexLogin });
+  }
+  if ([
+    'ai_error',
+    'codex_not_authenticated',
+    'codex_rate_limited',
+    'codex_server_unavailable',
+    'codex_invalid_output',
+    'codex_timeout'
+  ].includes(error.code) && job.source) {
+    actions.push({ label: '仅重试 AI', primary: true, handler: retryAcceptanceAnalysis });
+  }
+  actions.push({ label: '重新测试', handler: startAcceptance });
+  showAcceptanceError('验收未完成', error.message || job.message || '请稍后重试。', actions);
+}
+
+async function retryAcceptanceAnalysis() {
+  if (!currentAcceptanceJob) return;
+  hideAcceptanceError();
+  document.getElementById('progressPanel').classList.add('visible');
+  updateProgress({
+    status: runtimeState.runtime_mode === 'codex_plugin' ? 'starting_codex' : 'analyzing',
+    progress: 84,
+    message: runtimeState.runtime_mode === 'codex_plugin'
+      ? '正在连接 Codex 并重新分析'
+      : '正在重新进行 AI 分析'
+  });
+  try {
+    const response = await apiFetch(
+      '/api/analysis-jobs/' + encodeURIComponent(currentAcceptanceJob) + '/retry-analysis',
+      { method: 'POST' }
+    );
+    const data = await response.json();
+    if (!response.ok || !data.ok) throw new Error(readApiError(data));
+    await pollAcceptanceJob();
+  } catch (error) {
+    showAcceptanceError('AI 重试失败', error.message);
+  }
+}
+
+function showAcceptanceError(title, message, actions) {
+  showAcceptanceMessage(title, message, actions, false);
+}
+
+function showAcceptanceNotice(title, message, actions) {
+  showAcceptanceMessage(title, message, actions, true);
+}
+
+function showAcceptanceMessage(title, message, actions, notice) {
+  const panel = document.getElementById('acceptanceError');
+  panel.classList.toggle('notice', notice);
+  document.getElementById('errorTitle').textContent = title;
+  document.getElementById('errorMessage').textContent = message;
+  const actionBox = document.getElementById('errorActions');
+  actionBox.replaceChildren();
+  (actions || []).forEach(action => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = action.primary ? 'primary-btn' : 'quiet-btn';
+    button.textContent = action.label;
+    button.addEventListener('click', action.handler);
+    actionBox.appendChild(button);
+  });
+  panel.classList.add('visible');
+}
+
+function hideAcceptanceError() {
+  const panel = document.getElementById('acceptanceError');
+  panel.classList.remove('visible', 'notice');
+}
+
+function renderAcceptanceResult(job) {
+  const source = job.source;
+  const scope = source.scope;
+  const note = source.note;
+  hideAcceptanceError();
+  document.getElementById('progressPanel').classList.remove('visible');
+  document.getElementById('resultNoteTitle').textContent = note.title || '未命名笔记';
+  document.getElementById('resultNoteMeta').textContent =
+    (note.author || '未知作者') + ' · ' + scope.top_level_count + ' 条主评论 · ' + scope.reply_count + ' 条回复';
+  document.getElementById('capturedStat').textContent = scope.captured_comments;
+  document.getElementById('reportedStat').textContent = scope.reported_comments || '—';
+  let coverage = '采集范围未确认';
+  if (scope.truncated) coverage = '已按上限采集 200 条';
+  else if (scope.accessible_complete) coverage = '已采集全部可访问评论';
+  document.getElementById('coverageStat').textContent = coverage;
+  const providerNote = document.getElementById('resultProviderNote');
+  providerNote.hidden = runtimeState.runtime_mode !== 'codex_plugin';
+  renderResultDirectory(job.result.categories || []);
+  document.getElementById('acceptanceResult').classList.add('visible');
+  document.getElementById('acceptanceResult').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function renderResultDirectory(categories) {
+  const directory = document.getElementById('resultDirectory');
+  directory.replaceChildren();
+  categories.forEach(category => {
+    const section = document.createElement('section');
+    section.className = 'result-category';
+    const head = document.createElement('div');
+    head.className = 'category-head';
+    const title = document.createElement('div');
+    title.className = 'category-title';
+    title.textContent = category.emoji + ' ' + category.title;
+    const count = document.createElement('div');
+    count.className = 'category-count';
+    count.textContent = category.mention_count + ' 条提到';
+    head.append(title, count);
+    section.appendChild(head);
+    if (!category.points.length) {
+      const empty = document.createElement('div');
+      empty.className = 'empty-category';
+      empty.textContent = '当前评论中没有足够明确的内容';
+      section.appendChild(empty);
+    }
+    category.points.forEach(point => section.appendChild(buildResultPoint(point)));
+    directory.appendChild(section);
+  });
+}
+
+function buildResultPoint(point) {
+  const wrapper = document.createElement('div');
+  wrapper.className = 'result-point';
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = 'point-button';
+  const copy = document.createElement('span');
+  copy.className = 'point-copy';
+  const strong = document.createElement('strong');
+  strong.textContent = point.title + '：';
+  copy.append(strong, document.createTextNode(point.summary));
+  const chevron = document.createElement('span');
+  chevron.className = 'point-chevron';
+  chevron.textContent = '›';
+  button.append(copy, chevron);
+  const representatives = document.createElement('div');
+  representatives.className = 'representatives';
+  (point.representative_comments || []).forEach(comment => {
+    const row = document.createElement('div');
+    row.className = 'representative';
+    let avatar;
+    if (comment.author_avatar) {
+      avatar = document.createElement('img');
+      avatar.src = comment.author_avatar;
+      avatar.alt = '';
+    } else {
+      avatar = document.createElement('span');
+      avatar.className = 'representative-avatar';
+    }
+    const content = document.createElement('div');
+    content.className = 'representative-copy';
+    const author = document.createElement('strong');
+    author.textContent = comment.author + (comment.is_author ? ' · 作者' : '');
+    content.append(author, document.createTextNode(comment.text));
+    row.append(avatar, content);
+    representatives.appendChild(row);
+  });
+  button.addEventListener('click', () => {
+    wrapper.classList.toggle('open');
+    chevron.textContent = wrapper.classList.contains('open') ? '⌄' : '›';
+  });
+  wrapper.append(button, representatives);
+  return wrapper;
+}
+
+function previewInDemo() {
+  if (!latestAcceptancePayload || latestAcceptancePayload.status !== 'ready') return;
+  const iframe = document.getElementById('demoIframe');
+  const payload = latestAcceptancePayload;
+  const send = () => iframe.contentWindow.postMessage({
+    type: 'xhs-analysis-preview',
+    payload: {
+      note: payload.source.note,
+      source: payload.source,
+      result: payload.result
+    }
+  }, window.location.origin);
+  send();
+  document.querySelector('.tab-btn[data-tab="demo"]').click();
+  window.setTimeout(() => {
+    send();
+    iframe.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 250);
+}
+
+function resetAcceptance() {
+  clearTimeout(acceptancePollTimer);
+  currentAcceptanceJob = null;
+  loginLaunchJob = null;
+  latestAcceptancePayload = null;
+  pendingCodexAuthUrl = null;
+  const iframe = document.getElementById('demoIframe');
+  if (iframe && iframe.contentWindow) {
+    iframe.contentWindow.postMessage({
+      type: 'xhs-analysis-preview-reset'
+    }, window.location.origin);
+  }
+  hideAcceptanceError();
+  document.getElementById('progressPanel').classList.remove('visible');
+  document.getElementById('acceptanceResult').classList.remove('visible');
+  document.getElementById('xhsUrl').focus();
+}
+
+runAnalyze = startAcceptance;
+document.getElementById('xhsUrl').addEventListener('keydown', event => {
+  if (event.key === 'Enter') {
+    event.preventDefault();
+    startAcceptance();
+  }
+});
+</script>
+
+</body>
+</html>

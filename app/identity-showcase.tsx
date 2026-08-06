@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import AiBuilderExperience from "./ai-builder-experience";
 import JournalismExperience from "./journalism-experience";
 import ProductManagerExperience from "./product-manager-experience";
 import TravelerExperience from "./traveler-experience";
@@ -14,11 +15,13 @@ type IdentityProject = {
 
 export type Identity = {
   name: string;
+  shortName: string;
   english: string;
   statement: string;
   intro: string;
   skills: string;
   character: string | null;
+  introCharacter: string;
   tone: string;
   projects: IdentityProject[];
 };
@@ -69,6 +72,10 @@ function IdentityDetails({ identity }: { identity: Identity }) {
     return <ProductManagerExperience identity={identity} />;
   }
 
+  if (identity.name === "AI Builder") {
+    return <AiBuilderExperience identity={identity} />;
+  }
+
   return (
     <>
       <div className="identity-heading">
@@ -92,6 +99,7 @@ function getPanelClass(identity: Identity) {
   if (identity.name === "新闻与传播学生") return " journalism-panel";
   if (identity.name === "旅行家") return " traveler-panel";
   if (identity.name === "AI 产品经理") return " product-manager-panel";
+  if (identity.name === "AI Builder") return " builder-panel";
   return "";
 }
 
@@ -124,7 +132,7 @@ export default function IdentityShowcase({ identities }: { identities: Identity[
   const triggerRefs = useRef<Array<HTMLElement | null>>([]);
 
   useEffect(() => {
-    const desktopQuery = window.matchMedia("(min-width: 1021px)");
+    const desktopQuery = window.matchMedia("(min-width: 721px)");
     let observer: IntersectionObserver | null = null;
 
     const stopObserving = () => {
@@ -178,6 +186,7 @@ export default function IdentityShowcase({ identities }: { identities: Identity[
     <section className="identity-list" id="identities" aria-label="我的五个身份">
       {identities.map((identity, index) => (
         <article
+          id={`identity-${identity.tone}`}
           className={`identity-trigger identity-${identity.tone}`}
           key={identity.name}
           ref={(element) => {

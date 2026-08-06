@@ -1,215 +1,327 @@
 "use client";
 
-import createGlobe from "cobe";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type TravelerIdentity = {
   english: string;
   name: string;
   statement: string;
   intro: string;
-  skills: string;
+  character: string | null;
 };
 
-const travelCountries = [
-  { name: "中国", location: [35.86, 104.2] as [number, number] },
-  { name: "日本", location: [36.2, 138.25] as [number, number] },
-  { name: "泰国", location: [15.87, 100.99] as [number, number] },
-  { name: "新加坡", location: [1.35, 103.82] as [number, number] },
-  { name: "印度尼西亚", location: [-0.79, 113.92] as [number, number] },
-  { name: "马来西亚", location: [4.21, 101.98] as [number, number] },
-  { name: "德国", location: [51.17, 10.45] as [number, number] },
-  { name: "荷兰", location: [52.13, 5.29] as [number, number] },
-  { name: "冰岛", location: [64.96, -19.02] as [number, number] },
-  { name: "希腊", location: [39.07, 21.82] as [number, number] },
-  { name: "西班牙", location: [40.46, -3.75] as [number, number] },
-  { name: "意大利", location: [41.87, 12.57] as [number, number] },
-  { name: "埃及", location: [26.82, 30.8] as [number, number] },
-  { name: "比利时", location: [50.5, 4.47] as [number, number] },
-  { name: "梵蒂冈", location: [41.9, 12.45] as [number, number] },
-  { name: "菲律宾", location: [12.88, 121.77] as [number, number] },
+const routeLinks = [
+  {
+    href: "https://mp.weixin.qq.com/s/AbFVRO-soz3lelil_eJu6w",
+    image: "/travel/routes/xiapu.jpg",
+    title: "五一霞浦｜相约人间塞尔达",
+  },
+  {
+    href: "https://mp.weixin.qq.com/s/WCBj2s7mrfz8GxmS7Dh-yg",
+    image: "/travel/routes/thailand.jpg",
+    title: "五月泰国毕业线｜夏日大作战",
+  },
+  {
+    href: "https://mp.weixin.qq.com/s/NLoQMCfc-__FNJQREICA4Q",
+    image: "/travel/routes/indonesia.jpg",
+    title: "印尼招募｜颠沛流离，也不愿说再见",
+  },
 ];
 
-const photoPlaceholders = Array.from({ length: 8 }, (_, index) => ({
-  number: String(index + 1).padStart(2, "0"),
-  label: ["CITY WALK", "ON THE ROAD", "LOCAL LIFE", "BLUE HOUR"][index % 4],
-}));
+const travelFrames = [
+  { place: "冰岛", note: "北纬 64°" },
+  { place: "意大利", note: "街巷与日常" },
+  { place: "埃及", note: "沿尼罗河" },
+  { place: "泰国", note: "热带旅程" },
+  { place: "日本", note: "城市观察" },
+];
 
-function TravelGlobe() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const rotationRef = useRef(-0.7);
-  const dragStartRef = useRef<number | null>(null);
-  const dragOffsetRef = useRef(0);
-  const reducedMotionRef = useRef(false);
-
-  useEffect(() => {
-    const container = containerRef.current;
-    const canvas = canvasRef.current;
-    if (!container || !canvas) return;
-
-    let size = Math.max(container.offsetWidth, 1);
-    let animationFrame = 0;
-    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    reducedMotionRef.current = motionQuery.matches;
-
-    const globe = createGlobe(canvas, {
-      width: size,
-      height: size,
-      devicePixelRatio: Math.min(window.devicePixelRatio, 2),
-      phi: rotationRef.current,
-      theta: 0.18,
-      dark: 0,
-      diffuse: 1.2,
-      mapSamples: 16000,
-      mapBrightness: 4.6,
-      mapBaseBrightness: 0.08,
-      baseColor: [0.7, 0.72, 0.58],
-      markerColor: [0.94, 0.36, 0.16],
-      glowColor: [0.97, 0.93, 0.82],
-      markerElevation: 0.035,
-      scale: 0.94,
-      opacity: 0.96,
-      markers: travelCountries.map((country, index) => ({
-        id: `country-${index + 1}`,
-        location: country.location,
-        size: country.name === "梵蒂冈" ? 0.025 : 0.038,
-      })),
-    });
-
-    const globeWrapper = canvas.parentElement;
-    const resizeObserver = new ResizeObserver(() => {
-      size = Math.max(container.offsetWidth, 1);
-    });
-
-    const render = () => {
-      if (dragStartRef.current === null && !reducedMotionRef.current) {
-        rotationRef.current += 0.0024;
-      }
-
-      globe.update({
-        width: size,
-        height: size,
-        phi: rotationRef.current + dragOffsetRef.current,
-        theta: 0.18,
-      });
-      animationFrame = window.requestAnimationFrame(render);
-    };
-
-    const handleMotionChange = (event: MediaQueryListEvent) => {
-      reducedMotionRef.current = event.matches;
-    };
-
-    resizeObserver.observe(container);
-    motionQuery.addEventListener("change", handleMotionChange);
-    animationFrame = window.requestAnimationFrame(render);
-
-    return () => {
-      window.cancelAnimationFrame(animationFrame);
-      resizeObserver.disconnect();
-      motionQuery.removeEventListener("change", handleMotionChange);
-      globe.destroy();
-
-      if (globeWrapper && globeWrapper !== container && globeWrapper.parentElement === container) {
-        container.insertBefore(canvas, globeWrapper);
-        globeWrapper.remove();
-      }
-    };
-  }, []);
-
-  const finishDrag = (pointerId: number) => {
-    if (dragStartRef.current === null) return;
-    rotationRef.current += dragOffsetRef.current;
-    dragOffsetRef.current = 0;
-    dragStartRef.current = null;
-    if (canvasRef.current?.hasPointerCapture(pointerId)) {
-      canvasRef.current.releasePointerCapture(pointerId);
-    }
-  };
+function TravelFrame({ index, compact = false }: { index: number; compact?: boolean }) {
+  const frame = travelFrames[index % travelFrames.length];
 
   return (
-    <div className="travel-globe-shell" ref={containerRef}>
-      <div className="travel-globe-fallback" aria-hidden="true" />
-      <canvas
-        ref={canvasRef}
-        className="travel-globe-canvas"
-        role="img"
-        aria-label="标记了十六个到访国家的可旋转地球"
-        onPointerDown={(event) => {
-          dragStartRef.current = event.clientX;
-          dragOffsetRef.current = 0;
-          event.currentTarget.setPointerCapture(event.pointerId);
-        }}
-        onPointerMove={(event) => {
-          if (dragStartRef.current === null) return;
-          dragOffsetRef.current = (event.clientX - dragStartRef.current) / 160;
-        }}
-        onPointerUp={(event) => finishDrag(event.pointerId)}
-        onPointerCancel={(event) => finishDrag(event.pointerId)}
-      />
-      <span className="travel-globe-instruction">拖动地球 · 探索足迹</span>
-    </div>
+    <figure className={`travel-frame travel-frame-${(index % 5) + 1}${compact ? " is-compact" : ""}`}>
+      <img src="/travel/world-map-handdrawn.png" alt="" aria-hidden="true" />
+      <div aria-hidden="true" />
+      {!compact && (
+        <figcaption>
+          <strong>{frame.place}</strong>
+          <span>{frame.note} · 照片待替换</span>
+        </figcaption>
+      )}
+    </figure>
   );
 }
 
-function TravelPhotoRail() {
-  const loopedPhotos = [...photoPlaceholders, ...photoPlaceholders];
+function TravelIntroRail({ active }: { active: boolean }) {
+  const [paused, setPaused] = useState(false);
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const dragRef = useRef<{ x: number; left: number } | null>(null);
+  const loopedFrames = [...travelFrames, ...travelFrames];
+
+  useEffect(() => {
+    if (!active || paused || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    let animationFrame = 0;
+
+    const advance = () => {
+      const viewport = viewportRef.current;
+      const firstDuplicate = viewport?.querySelector<HTMLElement>("[data-intro-frame='5']");
+      if (viewport && firstDuplicate) {
+        viewport.scrollLeft += 0.42;
+        if (viewport.scrollLeft >= firstDuplicate.offsetLeft) {
+          viewport.scrollLeft -= firstDuplicate.offsetLeft;
+        }
+      }
+      animationFrame = window.requestAnimationFrame(advance);
+    };
+
+    animationFrame = window.requestAnimationFrame(advance);
+    return () => window.cancelAnimationFrame(animationFrame);
+  }, [active, paused]);
+
+  useEffect(() => {
+    const viewport = viewportRef.current;
+    if (!viewport) return;
+
+    const handleWheel = (event: WheelEvent) => {
+      event.preventDefault();
+      event.stopPropagation();
+      setPaused(true);
+      viewport.scrollLeft += event.deltaX + event.deltaY;
+    };
+
+    viewport.addEventListener("wheel", handleWheel, { passive: false });
+    return () => viewport.removeEventListener("wheel", handleWheel);
+  }, []);
 
   return (
-    <div className="travel-photo-rail" aria-label="旅行照片占位轮播">
-      <div className="travel-photo-track">
-        {loopedPhotos.map((photo, index) => {
-          const isDuplicate = index >= photoPlaceholders.length;
-          return (
-            <figure
-              className={`travel-photo-card travel-photo-tone-${(index % 4) + 1}`}
-              key={`${photo.number}-${index}`}
-              tabIndex={isDuplicate ? -1 : 0}
-              aria-hidden={isDuplicate || undefined}
-            >
-              <div aria-hidden="true">
-                <span>PHOTO</span>
-                <strong>{photo.number}</strong>
-              </div>
-              <figcaption>
-                <span>{photo.label}</span>
-                <small>照片占位 · 待替换</small>
-              </figcaption>
-            </figure>
-          );
-        })}
+    <section
+      className="travel-intro-rail"
+      aria-label="连续旅行照片轮播"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      ref={viewportRef}
+      onPointerDown={(event) => {
+        dragRef.current = { x: event.clientX, left: event.currentTarget.scrollLeft };
+        event.currentTarget.setPointerCapture(event.pointerId);
+        setPaused(true);
+      }}
+      onPointerMove={(event) => {
+        if (!dragRef.current) return;
+        event.currentTarget.scrollLeft = dragRef.current.left - (event.clientX - dragRef.current.x);
+      }}
+      onPointerUp={(event) => {
+        dragRef.current = null;
+        if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
+      }}
+      onPointerCancel={() => { dragRef.current = null; }}
+    >
+      <div className="travel-intro-track">
+        {loopedFrames.map((frame, index) => (
+          <div data-intro-frame={index} key={`${frame.place}-${index}`}>
+            <TravelFrame index={index} />
+          </div>
+        ))}
       </div>
-    </div>
+    </section>
+  );
+}
+
+function TravelCarousel({ active }: { active: boolean }) {
+  const [index, setIndex] = useState(0);
+  const [interactionPaused, setInteractionPaused] = useState(false);
+  const [hovered, setHovered] = useState(false);
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const dragRef = useRef<{ x: number; left: number } | null>(null);
+
+  const goTo = (nextIndex: number) => {
+    const normalized = (nextIndex + travelFrames.length) % travelFrames.length;
+    const viewport = viewportRef.current;
+    const item = viewport?.querySelector<HTMLElement>(`[data-travel-frame="${normalized}"]`);
+    const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
+    if (viewport && item) viewport.scrollTo({ left: item.offsetLeft, behavior });
+    setIndex(normalized);
+  };
+
+  useEffect(() => {
+    if (!active || interactionPaused || hovered || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const timer = window.setInterval(() => goTo(index + 1), 4500);
+    return () => window.clearInterval(timer);
+  }, [active, index, interactionPaused, hovered]);
+
+  return (
+    <section
+      className="travel-carousel"
+      aria-label="旅行照片轮播"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <div className="travel-carousel-heading">
+        <p>旅行照片 · 待替换</p>
+        <div>
+          <span>{String(index + 1).padStart(2, "0")} / {String(travelFrames.length).padStart(2, "0")}</span>
+          <button
+            type="button"
+            onClick={() => setInteractionPaused((current) => !current)}
+            aria-label={interactionPaused ? "继续自动播放" : "暂停自动播放"}
+          >
+            {interactionPaused ? "播放" : "暂停"}
+          </button>
+          <button type="button" onClick={() => { setInteractionPaused(true); goTo(index - 1); }} aria-label="上一张旅行照片">←</button>
+          <button type="button" onClick={() => { setInteractionPaused(true); goTo(index + 1); }} aria-label="下一张旅行照片">→</button>
+        </div>
+      </div>
+      <div
+        className="travel-carousel-viewport"
+        ref={viewportRef}
+        onPointerDown={(event) => {
+          dragRef.current = { x: event.clientX, left: event.currentTarget.scrollLeft };
+          event.currentTarget.setPointerCapture(event.pointerId);
+          setInteractionPaused(true);
+        }}
+        onPointerMove={(event) => {
+          if (!dragRef.current) return;
+          event.currentTarget.scrollLeft = dragRef.current.left - (event.clientX - dragRef.current.x);
+        }}
+        onPointerUp={(event) => {
+          const viewport = event.currentTarget;
+          dragRef.current = null;
+          if (viewport.hasPointerCapture(event.pointerId)) viewport.releasePointerCapture(event.pointerId);
+          const items = [...viewport.querySelectorAll<HTMLElement>("[data-travel-frame]")];
+          const nearest = items.reduce((best, item, itemIndex) =>
+            Math.abs(item.offsetLeft - viewport.scrollLeft) < Math.abs(items[best].offsetLeft - viewport.scrollLeft)
+              ? itemIndex
+              : best, 0);
+          goTo(nearest);
+        }}
+        onPointerCancel={() => { dragRef.current = null; }}
+      >
+        <div className="travel-carousel-track">
+          {travelFrames.map((frame, frameIndex) => (
+            <div data-travel-frame={frameIndex} key={frame.place}>
+              <TravelFrame index={frameIndex} />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
 
 export default function TravelerExperience({ identity }: { identity: TravelerIdentity }) {
-  return (
-    <section className="traveler-experience" aria-label="旅行家足迹">
-      <header className="traveler-copy">
-        <p>{identity.english}</p>
-        <div>
-          <h2>{identity.name}</h2>
-          <span>
-            <strong>16</strong>
-            COUNTRIES
-          </span>
-        </div>
-        <h3>{identity.statement.replace("\n", " ")}</h3>
-        <p>{identity.intro}</p>
-        <small>{identity.skills}</small>
-      </header>
+  const [page, setPage] = useState(0);
+  const chapterRef = useRef<HTMLElement>(null);
+  const dragRef = useRef<{ x: number; y: number } | null>(null);
+  const wheelLockRef = useRef(0);
 
-      <div className="traveler-visual">
-        <div className="traveler-globe-column">
-          <TravelGlobe />
-          <ul className="traveler-country-list" aria-label="去过的十六个国家">
-            {travelCountries.map((country) => (
-              <li key={country.name}>{country.name}</li>
-            ))}
-          </ul>
-        </div>
-        <TravelPhotoRail />
+  const changePage = (nextPage: number) => setPage(Math.max(0, Math.min(1, nextPage)));
+
+  return (
+    <section
+      className={`traveler-experience is-page-${page + 1}`}
+      ref={chapterRef}
+      aria-label="旅行家与旅行创业项目"
+      tabIndex={0}
+      onKeyDown={(event) => {
+        if (event.key === "ArrowRight") changePage(1);
+        if (event.key === "ArrowLeft") changePage(0);
+      }}
+      onWheel={(event) => {
+        if (Math.abs(event.deltaX) <= Math.abs(event.deltaY) || Math.abs(event.deltaX) < 18) return;
+        event.preventDefault();
+        const now = Date.now();
+        if (now - wheelLockRef.current < 520) return;
+        wheelLockRef.current = now;
+        changePage(event.deltaX > 0 ? 1 : 0);
+      }}
+      onPointerDown={(event) => {
+        if ((event.target as HTMLElement).closest("a, button, .travel-carousel")) return;
+        dragRef.current = { x: event.clientX, y: event.clientY };
+        event.currentTarget.setPointerCapture(event.pointerId);
+      }}
+      onPointerUp={(event) => {
+        if (!dragRef.current) return;
+        const dx = event.clientX - dragRef.current.x;
+        const dy = event.clientY - dragRef.current.y;
+        dragRef.current = null;
+        if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
+        if (Math.abs(dx) > 56 && Math.abs(dx) > Math.abs(dy)) changePage(dx < 0 ? 1 : 0);
+      }}
+      onPointerCancel={() => { dragRef.current = null; }}
+    >
+      <div className="traveler-track" style={{ transform: `translate3d(-${page * 50}%, 0, 0)` }}>
+        <article className="traveler-page traveler-intro-page" aria-hidden={page !== 0} inert={page !== 0}>
+          <header className="traveler-copy">
+            <div>
+              <h2>{identity.name}</h2>
+              <span><strong>16</strong> COUNTRIES</span>
+            </div>
+            <h3>{identity.statement}</h3>
+            <p>{identity.intro}</p>
+          </header>
+
+          <div className="traveler-map-stage">
+            <img src="/travel/world-map-handdrawn.png" alt="标有十六个到访国家的手绘世界地图" />
+            <button type="button" className="traveler-next-cue" onClick={() => changePage(1)}>
+              <span>旅行创业实践 · 2023.11 至今</span>
+              <strong>Inspiration 旅行实验室</strong>
+              <small>创始人 &amp; 产品负责人</small>
+              <div>
+                <b>30+ 次旅行项目</b>
+                <b>4000+ 活跃成员</b>
+              </div>
+              <em>向左滑查看项目 →</em>
+            </button>
+          </div>
+
+          <div className="traveler-intro-carousel">
+            <TravelIntroRail active={page === 0} />
+          </div>
+
+        </article>
+
+        <article className="traveler-page traveler-project-page" aria-hidden={page !== 1} inert={page !== 1}>
+          <div className="travel-project-top">
+            <header className="travel-project-copy">
+              <div className="travel-project-title-row">
+                <h2>Inspiration<br />旅行实验室</h2>
+                <span>青年旅行社群</span>
+              </div>
+              <p>
+                由沪上高校领队与户外爱好者发起，我们从真实旅行经验出发，组织户外、非遗、瑜伽与禅修等多种体验，探索不同于标准行程的青年旅行方式。
+              </p>
+              <nav className="travel-route-links" aria-label="精彩旅行线路">
+                {routeLinks.map((route) => (
+                  <a
+                    href={route.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    key={route.href}
+                  >
+                    <span className="travel-route-cover">
+                      <img src={route.image} alt="" aria-hidden="true" />
+                    </span>
+                    <span className="travel-route-copy">
+                      <b>{route.title}</b>
+                      <strong>阅读全文 ↗</strong>
+                    </span>
+                  </a>
+                ))}
+              </nav>
+            </header>
+
+            <figure className="travel-project-visual">
+              <img src="/travel/inspiration-qr.png" alt="Inspiration 旅行实验室公众号二维码" />
+              <figcaption>微信公众号 · 长按或扫码关注</figcaption>
+            </figure>
+
+            <button type="button" className="traveler-back-cue" onClick={() => changePage(0)} aria-label="返回旅行者介绍">
+              ← 返回旅行者介绍
+            </button>
+          </div>
+
+          <TravelCarousel active={page === 1} />
+        </article>
       </div>
     </section>
   );

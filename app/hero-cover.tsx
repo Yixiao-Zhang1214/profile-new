@@ -25,7 +25,37 @@ export default function HeroCover() {
   };
 
   useEffect(() => {
+    const previousScrollRestoration = window.history.scrollRestoration;
+    let resetFrame: number | null = null;
+
+    const resetHomePosition = () => {
+      const isHomepage = window.location.pathname === "/";
+      const hasSectionTarget =
+        window.location.hash !== "" && window.location.hash !== "#top";
+
+      if (!isHomepage || hasSectionTarget) return;
+
+      window.history.scrollRestoration = "manual";
+      const root = document.documentElement;
+      const previousScrollBehavior = root.style.scrollBehavior;
+      root.style.scrollBehavior = "auto";
+      window.scrollTo(0, 0);
+
+      if (resetFrame !== null) cancelAnimationFrame(resetFrame);
+      resetFrame = requestAnimationFrame(() => {
+        window.scrollTo(0, 0);
+        root.style.scrollBehavior = previousScrollBehavior;
+        resetFrame = null;
+      });
+    };
+
+    resetHomePosition();
+    window.addEventListener("pageshow", resetHomePosition);
+
     return () => {
+      window.removeEventListener("pageshow", resetHomePosition);
+      window.history.scrollRestoration = previousScrollRestoration;
+      if (resetFrame !== null) cancelAnimationFrame(resetFrame);
       if (animationFrameRef.current !== null) {
         cancelAnimationFrame(animationFrameRef.current);
       }
