@@ -1288,7 +1288,7 @@ export default function AiBuilderExperience() {
                       aria-hidden="true"
                     >
                       <Image
-                        src={project.video.poster}
+                        src={project.video.poster!}
                         alt=""
                         fill
                         unoptimized
