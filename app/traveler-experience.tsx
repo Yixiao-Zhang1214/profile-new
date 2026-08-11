@@ -119,7 +119,14 @@ function TravelSwipeStack() {
                 setCards(([first, ...rest]) => [...rest, first]);
               } : undefined}
             >
-              <img src={image.src} alt={image.alt} draggable={false} />
+              <img
+                src={image.src}
+                alt={image.alt}
+                draggable={false}
+                loading="lazy"
+                decoding="async"
+                fetchPriority="low"
+              />
             </button>
           );
         })}
@@ -133,7 +140,14 @@ function TravelFrame({ index, compact = false }: { index: number; compact?: bool
 
   return (
     <figure className={`travel-frame travel-frame-${(index % 5) + 1}${compact ? " is-compact" : ""}`}>
-      <img src={frame.image} alt="" aria-hidden="true" />
+      <img
+        src={frame.image}
+        alt=""
+        aria-hidden="true"
+        loading="lazy"
+        decoding="async"
+        fetchPriority="low"
+      />
       <div aria-hidden="true" />
       {!compact && (
         <figcaption>
@@ -274,7 +288,13 @@ export default function TravelerExperience({ identity }: { identity: TravelerIde
           </header>
 
           <div className="traveler-map-stage">
-            <img src="/travel/world-map-handdrawn.png" alt="标有十六个到访国家的手绘世界地图" />
+            <img
+              src="/travel/world-map-handdrawn.png"
+              alt="标有十六个到访国家的手绘世界地图"
+              loading="lazy"
+              decoding="async"
+              fetchPriority="low"
+            />
             <button type="button" className="traveler-next-cue" onClick={() => changePage(1)}>
               <span>旅行创业实践 · 2023.11 至今</span>
               <strong>旅行实验室</strong>
@@ -338,7 +358,14 @@ export default function TravelerExperience({ identity }: { identity: TravelerIde
                     key={route.href}
                   >
                     <span className="travel-route-cover">
-                      <img src={route.image} alt="" aria-hidden="true" />
+                      <img
+                        src={route.image}
+                        alt=""
+                        aria-hidden="true"
+                        loading="lazy"
+                        decoding="async"
+                        fetchPriority="low"
+                      />
                     </span>
                     <span className="travel-route-copy">
                       <b>{route.title}</b>

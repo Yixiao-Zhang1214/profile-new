@@ -171,7 +171,9 @@ export default function PhotographerExperience({ identity }: {
                             ? `摄影作品 ${String(laneIndex + index * 3 + 1).padStart(2, "0")}`
                             : ""
                         }
-                        loading={cycle === 0 && index < 3 ? "eager" : "lazy"}
+                        loading="lazy"
+                        decoding="async"
+                        fetchPriority="low"
                       />
                     </figure>
                   ))}
