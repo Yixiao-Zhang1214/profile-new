@@ -24,7 +24,7 @@ const routeLinks = [
   {
     href: "https://mp.weixin.qq.com/s/NLoQMCfc-__FNJQREICA4Q",
     image: "/travel/routes/indonesia.jpg",
-    title: "印尼招募｜颠沛流离，也不愿说再见",
+    title: "印尼毕业线招募｜颠沛流离，也不愿说再见",
   },
 ];
 
@@ -70,22 +70,22 @@ function TravelSwipeStack() {
           const isTop = index === 0;
           const hoverPositions = [
             { x: 0, y: 0, rotate: 0 },
-            { x: -122, y: -96, rotate: -14 },
-            { x: 118, y: -84, rotate: 13 },
-            { x: -132, y: 92, rotate: -18 },
+            { x: -84, y: -44, rotate: -16 },
+            { x: 76, y: -38, rotate: 15 },
+            { x: -92, y: 47, rotate: -20 },
           ];
           const restingPositions = [
             { x: 0, y: 0, rotate: 0 },
-            { x: -8, y: -9, rotate: -3 },
-            { x: 10, y: -15, rotate: 4 },
-            { x: -14, y: -21, rotate: -6 },
+            { x: -3, y: -2, rotate: -3 },
+            { x: 4, y: -3, rotate: 4 },
+            { x: -5, y: -4, rotate: -6 },
           ];
           const restingPosition = restingPositions[index];
           const position = expanded ? hoverPositions[index] : restingPosition;
-          const x = isTop && drag.active ? drag.x : position.x;
-          const y = isTop && drag.active ? drag.y : position.y;
+          const x = isTop && drag.active ? `${drag.x}px` : `${position.x}%`;
+          const y = isTop && drag.active ? `${drag.y}px` : `${position.y}%`;
           const rotation = isTop && drag.active ? 0 : position.rotate;
-          const scale = isTop && drag.active ? 1.04 : 1 - index * 0.045;
+          const scale = isTop && drag.active ? 1.04 : 1 - index * 0.028;
 
           return (
             <button
@@ -96,7 +96,7 @@ function TravelSwipeStack() {
               tabIndex={isTop ? 0 : -1}
               style={{
                 zIndex: cards.length - index,
-                transform: `translate3d(${x}px, ${y}px, ${index * -10}px) rotate(${rotation}deg) scale(${scale})`,
+                transform: `translate3d(${x}, ${y}, ${index * -10}px) rotate(${rotation}deg) scale(${scale})`,
               }}
               onPointerDown={isTop ? (event) => {
                 pointerStart.current = { x: event.clientX, y: event.clientY };
@@ -219,87 +219,6 @@ function TravelIntroRail({ active }: { active: boolean }) {
   );
 }
 
-function TravelCarousel({ active }: { active: boolean }) {
-  const [index, setIndex] = useState(0);
-  const [interactionPaused, setInteractionPaused] = useState(false);
-  const [hovered, setHovered] = useState(false);
-  const viewportRef = useRef<HTMLDivElement>(null);
-  const dragRef = useRef<{ x: number; left: number } | null>(null);
-
-  const goTo = (nextIndex: number) => {
-    const normalized = (nextIndex + travelFrames.length) % travelFrames.length;
-    const viewport = viewportRef.current;
-    const item = viewport?.querySelector<HTMLElement>(`[data-travel-frame="${normalized}"]`);
-    const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
-    if (viewport && item) viewport.scrollTo({ left: item.offsetLeft, behavior });
-    setIndex(normalized);
-  };
-
-  useEffect(() => {
-    if (!active || interactionPaused || hovered || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const timer = window.setInterval(() => goTo(index + 1), 4500);
-    return () => window.clearInterval(timer);
-  }, [active, index, interactionPaused, hovered]);
-
-  return (
-    <section
-      className="travel-carousel"
-      aria-label="旅行照片轮播"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
-      <div className="travel-carousel-heading">
-        <p>旅行照片 · 待替换</p>
-        <div>
-          <span>{String(index + 1).padStart(2, "0")} / {String(travelFrames.length).padStart(2, "0")}</span>
-          <button
-            type="button"
-            onClick={() => setInteractionPaused((current) => !current)}
-            aria-label={interactionPaused ? "继续自动播放" : "暂停自动播放"}
-          >
-            {interactionPaused ? "播放" : "暂停"}
-          </button>
-          <button type="button" onClick={() => { setInteractionPaused(true); goTo(index - 1); }} aria-label="上一张旅行照片">←</button>
-          <button type="button" onClick={() => { setInteractionPaused(true); goTo(index + 1); }} aria-label="下一张旅行照片">→</button>
-        </div>
-      </div>
-      <div
-        className="travel-carousel-viewport"
-        ref={viewportRef}
-        onPointerDown={(event) => {
-          dragRef.current = { x: event.clientX, left: event.currentTarget.scrollLeft };
-          event.currentTarget.setPointerCapture(event.pointerId);
-          setInteractionPaused(true);
-        }}
-        onPointerMove={(event) => {
-          if (!dragRef.current) return;
-          event.currentTarget.scrollLeft = dragRef.current.left - (event.clientX - dragRef.current.x);
-        }}
-        onPointerUp={(event) => {
-          const viewport = event.currentTarget;
-          dragRef.current = null;
-          if (viewport.hasPointerCapture(event.pointerId)) viewport.releasePointerCapture(event.pointerId);
-          const items = [...viewport.querySelectorAll<HTMLElement>("[data-travel-frame]")];
-          const nearest = items.reduce((best, item, itemIndex) =>
-            Math.abs(item.offsetLeft - viewport.scrollLeft) < Math.abs(items[best].offsetLeft - viewport.scrollLeft)
-              ? itemIndex
-              : best, 0);
-          goTo(nearest);
-        }}
-        onPointerCancel={() => { dragRef.current = null; }}
-      >
-        <div className="travel-carousel-track">
-          {travelFrames.map((frame, frameIndex) => (
-            <div data-travel-frame={frameIndex} key={frame.place}>
-              <TravelFrame index={frameIndex} />
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
 export default function TravelerExperience({ identity }: { identity: TravelerIdentity }) {
   const [page, setPage] = useState(0);
   const chapterRef = useRef<HTMLElement>(null);
@@ -346,12 +265,11 @@ export default function TravelerExperience({ identity }: { identity: TravelerIde
           <header className="traveler-copy">
             <div>
               <h2>{identity.name}</h2>
-              <span><strong>16</strong> 个国家</span>
+              <span>漫游 <strong>16</strong> 个国家</span>
             </div>
             <h3>{identity.statement}</h3>
             <p>
-              去过 16 个国家，带领过 30+ 次旅行项目，也把旅途中观察到的真实需求，变成了一次成功的
-              <strong>旅行创业实践。</strong>
+              “人生漫游者”是我的信条，我相信生活在别处能持续给我带来灵感。<br />从 2023 年开始，我组织了 30 多次旅行项目，建立了一个 4000 多人的社群，也把一路遇到的需求做成了产品。
             </p>
           </header>
 
@@ -362,8 +280,8 @@ export default function TravelerExperience({ identity }: { identity: TravelerIde
               <strong>旅行实验室</strong>
               <small>创始人 &amp; 产品负责人</small>
               <div>
-                <b>30+ 次旅行项目</b>
-                <b>4000+ 活跃成员</b>
+                <b>组织 30+ 次旅行项目</b>
+                <b>社群有 4000+ 名活跃成员</b>
               </div>
               <em className="traveler-click-hint">点击进入项目 →</em>
             </button>
@@ -380,24 +298,24 @@ export default function TravelerExperience({ identity }: { identity: TravelerIde
             <header className="travel-project-copy">
               <div className="travel-project-title-row">
                 <h2>Inspiration 旅行实验室</h2>
-                <span>青年旅行社群</span>
+                <span>一个从上海出发的青年旅行社群</span>
               </div>
               <div className="travel-detail-summary">
                 <p className="travel-detail-lead">
-                  由沪上高校领队与户外爱好者发起，我们从真实旅行经验出发，组织户外、非遗、瑜伽与禅修等多种体验，探索不同于标准行程的青年旅行方式。
+                  我们是一群沪上高校领队和户外爱好者，组织户外、非遗、瑜伽和禅修等旅行活动。比起复制标准行程，我们更愿意从自己真正喜欢的体验开始设计。
                 </p>
                 <div className="travel-detail-role">
-                  <strong>创始人 · 主要产品经理</strong>
-                  <span>战略制定 / 市场调研 / 产品规划 / 社群运营 / AI 开发</span>
+                  <strong>创始人 / 产品负责人</strong>
+                  <span>负责战略、调研、产品规划和社群运营，也参与 AI 开发。</span>
                 </div>
                 <div className="travel-detail-metrics" aria-label="项目核心成果">
                   <div>
                     <strong>5k+</strong>
-                    <span>旅行小精灵使用次数</span>
+                    <span>旅行小精灵AI使用次数</span>
                   </div>
                   <div>
                     <strong>4000+</strong>
-                    <span>四个月社群成员</span>
+                    <span>四个月积累社群成员</span>
                   </div>
                   <div>
                     <strong>50w+</strong>
@@ -408,7 +326,10 @@ export default function TravelerExperience({ identity }: { identity: TravelerIde
                   以上海为中心辐射全国，为年轻人提供「轻户外」精品旅行服务，影响力覆盖十余所高校及企业。
                 </p>
               </div>
-              <nav className="travel-route-links" aria-label="精彩旅行线路">
+              <nav
+                className="travel-route-links"
+                aria-label="精彩旅行线路"
+              >
                 {routeLinks.map((route) => (
                   <a
                     href={route.href}

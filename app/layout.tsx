@@ -20,7 +20,7 @@ const sourceHanSans = Noto_Sans_SC({
 });
 
 export const metadata: Metadata = {
-  title: "Your Name | AI 产品经理与创作者",
+  title: "Yixiao | AI 产品经理与创作者",
   description: "一份以五重身份展开的个人简历与作品集网站。",
 };
 

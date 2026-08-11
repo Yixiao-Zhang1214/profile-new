@@ -43,7 +43,7 @@ const experiences: ProductExperience[] = [
     role: "AI 应用产品经理实习",
     period: "2026.06 - 至今",
     summary:
-      "负责 AI 小应的直播选品与 AI 话术生成能力，参与产品设计、实验验证、效果评测与迭代优化。",
+      "围绕达人直播带货场景，通过 AI 降低达人的经营门槛，提升 AI 工具使用渗透与经营效率，并参与 Agent 底层架构升级。参与推动AI小应DAU提升7.48%，直播GMV+3%。",
     tags: ["达人直播+AI", "Agent 基建"],
     metrics: [
       { value: "+7.48%", label: "DAU" },
@@ -77,7 +77,7 @@ const experiences: ProductExperience[] = [
     role: "AI 产品经理实习",
     period: "2026.01 - 2026.06",
     summary:
-      "从 0 到 1 搭建抖音精选首个全局 AI Agent，落地交互式推荐与个性化主题播单。",
+      "业务概述：抖音精选是抖音旗下专注优质中长视频、深度干货内容的沉浸式内容平台。实习期间负责从0到1搭建抖音精选首个全局 AI Agent，落地交互式推荐、个性化主题播单等功能，负责页面功能设计与迭代，视频推荐效果优化，丰富用户内容分发体验。",
     tags: ["C 端搜推+AI", "0-1 Agent 建设"],
     metrics: [
       { value: "4×", label: "入口点击率" },
@@ -116,8 +116,8 @@ const experiences: ProductExperience[] = [
     role: "大模型产品经理实习",
     period: "2025.08 - 2026.01",
     summary:
-      "负责翻译与闹钟两大高流量垂域的云端 AI 交互架构、模型优化与策略迭代。",
-    tags: ["C 端大模型策略"],
+      "业务概述：小爱云端对小米手机、座舱、音箱等全终端AI体验负责。负责翻译&闹钟两大高流量垂域(全端日PV超700w)的云端 AI 交互架构设计、模型优化与策略迭代，为终端设备用户提供稳定高效的AI服务。任职期内推动整体满足率提升14.27%(69.59%->83.86%)。",
+    tags: ["C 端大模型策略", "多模态翻译"],
     metrics: [
       { value: "+14.27%", label: "整体满足率" },
       { value: "95%", label: "Agent 替代逻辑" },
@@ -524,7 +524,7 @@ export default function ProductManagerExperience({
       <section className="pm-experience-section" aria-label="产品实习经历">
         <div className="pm-section-heading">
           <h3>实习经历</h3>
-          <span>选择一段经历，查看项目方法与结果</span>
+          <span>翻开实习卡片，看看我具体做了什么。</span>
         </div>
 
         <div className="pm-experience-list">

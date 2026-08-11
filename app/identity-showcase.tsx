@@ -78,7 +78,7 @@ function IdentityDetails({ identity }: { identity: Identity }) {
   }
 
   if (identity.name === "AI Builder") {
-    return <AiBuilderExperience identity={identity} />;
+    return <AiBuilderExperience />;
   }
 
   return (

@@ -22,8 +22,8 @@ const education = [
     program: "播音与主持艺术",
     badges: ["985", "双一流"],
     details: [
-      "学业成绩 90.31（1 / 25）· 推荐免试攻读硕士学位研究生",
-      "校优秀毕业生 · 优秀学生 · 校特等奖学金 · “圆梦浙里”奖学金",
+      "专业成绩 90.31，排名 1 / 25，推免攻读硕士。",
+      "获校优秀毕业生、优秀学生、校特等奖学金和“圆梦浙里”奖学金。",
     ],
   },
   {
@@ -34,8 +34,8 @@ const education = [
     program: "新闻与传播",
     badges: ["985", "双一流"],
     details: [
-      "教育部大数据与国家传播战略实验室成员",
-      "研究生学业一等奖学金 · 科技创新奖学金",
+      "教育部大数据与国家传播战略实验室成员，",
+      "获研究生学业一等奖学金和科技创新奖学金。",
     ],
   },
   {
@@ -45,7 +45,7 @@ const education = [
     logoClass: "is-rwth",
     program: "学期交流",
     badges: ["QS 105"],
-    details: ["以人机交互课程补充产品与跨文化研究视角。"],
+    details: ["学期交流期间选修人机交互和技术伦理课程，补充产品和跨文化研究的视角。"],
   },
 ];
 
@@ -77,7 +77,7 @@ const studentActivities = [
     description: (
       <>
         参加外交学院、北京大学、澳门大学“东亚”等国际性模拟联合国大会，获
-        <strong>荣誉提名、最佳立场、最佳潜力</strong>等荣誉。
+        <strong>荣誉提名、最佳立场、最佳潜力</strong>等荣誉，也担任会场主席团成员。
       </>
     ),
   },
@@ -88,7 +88,7 @@ const interviewWorks = [
     number: "01",
     type: "深度采访",
     title: "陪诊师：陌生的“临时家人”",
-    description: "被收录于《大学生》杂志",
+    description: "收录于《大学生》杂志",
     format: "magazine",
     href: "https://mp.weixin.qq.com/s/JWM0_bjNcivnsb_bzMybyg",
   },
@@ -96,23 +96,23 @@ const interviewWorks = [
     number: "02",
     type: "人物采访",
     title: "胡斐斐：逐梦国际传播，传递中国声音",
-    description: "国际传播人物专访",
+    description: "一篇国际传播人物专访",
     format: "magazine",
     href: "https://mp.weixin.qq.com/s/iKRA9is73Xn7S7XJmMes7Q",
   },
   {
     number: "03",
     type: "视频采访",
-    title: "寻非遗——七宝皮影",
-    description: "以影像记录传统技艺与当代传承",
+    title: "寻非遗：七宝皮影",
+    description: "用影像记录皮影技艺和今天的传承者",
     format: "video",
     href: "https://weixin.qq.com/sph/AMBOj2vzwU",
   },
   {
     number: "04",
     type: "澎湃新闻国际部",
-    title: "署名作品档案",
-    description: "国际报道 / 2023 / 13 篇署名作品",
+    title: "澎湃新闻国际部作品",
+    description: "13 篇署名报道",
     format: "archive",
     archive: true,
   },
@@ -326,7 +326,7 @@ export default function JournalismExperience({ identity }: { identity: Journalis
     <div className="journalism-experience">
       <header className="journalism-copy">
         <div>
-          <h2>新闻与传播</h2>
+          <h2>求学者</h2>
           <small>{identity.skills}</small>
         </div>
         <h3>{identity.statement.replace("\n", "")}</h3>
@@ -363,7 +363,11 @@ export default function JournalismExperience({ identity }: { identity: Journalis
                     </div>
                   </div>
                   <div className="education-timeline-details">
-                    <p>{item.details.join(" · ")}</p>
+                  <p>
+                    {item.details.map((detail) => (
+                      <span key={detail}>{detail}</span>
+                    ))}
+                  </p>
                   </div>
                 </div>
               </article>
@@ -389,12 +393,11 @@ export default function JournalismExperience({ identity }: { identity: Journalis
       </div>
 
       <section className="interview-section" aria-labelledby="interview-title">
-        <div className="interview-heading">
-          <h3 className="journalism-section-title" id="interview-title">
-            采访与报道
-          </h3>
-          <p>SELECTED STORIES / 04</p>
-        </div>
+      <div className="interview-heading">
+        <h3 className="journalism-section-title" id="interview-title">
+          采访与报道
+        </h3>
+      </div>
         <div className="interview-list">
           {interviewWorks.map((work) =>
             work.archive ? (

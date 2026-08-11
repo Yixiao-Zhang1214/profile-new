@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#07121b">
+  <title>Living Ocean</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #eef8fb;
+      --muted: #98aeb8;
+      --line: rgb(210 240 248 / 14%);
+      --glass: rgb(5 15 23 / 72%);
+      --accent: #8de1ed;
+    }
+    * { box-sizing: border-box; }
+    html, body, #ocean { width: 100%; height: 100%; margin: 0; }
+    body {
+      overflow: hidden;
+      background: #07121b;
+      color: var(--ink);
+      font: 13px/1.4 ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    button, input, summary { font: inherit; }
+    button, input, summary, a { -webkit-tap-highlight-color: transparent; }
+    button:focus-visible, input:focus-visible, summary:focus-visible, a:focus-visible, #compass:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+    }
+    #ocean { display: block; cursor: grab; touch-action: none; }
+    #ocean:active { cursor: grabbing; }
+    #compass {
+      position: fixed;
+      left: 22px;
+      bottom: 22px;
+      z-index: 2;
+      display: grid;
+      justify-items: center;
+      gap: 7px;
+      width: 92px;
+      padding: 10px 10px 8px;
+      border: 1px solid var(--line);
+      border-radius: 50px 50px 12px 12px;
+      background: var(--glass);
+      box-shadow: 0 16px 42px rgb(0 0 0 / 26%);
+      backdrop-filter: blur(18px) saturate(120%);
+      cursor: grab;
+      touch-action: none;
+      user-select: none;
+    }
+    .compass-dial {
+      position: relative;
+      width: 64px;
+      height: 64px;
+      overflow: hidden;
+      border: 1px solid rgb(210 240 248 / 22%);
+      border-radius: 50%;
+      background: radial-gradient(circle, rgb(255 255 255 / 7%) 0 3px, transparent 4px), rgb(3 12 19 / 54%);
+      box-shadow: inset 0 0 18px rgb(0 0 0 / 30%);
+      cursor: grab;
+    }
+    .compass-dial:active { cursor: grabbing; }
+    #compass-rose {
+      position: absolute;
+      inset: 0;
+      transition: transform 90ms linear;
+    }
+    .compass-mark {
+      position: absolute;
+      color: var(--muted);
+      font-size: 8px;
+      font-weight: 700;
+      line-height: 1;
+    }
+    .compass-mark.n { top: 5px; left: 50%; translate: -50% 0; color: #ff8d76; }
+    .compass-mark.e { top: 50%; right: 5px; translate: 0 -50%; }
+    .compass-mark.s { bottom: 5px; left: 50%; translate: -50% 0; }
+    .compass-mark.w { top: 50%; left: 5px; translate: 0 -50%; }
+    .compass-axis {
+      position: absolute;
+      top: 16px;
+      left: 29px;
+      width: 6px;
+      height: 32px;
+      background: linear-gradient(#ff8d76 0 50%, #c5d6dc 50%);
+      clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+      filter: drop-shadow(0 1px 2px rgb(0 0 0 / 55%));
+    }
+    #heading-value { color: var(--ink); font-size: 10px; font-variant-numeric: tabular-nums; letter-spacing: .12em; }
+    #error {
+      position: fixed;
+      inset: 50% auto auto 50%;
+      z-index: 5;
+      max-width: 560px;
+      translate: -50% -50%;
+      padding: 18px 20px;
+      border: 1px solid rgb(255 142 142 / 35%);
+      border-radius: 10px;
+      background: rgb(35 7 7 / 88%);
+      color: #ffd7d7;
+      white-space: pre-wrap;
+    }
+    [hidden] { display: none !important; }
+    #panel-toggle {
+      position: fixed;
+      top: 22px;
+      right: 354px;
+      z-index: 3;
+      min-width: 86px;
+      padding: 9px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--glass);
+      color: var(--ink);
+      backdrop-filter: blur(18px);
+      cursor: pointer;
+    }
+    #panel {
+      position: fixed;
+      top: 22px;
+      right: 22px;
+      z-index: 2;
+      width: min(310px, calc(100vw - 44px));
+      max-height: calc(100vh - 44px);
+      overflow: auto;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--glass);
+      box-shadow: 0 24px 64px rgb(0 0 0 / 32%);
+      backdrop-filter: blur(18px) saturate(120%);
+    }
+    body.panel-closed #panel { display: none; }
+    body.panel-closed #panel-toggle { right: 22px; }
+    header { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
+    header p { margin: 0; color: var(--muted); font-size: 10px; font-weight: 700; letter-spacing: .18em; }
+    header output { font-size: 24px; font-weight: 300; letter-spacing: -.03em; }
+    fieldset { margin: 20px 0 17px; padding: 0; border: 0; }
+    legend, label:not(.check) { color: var(--muted); font-size: 11px; font-weight: 600; letter-spacing: .04em; }
+    .weather-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 8px; }
+    .weather-grid button, #reset-view {
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: rgb(255 255 255 / 4%);
+      color: var(--muted);
+      cursor: pointer;
+    }
+    .weather-grid button { padding: 8px 4px; font-size: 11px; }
+    .weather-grid button[aria-pressed="true"] { border-color: rgb(141 225 237 / 55%); background: rgb(141 225 237 / 14%); color: var(--ink); }
+    label:not(.check) { display: grid; gap: 7px; margin-top: 14px; }
+    input[type="range"] { width: 100%; height: 4px; margin: 3px 0 2px; accent-color: var(--accent); cursor: pointer; }
+    .check { display: flex; align-items: center; gap: 8px; margin-top: 11px; color: var(--muted); }
+    .check input { accent-color: var(--accent); }
+    details { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line); }
+    summary { color: var(--ink); cursor: pointer; user-select: none; }
+    input[type="color"] { width: 100%; height: 32px; padding: 2px; border: 1px solid var(--line); border-radius: 6px; background: transparent; cursor: pointer; }
+    #reset-view { width: 100%; margin-top: 20px; padding: 9px; color: var(--ink); }
+    #reset-view:hover, #panel-toggle:hover, .weather-grid button:hover { background: rgb(255 255 255 / 9%); }
+    small { display: block; margin-top: 16px; color: var(--muted); font-size: 10px; }
+    a { color: var(--accent); text-decoration: none; }
+    @media (max-width: 560px) {
+      #compass { left: 14px; bottom: 14px; scale: .88; transform-origin: left bottom; }
+      #panel { top: 14px; right: 14px; max-height: calc(100vh - 28px); }
+      #panel-toggle { top: auto; right: 14px; bottom: 14px; }
+      body.panel-closed #panel-toggle { right: 14px; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; } }
+  </style>
+</head>
+<body>
+  <canvas id="ocean" aria-label="交互式程序化海洋"></canvas>
+  <div id="error" role="alert" hidden></div>
+  <div id="compass" role="slider" tabindex="0" aria-label="视角方位" aria-valuemin="0" aria-valuemax="359" aria-valuenow="0" aria-valuetext="北，0 度" title="拖动以旋转视角">
+    <div class="compass-dial" aria-hidden="true">
+      <div id="compass-rose">
+        <span class="compass-mark n">N</span>
+        <span class="compass-mark e">E</span>
+        <span class="compass-mark s">S</span>
+        <span class="compass-mark w">W</span>
+        <i class="compass-axis"></i>
+      </div>
+    </div>
+    <output id="heading-value">000°</output>
+  </div>
+  <button id="panel-toggle" type="button" aria-expanded="true" aria-controls="panel">控制面板</button>
+  <aside id="panel" aria-label="海洋控制面板">
+    <header><p>LIVING OCEAN</p><output id="time-value" for="time">15:00</output></header>
+    <fieldset>
+      <legend>天气</legend>
+      <div class="weather-grid">
+        <button type="button" data-weather="clear" aria-pressed="true">晴朗</button>
+        <button type="button" data-weather="cloudy" aria-pressed="false">多云</button>
+        <button type="button" data-weather="fog" aria-pressed="false">大雾</button>
+        <button type="button" data-weather="storm" aria-pressed="false">风暴</button>
+      </div>
+    </fieldset>
+    <label>时间 <input id="time" type="range" min="0" max="24" step="0.1" value="15"></label>
+    <label class="check"><input id="time-running" type="checkbox"> 时间流动</label>
+    <details>
+      <summary>精细调节</summary>
+      <label>风力 <input id="wind" type="range" min="0" max="1" step="0.01"></label>
+      <label>浪高 <input id="wave-height" type="range" min="0.2" max="1.6" step="0.01"></label>
+      <label>云量 <input id="cloud-cover" type="range" min="0" max="1" step="0.01"></label>
+      <label>雾度 <input id="fog" type="range" min="0" max="1" step="0.01"></label>
+      <label>降雨 <input id="rain" type="range" min="0" max="1" step="0.01"></label>
+      <label>海水颜色 <input id="water-color" type="color" value="#12466f"></label>
+    </details>
+    <button id="reset-view" type="button">重置视角</button>
+    <small>拖动海面调整视角 · <a href="https://www.shadertoy.com/view/MdXyzX">着色器作者 afl_ext</a></small>
+  </aside>
+  <script src="./app.js?v=6" defer></script>
+</body>
+</html>

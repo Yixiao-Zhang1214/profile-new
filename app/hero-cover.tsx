@@ -1,12 +1,27 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export default function HeroCover() {
   const heroRef = useRef<HTMLElement>(null);
   const particleCanvasRef = useRef<HTMLCanvasElement>(null);
   const animationFrameRef = useRef<number | null>(null);
+  const assemblyRequestedAtRef = useRef<number | null>(null);
+  const fastExitRef = useRef(false);
   const [showWelcome, setShowWelcome] = useState(true);
+  const [assemblyRequested, setAssemblyRequested] = useState(false);
+  const [fastExit, setFastExit] = useState(false);
+
+  const requestWelcomeAssembly = useCallback((fast = false) => {
+    if (assemblyRequestedAtRef.current === null) {
+      assemblyRequestedAtRef.current = performance.now();
+    }
+    if (fast) {
+      fastExitRef.current = true;
+      setFastExit(true);
+    }
+    setAssemblyRequested(true);
+  }, []);
 
   const updateDepth = (x: number, y: number, revealBrush = true) => {
     if (animationFrameRef.current !== null) {
@@ -34,13 +49,13 @@ export default function HeroCover() {
 
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduceMotion) {
-      setShowWelcome(false);
+      welcomeTimer = window.setTimeout(() => setShowWelcome(false), 0);
     } else {
-      welcomeTimer = window.setTimeout(() => setShowWelcome(false), 8000);
+      welcomeTimer = window.setTimeout(() => requestWelcomeAssembly(false), 3000);
     }
 
-    const skipWelcome = () => setShowWelcome(false);
-    window.addEventListener("keydown", skipWelcome, { once: true });
+    const skipWelcome = () => requestWelcomeAssembly(true);
+    window.addEventListener("keydown", skipWelcome);
 
     const previousScrollRestoration = window.history.scrollRestoration;
     let resetFrame: number | null = null;
@@ -79,7 +94,16 @@ export default function HeroCover() {
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, []);
+  }, [requestWelcomeAssembly]);
+
+  useEffect(() => {
+    if (!showWelcome || !assemblyRequested) return;
+    const completionTimer = window.setTimeout(
+      () => setShowWelcome(false),
+      fastExit ? 900 : 2100,
+    );
+    return () => window.clearTimeout(completionTimer);
+  }, [assemblyRequested, fastExit, showWelcome]);
 
   useEffect(() => {
     const canvas = particleCanvasRef.current;
@@ -100,11 +124,11 @@ export default function HeroCover() {
 
       const viewportWidth = window.innerWidth;
       const viewportHeight = window.innerHeight;
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.15);
       const target = heroImage.getBoundingClientRect();
       const width = Math.max(1, Math.round(target.width));
       const height = Math.max(1, Math.round(target.height));
-      const sampleStep = Math.max(7, Math.ceil(Math.sqrt((width * height) / 5000)));
+      const sampleStep = Math.max(8, Math.ceil(Math.sqrt((width * height) / 4200)));
       const buffer = document.createElement("canvas");
       const bufferContext = buffer.getContext("2d", { willReadFrequently: true });
       if (!bufferContext) return;
@@ -120,6 +144,7 @@ export default function HeroCover() {
       const particles: Array<{
         color: string;
         delay: number;
+        driftX: number;
         size: number;
         startX: number;
         startY: number;
@@ -137,7 +162,8 @@ export default function HeroCover() {
           const ribbonX = viewportWidth * (-0.08 + Math.random() * 1.16);
           particles.push({
             color: `rgba(${pixels[pixelIndex]}, ${pixels[pixelIndex + 1]}, ${pixels[pixelIndex + 2]}, ${alpha / 255})`,
-            delay: Math.random() * 520,
+            delay: Math.random() * 260,
+            driftX: (Math.random() - 0.5) * 58,
             size: sampleStep * (0.72 + Math.random() * 0.28),
             startX: ribbonX,
             startY: ribbonY + Math.sin(ribbonX * 0.014) * 92 + (Math.random() - 0.5) * 68,
@@ -148,21 +174,33 @@ export default function HeroCover() {
       }
 
       const startedAt = performance.now();
-      const assembleAt = 5000;
-      const assembleDuration = 2350;
+      const naturalAssembleAt = 3000;
+      const naturalAssembleDuration = 1400;
 
       const draw = (now: number) => {
         const elapsed = now - startedAt;
+        const assembleAt = assemblyRequestedAtRef.current === null
+          ? naturalAssembleAt
+          : Math.max(0, assemblyRequestedAtRef.current - startedAt);
         context.clearRect(0, 0, viewportWidth, viewportHeight);
 
         if (elapsed >= assembleAt) {
+          const isFastExit = fastExitRef.current;
+          const assembleDuration = isFastExit ? 560 : naturalAssembleDuration;
+          const delayScale = isFastExit ? 0.26 : 1;
           for (const particle of particles) {
-            const progress = Math.max(0, Math.min(1, (elapsed - assembleAt - particle.delay) / assembleDuration));
+            const progress = Math.max(
+              0,
+              Math.min(
+                1,
+                (elapsed - assembleAt - particle.delay * delayScale) / assembleDuration,
+              ),
+            );
             if (progress === 0) continue;
             const eased = 1 - Math.pow(1 - progress, 3);
-            const drift = Math.sin((elapsed + particle.targetX) * 0.006) * 34 * (1 - eased);
-            const x = particle.startX + (particle.targetX - particle.startX) * eased;
-            const y = particle.startY + (particle.targetY - particle.startY) * eased + drift;
+            const x = particle.startX + (particle.targetX - particle.startX) * eased
+              + particle.driftX * (1 - eased);
+            const y = particle.startY + (particle.targetY - particle.startY) * eased;
             const size = particle.size * (0.42 + eased * 0.58);
             context.globalAlpha = Math.min(1, progress * 4);
             context.fillStyle = particle.color;
@@ -171,7 +209,9 @@ export default function HeroCover() {
         }
 
         context.globalAlpha = 1;
-        if (!cancelled && elapsed < 7900) particleFrame = window.requestAnimationFrame(draw);
+        if (!cancelled && elapsed < assembleAt + (fastExitRef.current ? 900 : 2000)) {
+          particleFrame = window.requestAnimationFrame(draw);
+        }
       };
 
       particleFrame = window.requestAnimationFrame(draw);
@@ -193,10 +233,10 @@ export default function HeroCover() {
     <>
       {showWelcome && (
         <button
-          className="welcome-intro"
+          className={`welcome-intro${assemblyRequested ? " is-assembling" : ""}${fastExit ? " is-fast-exit" : ""}`}
           type="button"
           aria-label="跳过欢迎动画"
-          onClick={() => setShowWelcome(false)}
+          onClick={() => requestWelcomeAssembly(true)}
         >
           <span className="welcome-ribbon welcome-ribbon-back" aria-hidden="true" />
           <span className="welcome-ribbon welcome-ribbon-middle" aria-hidden="true" />
@@ -229,11 +269,6 @@ export default function HeroCover() {
           <span>个人主页</span>
           <span>AI 产品经理</span>
         </div>
-        <div className="hero-meta hero-meta-right">
-          <span>作品集</span>
-          <span>Shanghai · 2026</span>
-        </div>
-
         <div className="hero-depth-plane">
           <img
             className="hero-character"
@@ -243,12 +278,10 @@ export default function HeroCover() {
         </div>
 
         <div className="hero-message">
-          <p>你好，我是</p>
-          <h1>关于我</h1>
+          <p>Hello！ I am Yixiao Zhang</p>
+          <h1>ABOUT ME</h1>
           <span>
-            新闻与传播学生，也是 AI 产品经理、旅行家、摄影师和 AI Builder。
-            <br />
-            我在观察、表达与创造之间，寻找自己的答案。
+            兴趣广泛且热爱生活的AI native 产品经理
           </span>
         </div>
 

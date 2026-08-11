@@ -6,6 +6,7 @@ type ParticleSample = {
   u: number;
   v: number;
   color: [number, number, number];
+  edgeDepth: number;
 };
 
 type Particle = {
@@ -57,14 +58,51 @@ function sampleImage(image: HTMLImageElement, count: number) {
   const candidates: ParticleSample[] = [];
 
   if (pixels) {
+    const size = width * height;
+    const opaque = new Uint8Array(size);
+    const distance = new Uint16Array(size);
+
+    for (let y = 0; y < height; y += 1) {
+      for (let x = 0; x < width; x += 1) {
+        const index = y * width + x;
+        const isOpaque = pixels[index * 4 + 3] >= 72;
+        opaque[index] = isOpaque ? 1 : 0;
+        distance[index] = isOpaque
+          ? (x === 0 || y === 0 || x === width - 1 || y === height - 1 ? 1 : 65535)
+          : 0;
+      }
+    }
+
+    for (let y = 0; y < height; y += 1) {
+      for (let x = 0; x < width; x += 1) {
+        const index = y * width + x;
+        if (!opaque[index]) continue;
+        if (x > 0) distance[index] = Math.min(distance[index], distance[index - 1] + 1);
+        if (y > 0) distance[index] = Math.min(distance[index], distance[index - width] + 1);
+      }
+    }
+
+    let maximumDepth = 1;
+    for (let y = height - 1; y >= 0; y -= 1) {
+      for (let x = width - 1; x >= 0; x -= 1) {
+        const index = y * width + x;
+        if (!opaque[index]) continue;
+        if (x < width - 1) distance[index] = Math.min(distance[index], distance[index + 1] + 1);
+        if (y < height - 1) distance[index] = Math.min(distance[index], distance[index + width] + 1);
+        maximumDepth = Math.max(maximumDepth, distance[index]);
+      }
+    }
+
     for (let y = 0; y < height; y += 2) {
       for (let x = 0; x < width; x += 2) {
         const offset = (y * width + x) * 4;
         if (pixels[offset + 3] < 72) continue;
+        const depth = distance[y * width + x];
         candidates.push({
           u: x / width,
           v: y / height,
           color: [pixels[offset], pixels[offset + 1], pixels[offset + 2]],
+          edgeDepth: clamp((depth - 1) / Math.max(1, maximumDepth - 1)),
         });
       }
     }
@@ -75,6 +113,7 @@ function sampleImage(image: HTMLImageElement, count: number) {
       u: 0.5,
       v: 0.5,
       color: [92, 88, 76] as [number, number, number],
+      edgeDepth: 0,
     }));
   }
 
@@ -157,13 +196,18 @@ export default function PersonaParticleTransition({
 
     const readProgress = () => {
       const introBounds = intro.getBoundingClientRect();
-      return clamp((window.innerHeight - introBounds.top) / (window.innerHeight * 0.86));
+      const scrollDistance = window.innerHeight - introBounds.top;
+      const triggerDistance = Math.max(10, window.innerHeight * 0.012);
+      if (scrollDistance <= triggerDistance) return 0;
+      return clamp(
+        (scrollDistance - triggerDistance) / (window.innerHeight * 0.58),
+      );
     };
 
     const draw = (progress: number) => {
-      heroImage.style.opacity = progress < 0.045 ? "1" : "0";
+      heroImage.style.opacity = String(1 - smoothstep(0.025, 0.38, progress));
       targetImages.forEach((image, index) => {
-        const reveal = smoothstep(0.73 + index * 0.018, 0.965, progress);
+        const reveal = smoothstep(0.64 + index * 0.014, 0.96, progress);
         const link = image.closest<HTMLElement>("a");
         link?.style.setProperty("--persona-opacity", String(reveal));
         link?.style.setProperty("--persona-rise", `${(1 - reveal) * 26}px`);
@@ -173,7 +217,7 @@ export default function PersonaParticleTransition({
       if (progress <= 0.012 || progress >= 0.992 || particles.length === 0) return;
 
       const liveSourceRect = getContainedImageRect(heroImage);
-      const sourceAnchor = smoothstep(0.02, 0.11, progress);
+      const sourceAnchor = smoothstep(0.01, 0.08, progress);
       const sourceRect = new DOMRect(
         liveSourceRect.x,
         liveSourceRect.y + window.scrollY * sourceAnchor,
@@ -181,10 +225,11 @@ export default function PersonaParticleTransition({
         liveSourceRect.height,
       );
       const targetRects = targetImages.map(getContainedImageRect);
-      const movement = smoothstep(0.42, 0.95, progress);
-      const dissolve = smoothstep(0.025, 0.16, progress);
-      const settleFade = smoothstep(0.88, 0.992, progress);
+      const movement = smoothstep(0.3, 0.94, progress);
+      const dissolve = smoothstep(0.005, 0.09, progress);
+      const settleFade = smoothstep(0.82, 0.98, progress);
       const particleOpacity = dissolve * (1 - settleFade);
+      const driftPhase = Math.sin(Math.PI * smoothstep(0.025, 0.9, progress));
 
       particles.forEach((particle) => {
         const targetRect = targetRects[particle.targetIndex];
@@ -192,42 +237,36 @@ export default function PersonaParticleTransition({
         const sourceY = sourceRect.y + sourceRect.height * particle.source.v;
         const targetX = targetRect.x + targetRect.width * particle.target.u;
         const targetY = targetRect.y + targetRect.height * particle.target.v;
-        const edgeDistance = clamp(
-          Math.abs(particle.source.u - 0.5) * 1.45 +
-            Math.abs(particle.source.v - 0.5) * 0.82,
-        );
-        const releaseStart = 0.065 + (1 - edgeDistance) * 0.07 + particle.seed * 0.025;
-        const release = smoothstep(releaseStart, releaseStart + 0.2, progress);
-        const driftEnvelope =
-          Math.sin(Math.PI * smoothstep(0.04, 0.88, progress)) * release;
-        const driftDistance = 72 + particle.seed * 148 + edgeDistance * 92;
+        const releaseStart = particle.source.edgeDepth * 0.31 + particle.seed * 0.018;
+        const release = smoothstep(releaseStart, releaseStart + 0.13, progress);
+        const driftEnvelope = driftPhase * release;
+        const driftDistance = 88 + particle.seed * 132 + (1 - particle.source.edgeDepth) * 74;
         const drift = driftDistance * driftEnvelope;
+        const particleMovement = movement * release;
         const x =
-          sourceX + (targetX - sourceX) * movement + particle.directionX * drift;
+          sourceX + (targetX - sourceX) * particleMovement + particle.directionX * drift;
         const y =
           sourceY +
-          (targetY - sourceY) * movement +
+          (targetY - sourceY) * particleMovement +
           particle.directionY * drift -
           driftEnvelope * (18 + particle.seed * 42);
         const red = Math.round(
           particle.source.color[0] +
-            (particle.target.color[0] - particle.source.color[0]) * movement,
+            (particle.target.color[0] - particle.source.color[0]) * particleMovement,
         );
         const green = Math.round(
           particle.source.color[1] +
-            (particle.target.color[1] - particle.source.color[1]) * movement,
+            (particle.target.color[1] - particle.source.color[1]) * particleMovement,
         );
         const blue = Math.round(
           particle.source.color[2] +
-            (particle.target.color[2] - particle.source.color[2]) * movement,
+            (particle.target.color[2] - particle.source.color[2]) * particleMovement,
         );
         const radius = particle.radius * (1 + driftEnvelope * 0.58);
-        const opacity = particleOpacity * (0.7 + particle.seed * 0.3);
+        const opacity = particleOpacity * (0.08 + release * 0.92) * (0.72 + particle.seed * 0.28);
 
         context.fillStyle = `rgba(${red}, ${green}, ${blue}, ${opacity})`;
-        context.beginPath();
-        context.arc(x, y, radius, 0, Math.PI * 2);
-        context.fill();
+        context.fillRect(x - radius, y - radius, radius * 2, radius * 2);
       });
     };
 
@@ -238,7 +277,7 @@ export default function PersonaParticleTransition({
       const elapsed = previousFrameTime ? Math.min(34, time - previousFrameTime) : 16;
       previousFrameTime = time;
       const difference = desiredProgress - renderedProgress;
-      const timeConstant = difference >= 0 ? 300 : 220;
+      const timeConstant = difference >= 0 ? 130 : 150;
       const blend = 1 - Math.exp(-elapsed / timeConstant);
 
       renderedProgress =
@@ -273,7 +312,7 @@ export default function PersonaParticleTransition({
     Promise.all([loadImage(source), ...targets.map(loadImage)])
       .then(([sourceImage, ...targetSources]) => {
         if (disposed) return;
-        const particleCount = window.innerWidth <= 720 ? 3800 : 9000;
+        const particleCount = window.innerWidth <= 720 ? 2400 : 5200;
         const targetCount = Math.floor(particleCount / targetSources.length);
         const sourceSamples = sampleImage(sourceImage, targetCount * targetSources.length);
         const targetSamples = targetSources.flatMap((image) => sampleImage(image, targetCount));

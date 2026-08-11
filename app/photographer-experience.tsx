@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import type {
   KeyboardEvent as ReactKeyboardEvent,
   PointerEvent as ReactPointerEvent,
@@ -9,6 +9,7 @@ import type {
 
 type PhotographerIdentity = {
   name: string;
+  intro: string;
 };
 
 const photos = Array.from(
@@ -27,9 +28,10 @@ function wrap(value: number, height: number) {
   return height > 0 ? ((value % height) + height) % height : 0;
 }
 
-export default function PhotographerExperience(_: {
+export default function PhotographerExperience({ identity }: {
   identity: PhotographerIdentity;
 }) {
+  const [copyHidden, setCopyHidden] = useState(false);
   const trackRefs = useRef<Array<HTMLDivElement | null>>([]);
   const offsets = useRef([0, 0, 0]);
   const groupHeights = useRef([1, 1, 1]);
@@ -95,6 +97,8 @@ export default function PhotographerExperience(_: {
 
   const handleWheel = (event: ReactWheelEvent<HTMLDivElement>) => {
     event.preventDefault();
+    if (event.deltaY > 3) setCopyHidden(true);
+    if (event.deltaY < -3) setCopyHidden(false);
     manualUntil.current = performance.now() + 900;
     moveBy(Math.max(-120, Math.min(120, event.deltaY)));
   };
@@ -108,6 +112,8 @@ export default function PhotographerExperience(_: {
     if (!drag.current || drag.current.pointerId !== event.pointerId) return;
     const delta = event.clientY - drag.current.y;
     drag.current.y = event.clientY;
+    if (delta < -3) setCopyHidden(true);
+    if (delta > 3) setCopyHidden(false);
     moveBy(-delta);
   };
 
@@ -120,12 +126,18 @@ export default function PhotographerExperience(_: {
   const handleKeyDown = (event: ReactKeyboardEvent<HTMLDivElement>) => {
     if (event.key !== "ArrowUp" && event.key !== "ArrowDown") return;
     event.preventDefault();
+    setCopyHidden(event.key === "ArrowDown");
     manualUntil.current = performance.now() + 900;
     moveBy(event.key === "ArrowDown" ? 120 : -120);
   };
 
   return (
     <section className="photo-waterfall-page" aria-label="摄影作品瀑布流">
+      <header className={`photographer-copy${copyHidden ? " is-hidden" : ""}`}>
+        <h2>{identity.name}</h2>
+        <h3>影像的意义在于把尽兴的瞬间变成永恒</h3>
+        <p>{identity.intro}</p>
+      </header>
       <div
         className="photo-waterfall-stream"
         tabIndex={0}

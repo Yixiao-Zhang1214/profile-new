@@ -4,14 +4,11 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
 
-type BuilderIdentity = {
-  english: string;
-};
-
 type BuilderProject = {
   number: string;
   kind: string;
   title: string;
+  productName?: string;
   summary: string;
   tagline?: string;
   description: string;
@@ -30,7 +27,27 @@ type BuilderProject = {
     question: string;
   }>;
   note?: string;
-  preview?: "comment" | "memento";
+  highlights?: string[];
+  highlightLead?: string;
+  highlightTitle?: string;
+  deliverables?: Array<{
+    name: string;
+    detail: string;
+  }>;
+  deliverablesIntro?: string;
+  comparison?: Array<{
+    dimension: string;
+    common: string;
+    project: string;
+  }>;
+  comparisonTitle?: string;
+  comparisonNote?: string;
+  comparisonLabels?: {
+    common: string;
+    project: string;
+  };
+  preview?: "comment" | "memento" | "sunset";
+  externalHref?: string;
   demo?: "comment" | "memento";
   gallery?: Array<{
     src: string;
@@ -40,7 +57,7 @@ type BuilderProject = {
   }>;
   video?: {
     src: string;
-    poster: string;
+    poster?: string;
     alt: string;
   };
   download?: {
@@ -152,7 +169,7 @@ const projectGroups: Array<{ title: string; english: string; projects: BuilderPr
         number: "01",
         kind: "评论洞察",
         title: "大家补充了什么",
-        summary: "评论区划重点 · 点击可回到原评论",
+        summary: "自动整理评论区的重点·别错过精彩的内容～",
         description:
           "当用户看完一篇笔记、准备进入评论区时，可以主动生成一张轻量卡片，快速看到有价值的补充、提醒、不同体验和近期变化。每个重点都能跳转到相关评论，让用户回到原始语境，自己判断总结是否可信。",
         descriptionRich: (
@@ -205,9 +222,25 @@ const projectGroups: Array<{ title: string; english: string; projects: BuilderPr
       },
       {
         number: "02",
+        kind: "交互模拟器",
+        title: "日出日落模拟器",
+        summary: "在办公室的日子，也想看看海上的不同天气，还有日出日落……",
+        description:
+          "通过时间与天气参数，模拟海上从黎明、日出、正午到日落的天空色彩、太阳位置、云层与海面光影变化。",
+        focus: ["时间模拟", "天气系统", "动态视觉"],
+        visual: {
+          src: "/ai-builder/sunrise-sunset-simulator.png",
+          alt: "日出日落模拟器的海洋场景、天气选项与时间控制界面",
+        },
+        preview: "sunset",
+        externalHref: "/living-ocean/",
+        note: "轻量交互实验，探索自然光照、天气状态与海面氛围之间的动态关系。",
+      },
+      {
+        number: "03",
         kind: "网页产品",
         title: "Memento",
-        summary: "把普通瞬间生成私人纪念卡",
+        summary: "把普通瞬间做成一张私人纪念卡",
         description:
           "用户放入一张照片或几句话，Memento 只追问一个关键细节，再把口语化的回忆整理成一张有标题、短故事和馆员评语的私人纪念卡。",
         focus: ["轻记录", "AI 写作", "情绪化表达"],
@@ -216,10 +249,10 @@ const projectGroups: Array<{ title: string; english: string; projects: BuilderPr
         note: "概念提案聚焦一次轻记录的完整闭环；点击纪念卡可在概要与完整故事之间切换。",
       },
       {
-        number: "03",
+        number: "04",
         kind: "无障碍应用",
         title: "行无碍 App",
-        summary: "无障碍地图 · 共建标注 · 互助社区",
+        summary: "一张可以共同标注的无障碍地图，还提供无障碍互助社区",
         description:
           "行无碍是一款面向残障人士、老年人，以及孕妇、伤病等行动不便人群的无障碍出行产品。它把无障碍设施地图、路线规划、用户标注与互助社区放进同一套移动端体验，让设施信息更及时，也让真实出行经验可以被共享。",
         focus: ["产品规划", "移动端设计", "AI + 地图"],
@@ -254,22 +287,135 @@ const projectGroups: Array<{ title: string; english: string; projects: BuilderPr
     english: "工作实践",
     projects: [
       {
-        number: "04",
-        kind: "内部 Skill",
+        number: "05",
+        kind: "个人提效skill",
         title: "面试复盘成长助手",
-        summary: "把面试记录转成可执行的复盘与成长建议",
+        productName: "Interview Prism",
+        summary: "贴心的求职助手，把面试记录转成可执行的复盘与成长建议",
+        link: {
+          href: "https://github.com/Yixiao-Zhang1214/Interview-Prism-Skill",
+          label: "查看 Interview Prism 代码仓 ↗",
+          installHref:
+            "git clone https://github.com/Yixiao-Zhang1214/Interview-Prism-Skill.git ~/.codex/skills/interview-prism",
+        },
         description:
-          "整理面试过程中的问题、回答与反馈，识别表达和能力短板，并生成清晰的改进建议与下一步练习计划。",
-        focus: ["结构化复盘", "能力诊断", "行动计划"],
+          "上传或粘贴真实面试文字稿。Interview Prism 会先还原问答关系，再逐个回答你真正关心的问题：面试官想考什么？这段回答哪里加分？哪里证据不够？下一次怎么答？每个判断都尽量引用原文，推测会单独标明。",
+        highlights: [
+          "设置“面试官心声”，说明真正想要考察的能力点",
+          "哪些回答形成了明确加分",
+          "哪些地方证据不足或容易被追问",
+          "用实际的成长任务，帮助你了解如何调整表达和思考方式",
+          "多场面试中，哪些问题正在改善，哪些风险反复出现",
+        ],
+        deliverables: [
+          {
+            name: "analysis.md",
+            detail: "完整复盘。包括总体结论、能力快照、重点回答分析和下一步成长任务。",
+          },
+          {
+            name: "qa-original.md",
+            detail: "按时间顺序整理原始问答，保留上下文，也方便回看每个判断来自哪里。",
+          },
+          {
+            name: "session.json",
+            detail: "结构化保存这场面试的数据，便于校验、迁移和继续写入成长账本。",
+          },
+          {
+            name: "ability-model.md",
+            detail: "记录当前能力模型，以及多场面试中已经出现的能力变化。",
+          },
+          {
+            name: "frequent-questions.md",
+            detail: "沉淀已经出现的问题、考察点和反复缺失的证据，形成个人问题库。",
+          },
+        ],
+        comparison: [
+          {
+            dimension: "从哪里开始",
+            common: "常见产品多从模拟题、职位描述或实时面试开始。",
+            project: "从你已经经历过的真实面试文字稿开始。",
+          },
+          {
+            dimension: "主要看什么",
+            common: "更常关注回答相关性、表达节奏、语法、语气和自信度。",
+            project: "重点看考察意图、回答证据、面试官顾虑和可追问点。",
+          },
+          {
+            dimension: "结论怎么来",
+            common: "通常给出即时评分、表达指标或参考答案。",
+            project: "每个重要判断尽量引用原文，事实和推测分开写。",
+          },
+          {
+            dimension: "怎么持续使用",
+            common: "多用于反复练习，并追踪模拟训练中的表现变化。",
+            project: "把多场真实面试写进同一本成长账本；样本不足时不制造趋势。",
+          },
+          {
+            dimension: "结果留在哪里",
+            common: "结果通常保留在产品仪表盘或单次反馈报告中。",
+            project: "固定生成 5 份本地文件，既能阅读，也能校验和继续积累。",
+          },
+        ],
+        focus: ["原文证据", "回答改进", "多场成长账本"],
+        note: "默认处理你主动提供的本地文字稿。公开报告前，请先检查姓名、公司、岗位和招聘信息。",
       },
       {
-        number: "05",
-        kind: "内部 Skill",
+        number: "06",
+        kind: "个人提效skill",
         title: "解释 Skill 的 Skill",
+        productName: "Explain Skill",
         summary: "把陌生 Skill 变成看得懂的离线说明书",
-        tagline: "把一个陌生 Agent Skill，翻译成任何人都能看懂的可视化说明书。",
         description:
-          "Explain Skill 会安全地读取 Skill 的说明、脚本和参考文件，解释它能做什么、怎么工作、依赖什么、有哪些风险，以及应该如何使用，最后生成一份带证据、可离线打开的单文件 HTML 报告。",
+          "给它一个 Skill 目录、SKILL.md 或 ZIP，它会在不执行目标脚本、不安装依赖的前提下，梳理这个 Skill 能做什么、如何使用、怎样运行、依赖哪些工具，以及结论来自哪里，最后生成一份可以直接分享和离线阅读的 HTML 说明书。",
+        highlightLead: "它不只解释",
+        highlightTitle: "「这个 Skill 是什么」",
+        highlights: [
+          "用 30 秒说明它解决什么问题、适合谁、需要什么输入",
+          "判断它在当前 Agent 应用中能直接使用、需要改造，还是暂时无法确认",
+          "还原一次任务的真实流程，以及主 Skill、子 Skill 和工具之间的关系",
+          "说明首次使用需要安装什么、授权什么、准备什么",
+          "让重要判断回到具体文件、行号或公开来源，并明确尚未验证的部分",
+        ],
+        deliverables: [
+          {
+            name: "report.html",
+            detail: "一份不依赖外部字体、脚本或样式的单文件说明书，可以在浏览器中离线打开，也方便直接发给其他人阅读。",
+          },
+        ],
+        deliverablesIntro: "不是聊天窗口里的一次回答，而是一份可以保存、回查和分享的独立报告。",
+        comparisonTitle: "它和手动阅读或普通 AI 总结有什么不同",
+        comparisonNote: "这里比较的是理解一个陌生 Skill 时的工作方式，而不是判断所有分析工具的优劣。",
+        comparisonLabels: {
+          common: "手动阅读或普通 AI 总结",
+          project: "Explain Skill",
+        },
+        comparison: [
+          {
+            dimension: "从哪里开始",
+            common: "逐个翻看 README、SKILL.md、脚本和配置，信息容易散落。",
+            project: "从目录、单个 SKILL.md 或 ZIP 建立只读文件清单，再按统一路径分析。",
+          },
+          {
+            dimension: "主要看什么",
+            common: "通常停留在功能概括，较少说明安装、调用、依赖和应用兼容性。",
+            project: "同时解释用途、唤起方式、任务流程、首次使用、依赖关系和设计风险。",
+          },
+          {
+            dimension: "结论怎么来",
+            common: "总结与原文件分离，读者很难确认依据。",
+            project: "重要判断链接到具体文件、行号或公开来源；无法确认的内容保留为未知。",
+          },
+          {
+            dimension: "如何保证安全",
+            common: "分析过程中可能误执行脚本、导入代码或安装目标依赖。",
+            project: "把目标 Skill 当作不可信数据，不执行脚本、不导入代码，也不安装其依赖。",
+          },
+          {
+            dimension: "结果留在哪里",
+            common: "通常留在一次对话里，后续查找和转发不方便。",
+            project: "生成独立的离线 HTML，结构完整，可以长期保存、复核和分享。",
+          },
+        ],
         reportTable: [
           { section: "30 秒看懂", question: "这是什么，适合谁，输入和输出是什么？" },
           { section: "怎么唤起它", question: "在当前应用里应该说什么？是否需要改造？" },
@@ -283,27 +429,119 @@ const projectGroups: Array<{ title: string; english: string; projects: BuilderPr
         ],
         focus: ["看懂能力", "证据与边界", "离线说明书"],
         link: {
-          href: "https://github.com/Yixiao-Zhang1214/silly-skill",
+          href: "https://github.com/Yixiao-Zhang1214/Explain-Skill",
           label: "查看 Explain Skill 代码仓 ↗",
           installHref:
-            "请安装这个仓库中的 Explain Skill：\nhttps://github.com/Yixiao-Zhang1214/silly-skill\nSkill 位于 outputs/explain-skill。",
+            "请安装这个仓库中的 Explain Skill：\nhttps://github.com/Yixiao-Zhang1214/Explain-Skill\nSkill 位于 outputs/explain-skill。",
         },
       },
       {
-        number: "06",
-        kind: "工作系统",
-        title: "标注协作平台 A",
-        summary: "任务流转与团队协作",
-        description: "围绕任务分发、标注流转与多人协作，组织内部工作系统的核心路径。",
-        focus: ["流程设计", "多人协作", "系统搭建"],
+        number: "07",
+        kind: "工作提效平台",
+        title: "Badcase评测&管理平台",
+        summary: "AI产品经理必备的标注平台！效率提升N倍！",
+        video: {
+          src: "/ai-builder/badcase-management-platform.mp4",
+          alt: "Badcase评测与管理平台操作演示",
+        },
+        description:
+          "这是一个面向 Agent 评测的 Badcase 工作台。产品和研发可以在同一处管理 Case、配置评测 PE、发起批量标注，并继续处理评测后的分类、编辑和讨论。",
+        focus: ["全量 Case 管理", "批量评测", "产研协作"],
+        sections: [
+          {
+            title: "全量 Badcase 管理",
+            body: "集中导入和维护全量 Badcase。平台支持搜索、分类统计和单条编辑，产品与研发可以随时查看当前积累了哪些问题、各类问题分别有多少。",
+          },
+          {
+            title: "评测任务与批量打标",
+            body: "针对不同评测目标配置评测 PE（Prompt），选择模型并创建评测任务。任务可以批量处理 Badcase，自动输出每条 Case 的标签、判断结果和判断理由。",
+          },
+          {
+            title: "评测结果管理",
+            body: "评测完成后，可以按问题类型查看数量和分布，快速找到主要问题。每条 Case 的标签、评测结论和相关信息都可以继续编辑，方便人工复核和修正。",
+          },
+          {
+            title: "Case 讨论与跟进",
+            body: "可从具体 Case 发起讨论，记录产品和研发的处理意见，并设置问题状态、优先级和负责人。团队可以在同一处确认问题由谁跟进、目前处理到哪一步。",
+          },
+        ],
+        gallery: [
+          {
+            src: "/ai-builder/badcase-01-tool-home.png",
+            alt: "Agent 测评工具首页与测评类型入口",
+            width: 2048,
+            height: 1080,
+          },
+          {
+            src: "/ai-builder/badcase-02-evaluation-task.png",
+            alt: "上传数据并创建 Badcase 批量评测任务",
+            width: 2048,
+            height: 1080,
+          },
+          {
+            src: "/ai-builder/badcase-03-prompt-tuning.png",
+            alt: "评测 Prompt 调优与历史版本管理",
+            width: 2048,
+            height: 1080,
+          },
+          {
+            src: "/ai-builder/badcase-04-case-management.png",
+            alt: "全量 Badcase 分类、检索与单条结果编辑",
+            width: 2048,
+            height: 1080,
+          },
+          {
+            src: "/ai-builder/badcase-05-case-discussion.png",
+            alt: "Case 讨论、处理状态、优先级与负责人管理",
+            width: 2048,
+            height: 1080,
+          },
+          {
+            src: "/ai-builder/badcase-06-evaluation-results.png",
+            alt: "批量评测结果与单条 Case 判断理由",
+            width: 2048,
+            height: 1080,
+          },
+        ],
       },
       {
-        number: "07",
-        kind: "工作系统",
-        title: "标注协作平台 B",
-        summary: "反馈、质量与进度管理",
-        description: "围绕反馈收集、质量检查与进度同步，设计更清晰的协作闭环。",
-        focus: ["质量管理", "反馈闭环", "进度协同"],
+        number: "08",
+        kind: "工作提效平台",
+        title: "业务评测平台",
+        summary: "AI产品经理心疼标注人员的产物！效率提升N倍！",
+        description:
+          "这是一个面向 CQC 标注人员的业务评测平台。它把原始输入、长文本结果和评测维度拆分到清晰的工作区，减少在表格中来回查找、横向滚动和误标的问题。",
+        focus: ["长文本阅读", "评测维度组织", "标注效率"],
+        visual: {
+          src: "/ai-builder/business-evaluation-platform.png",
+          alt: "业务评测平台的长文本阅读与多维评分界面",
+        },
+        sections: [
+          {
+            title: "长文本分栏阅读",
+            body: "将原始输入、生成话术和评分区并排展示。标注人员不需要在表格单元格之间反复展开和切换，就能对照上下文完成判断。",
+          },
+          {
+            title: "评测维度分组",
+            body: "把分散的评测项按维度组织，并显示每组的完成进度和平均分。标注人员可以看清当前评到哪里，减少漏标和错选。",
+          },
+          {
+            title: "连续标注流程",
+            body: "支持保存当前结果后直接进入下一条，也可以暂存草稿。连续操作减少页面跳转，让批量标注更顺手。",
+          },
+          {
+            title: "结果即时核对",
+            body: "页面同步展示单条总分、合格状态和已完成维度。提交前可以快速检查结果，及时发现没有评完或分数异常的 Case。",
+          },
+        ],
+        gallery: [
+          {
+            src: "/ai-builder/business-evaluation-platform.png",
+            alt: "长文本内容、评测维度与结果状态集中展示的业务评测工作区",
+            width: 2048,
+            height: 1366,
+          },
+        ],
       },
     ],
   },
@@ -466,6 +704,8 @@ function BuilderProjectDialog({
   const dialogRef = useRef<HTMLElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const [copiedInstallLink, setCopiedInstallLink] = useState(false);
+  const [activeGalleryIndex, setActiveGalleryIndex] = useState<number | null>(null);
+  const galleryLength = project.gallery?.length ?? 0;
 
   const handleCopyInstallLink = async () => {
     const installHref = project.link?.installHref ?? project.link?.href;
@@ -487,6 +727,24 @@ function BuilderProjectDialog({
     closeButtonRef.current?.focus();
 
     const handleKeyDown = (event: KeyboardEvent) => {
+      if (activeGalleryIndex !== null && galleryLength > 0) {
+        if (event.key === "Escape") {
+          event.preventDefault();
+          setActiveGalleryIndex(null);
+          return;
+        }
+        if (event.key === "ArrowLeft") {
+          event.preventDefault();
+          setActiveGalleryIndex((activeGalleryIndex - 1 + galleryLength) % galleryLength);
+          return;
+        }
+        if (event.key === "ArrowRight") {
+          event.preventDefault();
+          setActiveGalleryIndex((activeGalleryIndex + 1) % galleryLength);
+          return;
+        }
+      }
+
       if (event.key === "Escape") onClose();
       if (event.key !== "Tab" || !dialogRef.current) return;
 
@@ -513,13 +771,13 @@ function BuilderProjectDialog({
       window.removeEventListener("keydown", handleKeyDown);
       previousActiveElement?.focus();
     };
-  }, [onClose]);
+  }, [activeGalleryIndex, galleryLength, onClose]);
 
   return (
     <div className="builder-dialog-backdrop" onPointerDown={onClose}>
       <aside
         ref={dialogRef}
-        className={`builder-dialog${project.visual ? " is-product" : ""}${project.gallery ? " is-gallery" : ""}${project.video ? " is-video" : ""}${project.demo ? " is-demo" : ""}${project.embed ? " is-embed" : ""}`}
+        className={`builder-dialog${project.visual ? " is-product" : ""}${project.gallery ? " is-gallery" : ""}${project.video ? " is-video" : ""}${project.demo ? " is-demo" : ""}${project.embed ? " is-embed" : ""}${project.productName ? " is-interview-prism is-editorial-skill" : ""}`}
         role="dialog"
         aria-modal="true"
         aria-labelledby="builder-dialog-title"
@@ -560,23 +818,74 @@ function BuilderProjectDialog({
           <div className="builder-gallery">
             <div className="builder-gallery-intro builder-dialog-copy">
               <h2 id="builder-dialog-title">{project.title}</h2>
-              <p>{project.description}</p>
             </div>
-            <div className="builder-gallery-grid">
-              {project.gallery.map((work, index) => (
-                <figure key={work.src}>
-                  <Image
-                    src={work.src}
-                    alt={work.alt}
-                    width={work.width}
-                    height={work.height}
-                    unoptimized
-                    sizes="(max-width: 640px) 46vw, 220px"
-                  />
-                  <figcaption>{String(index + 1).padStart(2, "0")}</figcaption>
+            {project.video && (
+              <section className="builder-gallery-recording" aria-labelledby="builder-recording-title">
+                <header>
+                  <h3 id="builder-recording-title">操作录屏</h3>
+                  <p>完整展示评测任务、Badcase 管理和 Case 跟进流程</p>
+                  <p className="builder-gallery-recording-description">
+                    {project.description}
+                  </p>
+                </header>
+                <figure className="builder-gallery-video">
+                  <video
+                    controls
+                    playsInline
+                    preload="metadata"
+                    poster={project.video.poster}
+                    aria-label={project.video.alt}
+                  >
+                    <source src={project.video.src} type="video/mp4" />
+                  </video>
                 </figure>
-              ))}
-            </div>
+              </section>
+            )}
+            {project.sections && project.sections.length > 0 && (
+              <div className="builder-dialog-explain-sections" aria-label="平台用途">
+                {project.sections.map((section, index) => (
+                  <section key={section.title}>
+                    <span>{String(index + 1).padStart(2, "0")}</span>
+                    <div>
+                      <h3>{section.title}</h3>
+                      <p>{section.body}</p>
+                    </div>
+                  </section>
+                ))}
+              </div>
+            )}
+            <section className="builder-gallery-screenshots" aria-labelledby="builder-screenshots-title">
+              <header>
+                <h3 id="builder-screenshots-title">产品界面</h3>
+                <p>点击图片查看完整界面</p>
+              </header>
+              <div className="builder-gallery-grid">
+                {project.gallery.map((work, index) => (
+                  <figure key={work.src}>
+                    <button
+                      className="builder-gallery-open"
+                      type="button"
+                      aria-label={`查看大图：${work.alt}`}
+                      onClick={() => setActiveGalleryIndex(index)}
+                    >
+                      <Image
+                        src={work.src}
+                        alt={work.alt}
+                        width={work.width}
+                        height={work.height}
+                        unoptimized
+                        sizes="(max-width: 720px) 100vw, 560px"
+                      />
+                      <span>查看大图</span>
+                    </button>
+                    <figcaption>
+                      <span>{String(index + 1).padStart(2, "0")}</span>
+                      {work.alt}
+                    </figcaption>
+                  </figure>
+                ))}
+              </div>
+            </section>
           </div>
         ) : project.video ? (
           <div className="builder-video-project">
@@ -672,14 +981,16 @@ function BuilderProjectDialog({
                 ))}
               </div>
 
-              <section className="builder-dialog-focus" aria-labelledby="builder-focus-title">
-                <h3 id="builder-focus-title">能力侧重</h3>
-                <ul>
-                  {project.focus.map((item) => (
-                    <li key={item}>{item}</li>
-                  ))}
-                </ul>
-              </section>
+              {!project.link?.href.includes("Interview-Prism-Skill") && (
+                <section className="builder-dialog-focus" aria-labelledby="builder-focus-title">
+                  <h3 id="builder-focus-title">能力侧重</h3>
+                  <ul>
+                    {project.focus.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </section>
+              )}
 
               {project.download && (
                 <a className="builder-dialog-download" href={project.download.href} download>
@@ -691,15 +1002,16 @@ function BuilderProjectDialog({
         ) : (
           <>
             <div className="builder-dialog-copy">
+              {project.productName && <p className="builder-dialog-product-name">{project.productName}</p>}
               <h2 id="builder-dialog-title">{project.title}</h2>
               {project.tagline && <p className="builder-dialog-tagline">{project.tagline}</p>}
               <p>{project.description}</p>
             </div>
 
-            {project.link && (
-              <div className="builder-dialog-repo-bar">
+            {project.productName && project.link && (
+              <div className="builder-dialog-repo-bar is-primary">
                 <div>
-                  <span>代码仓库 · 安装位置</span>
+                  <span>代码仓库</span>
                   <a href={project.link.href} target="_blank" rel="noreferrer">
                     {project.link.href.replace("https://", "")}
                   </a>
@@ -707,6 +1019,85 @@ function BuilderProjectDialog({
                 <button type="button" onClick={handleCopyInstallLink}>
                   {copiedInstallLink ? "已复制" : "复制安装地址"}
                 </button>
+              </div>
+            )}
+
+            {project.highlights && project.highlights.length > 0 && (
+              <section className="builder-dialog-highlights" aria-labelledby="builder-highlights-title">
+                <p id="builder-highlights-title">
+                  {project.highlightLead ?? "它不只回答"}<br />
+                  <strong>{project.highlightTitle ?? "「这场表现怎么样」"}</strong>
+                </p>
+                <ul>
+                  {project.highlights.map((highlight) => (
+                    <li key={highlight}>{highlight}</li>
+                  ))}
+                </ul>
+              </section>
+            )}
+
+            {project.deliverables && project.deliverables.length > 0 && (
+              <section className="builder-dialog-deliverables" aria-labelledby="builder-deliverables-title">
+                <header>
+                  <p>固定产出 / {String(project.deliverables.length).padStart(2, "0")}</p>
+                  <h3 id="builder-deliverables-title">你会得到什么</h3>
+                  <span>{project.deliverablesIntro ?? "不是一段看完就消失的总结，而是一套可以回查和继续积累的文件。"}</span>
+                </header>
+                <ol>
+                  {project.deliverables.map((deliverable, index) => (
+                    <li key={deliverable.name}>
+                      <span>{String(index + 1).padStart(2, "0")}</span>
+                      <code>{deliverable.name}</code>
+                      <p>{deliverable.detail}</p>
+                    </li>
+                  ))}
+                </ol>
+              </section>
+            )}
+
+            {project.comparison && project.comparison.length > 0 && (
+              <section className="builder-dialog-comparison" aria-labelledby="builder-comparison-title">
+                <header>
+                  <p>定位对比</p>
+                  <h3 id="builder-comparison-title">{project.comparisonTitle ?? "它和常见面试复盘产品有什么不同"}</h3>
+                  <span>{project.comparisonNote ?? "这里比较的是使用方式和输出重点，不代表所有产品都完全相同。"}</span>
+                </header>
+                <div className="builder-dialog-comparison-table" role="table" aria-label="产品定位对比">
+                  <div className="builder-dialog-comparison-row is-heading" role="row">
+                    <span role="columnheader">比较维度</span>
+                    <span role="columnheader">{project.comparisonLabels?.common ?? "常见 AI 面试产品"}</span>
+                    <span role="columnheader">{project.comparisonLabels?.project ?? "Interview Prism"}</span>
+                  </div>
+                  {project.comparison.map((row) => (
+                    <div className="builder-dialog-comparison-row" role="row" key={row.dimension}>
+                      <strong role="cell">{row.dimension}</strong>
+                      <p role="cell">{row.common}</p>
+                      <p role="cell">{row.project}</p>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {project.link && (
+              <div
+                className={`builder-dialog-repo-bar${project.productName ? " is-footer" : ""}`}
+              >
+                <div>
+                  <span>{project.link.label}</span>
+                  <a href={project.link.href} target="_blank" rel="noreferrer">
+                    {project.link.href.replace("https://", "")}
+                  </a>
+                </div>
+                {project.productName ? (
+                  <a className="builder-dialog-repo-action" href={project.link.href} target="_blank" rel="noreferrer">
+                    查看代码仓 <span aria-hidden="true">↗</span>
+                  </a>
+                ) : (
+                  <button type="button" onClick={handleCopyInstallLink}>
+                    {copiedInstallLink ? "已复制" : "复制安装地址"}
+                  </button>
+                )}
               </div>
             )}
 
@@ -749,42 +1140,110 @@ function BuilderProjectDialog({
               </div>
             )}
 
-            <section className="builder-dialog-focus" aria-labelledby="builder-focus-title">
-              <h3 id="builder-focus-title">能力侧重</h3>
-              <ul>
-                {project.focus.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-            </section>
+            {!project.productName && (
+              <section className="builder-dialog-focus" aria-labelledby="builder-focus-title">
+                <h3 id="builder-focus-title">能力侧重</h3>
+                <ul>
+                  {project.focus.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </section>
+            )}
 
           </>
         )}
 
-        {!project.embed && (
+        {!project.embed && !project.productName && (
           <p className="builder-dialog-note">
             {project.note ?? "项目材料可继续补充为产品截图、交互录屏或代码仓库。"}
           </p>
         )}
+
+        {activeGalleryIndex !== null &&
+          project.gallery &&
+          typeof document !== "undefined" &&
+          createPortal(
+            <div
+              className="builder-gallery-lightbox"
+              role="dialog"
+              aria-modal="true"
+              aria-label="产品界面大图"
+              onPointerDown={(event) => {
+                event.stopPropagation();
+                setActiveGalleryIndex(null);
+              }}
+            >
+              <button
+                className="builder-gallery-lightbox-close"
+                type="button"
+                onClick={() => setActiveGalleryIndex(null)}
+              >
+                关闭
+              </button>
+              <button
+                className="builder-gallery-lightbox-nav is-previous"
+                type="button"
+                aria-label="上一张"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setActiveGalleryIndex(
+                    (activeGalleryIndex - 1 + galleryLength) % galleryLength,
+                  );
+                }}
+              >
+                ‹
+              </button>
+              <figure onPointerDown={(event) => event.stopPropagation()}>
+                <Image
+                  src={project.gallery[activeGalleryIndex].src}
+                  alt={project.gallery[activeGalleryIndex].alt}
+                  width={project.gallery[activeGalleryIndex].width}
+                  height={project.gallery[activeGalleryIndex].height}
+                  unoptimized
+                  sizes="96vw"
+                />
+                <figcaption>
+                  <span>
+                    {String(activeGalleryIndex + 1).padStart(2, "0")} / {String(galleryLength).padStart(2, "0")}
+                  </span>
+                  {project.gallery[activeGalleryIndex].alt}
+                </figcaption>
+              </figure>
+              <button
+                className="builder-gallery-lightbox-nav is-next"
+                type="button"
+                aria-label="下一张"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setActiveGalleryIndex((activeGalleryIndex + 1) % galleryLength);
+                }}
+              >
+                ›
+              </button>
+            </div>,
+            document.body,
+          )}
       </aside>
     </div>
   );
 }
 
-export default function AiBuilderExperience({ identity }: { identity: BuilderIdentity }) {
+export default function AiBuilderExperience() {
   const [selectedProject, setSelectedProject] = useState<BuilderProject | null>(null);
 
   return (
     <section className="builder-experience" aria-labelledby="builder-title">
       <header className="builder-copy">
+        <strong className="builder-role-label">AI Builder</strong>
         <p>
-          AI 构建 · 06 个项目 · 02 个 AIGC 研究
+          AI 构建 · 08 个项目 · 02 个 AIGC 研究
         </p>
         <h2 id="builder-title">
-          把 AI 做成能被使用的东西。
+          成为合格的AI builder，快乐玩AI
         </h2>
         <span>
-          从面向真实用户的 App、可复用 Skill，到团队协作系统，我用 AI、设计与代码把想法变成真实体验。
+          从面向真实用户的产品、可复用 Skill，到标注系统，我从生活和工作出发，用 AI、设计把想法变成真实体验。
         </span>
       </header>
 
@@ -797,14 +1256,21 @@ export default function AiBuilderExperience({ identity }: { identity: BuilderIde
             <div className="builder-project-grid">
               {group.projects.map((project) => (
                 <button
-                  className={`builder-project-card${project.visual ? " has-visual" : ""}${project.preview === "comment" ? " has-comment-preview" : ""}${project.preview === "memento" ? " has-memento-preview" : ""}`}
+                  className={`builder-project-card${project.visual || project.video ? " has-visual" : ""}${project.preview === "comment" ? " has-comment-preview" : ""}${project.preview === "memento" ? " has-memento-preview" : ""}${project.preview === "sunset" ? " has-sunset-preview" : ""}`}
                   type="button"
-                  aria-haspopup="dialog"
-                  aria-label={`${project.title}，查看项目详情`}
-                  onClick={() => setSelectedProject(project)}
+                  aria-haspopup={project.externalHref ? undefined : "dialog"}
+                  aria-label={`${project.title}，${project.externalHref ? "进入在线模拟器" : "查看项目详情"}`}
+                  onClick={() => {
+                    if (project.externalHref) {
+                      window.open(project.externalHref, "_blank", "noopener,noreferrer");
+                      return;
+                    }
+
+                    setSelectedProject(project);
+                  }}
                   key={project.number}
                 >
-                  {project.visual && (
+                  {project.visual && project.preview !== "sunset" && (
                     <span className="builder-project-visual" aria-hidden="true">
                       <Image
                         src={project.visual.src}
@@ -813,6 +1279,16 @@ export default function AiBuilderExperience({ identity }: { identity: BuilderIde
                         unoptimized
                         sizes="(max-width: 640px) 46vw, 220px"
                       />
+                    </span>
+                  )}
+                  {project.video && (
+                    <span
+                      className="builder-project-visual builder-project-video-preview"
+                      aria-hidden="true"
+                    >
+                      <video autoPlay muted loop playsInline preload="metadata">
+                        <source src={project.video.src} type="video/mp4" />
+                      </video>
                     </span>
                   )}
                   {project.preview === "comment" && (
@@ -830,6 +1306,17 @@ export default function AiBuilderExperience({ identity }: { identity: BuilderIde
                     <span className="builder-memento-preview" aria-hidden="true">
                       <Image
                         src="/ai-builder/memento-original-card.jpg"
+                        alt=""
+                        fill
+                        unoptimized
+                        sizes="110px"
+                      />
+                    </span>
+                  )}
+                  {project.preview === "sunset" && project.visual && (
+                    <span className="builder-sunset-preview" aria-hidden="true">
+                      <Image
+                        src={project.visual.src}
                         alt=""
                         fill
                         unoptimized
@@ -867,9 +1354,9 @@ export default function AiBuilderExperience({ identity }: { identity: BuilderIde
             onClick={() => setSelectedProject(aigcImageProject)}
           >
             <span>
-              <small>13 件作品</small>
-              <strong>AIGC 生图</strong>
-              <em>打开作品集 ↗</em>
+              <small>AIGC 图像作品</small>
+              <strong>持续更新中……</strong>
+              <em></em>
             </span>
             <span className="builder-creative-thumbnails" aria-hidden="true">
               {["01", "05", "12"].map((work) => (
@@ -906,9 +1393,9 @@ export default function AiBuilderExperience({ identity }: { identity: BuilderIde
             onClick={() => setSelectedProject(aigcVideoProject)}
           >
             <span>
-              <small>视频实验</small>
-              <strong>AIGC 生视频</strong>
-              <em>《黄河捞尸人》宣传片 ↗</em>
+              <small>AIGC 视频实验</small>
+              <strong>《黄河捞尸人》宣传片</strong>
+              <em></em>
             </span>
             <span className="builder-video-preview" aria-hidden="true">
               <video
@@ -927,8 +1414,8 @@ export default function AiBuilderExperience({ identity }: { identity: BuilderIde
       </section>
 
       <div className="builder-footer-note">
-        <p>点击卡片，在弹窗中展开项目详情。</p>
-        <span>工作实践使用脱敏截图或抽象流程图</span>
+        <p>点击卡片查看项目详情。</p>
+        <span>工作项目仅展示脱敏截图和抽象流程图。</span>
       </div>
 
       {selectedProject &&

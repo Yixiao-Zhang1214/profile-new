@@ -1,16 +1,19 @@
 import Image from "next/image";
+import ContactSpotlight from "./contact-spotlight";
 import HeroCover from "./hero-cover";
+import IdentityNavMenu from "./identity-nav-menu";
+import IdentityPhotoReveal from "./identity-photo-reveal";
 import IdentityShowcase from "./identity-showcase";
 import PersonaParticleTransition from "./persona-particle-transition";
 
 const identities = [
   {
     name: "新闻与传播学生",
-    shortName: "新闻与传播",
+    shortName: "求学者",
     english: "JOURNALISM & COMMUNICATION",
-    statement: "先看见人，\n再讲好故事。",
+    statement: "先读懂人，\n再讲好故事",
     intro:
-      "采访、观察与写作，让我习惯从真实的人出发。它们也是我理解用户、梳理问题和组织表达的起点。",
+      "新传的学习让我 理解“终身学习”的含义，习惯跟踪新事物，习惯把复杂的事研究清楚。后来做产品，我也一直沿用这套方法。",
     skills: "采访研究 / 内容策划 / 叙事表达",
     character: "/personas/news-interviewer-camera-transparent.png",
     introCharacter: "/personas/clean/journalism-person.png",
@@ -34,7 +37,7 @@ const identities = [
     name: "AI 产品经理",
     shortName: "AI 产品经理",
     english: "AI PRODUCT MANAGER",
-    statement: "让 AI 从模型能力，\n走进真实使用。",
+    statement: "从AI native的视角，\n让模型能力落地产品",
     intro:
       "从小爱的 C 端大模型策略调优能力，到抖音精选的 AI + 推荐能力，再到电商直播的 AI + 业务场景，我持续把模型能力转化为用户可感知、业务可验证的产品体验。",
     skills: "用户洞察 / 产品策略 / 方案交付",
@@ -57,12 +60,38 @@ const identities = [
     ],
   },
   {
+    name: "AI Builder",
+    shortName: "AI Builder",
+    english: "AI BUILDER",
+    statement: "成为合格的AI builder，\n快乐玩AI",
+    intro:
+      "从面向真实用户的产品、可复用 Skill，到标注系统，我从生活和工作出发，用 AI、设计把想法变成真实体验。",
+    skills: "AI 原型 / 快速开发 / 实验迭代",
+    character: "/personas/ai-builder-transparent.png",
+    introCharacter: "/personas/clean/ai-builder-solo.png",
+    tone: "ink",
+    projects: [
+      {
+        type: "独立构建 · 示例项目",
+        title: "一周一个 AI 原型",
+        result: "放置可体验链接、构建过程、技术选择与学习结论。",
+        media: "产品演示 / 代码仓库",
+      },
+      {
+        type: "交互实验 · 示例项目",
+        title: "与模型一起思考",
+        result: "记录一次新交互方式从想法到被使用的完整路径。",
+        media: "交互录屏 / 实验数据",
+      },
+    ],
+  },
+  {
     name: "旅行家",
     shortName: "旅行家",
     english: "TRAVELER",
-    statement: "换一个坐标，也换一种判断。",
+    statement: "地球online持续探索中",
     intro:
-      "去过 16 个国家，带领过 30+ 次旅行项目，也把旅途中观察到的真实需求，变成了一次成功的旅行创业实践。",
+      "“人生漫游者”是我的信条，我相信生活在别处能持续给我带来灵感。从 2023 年开始，我组织了 30 多次旅行项目，建立了一个 4000 多人的社群，也把一路遇到的需求做成了产品。",
     skills: "田野观察 / 跨文化感知 / 旅行书写",
     character: "/personas/traveler-hiking-boots-transparent.png",
     introCharacter: "/personas/clean/traveler-solo.png",
@@ -88,7 +117,7 @@ const identities = [
     english: "PHOTOGRAPHER",
     statement: "留住那些，\n没被说出口的。",
     intro:
-      "镜头训练我注意情绪、节奏与微小变化。摄影也是另一种研究方式：不急于解释，先认真地看。",
+      "当你回看的时候，回忆起当时的心情，影像会让这段回忆变得更加具体，也更加鲜活",
     skills: "视觉叙事 / 纪实摄影 / 编辑策展",
     character: "/personas/photographer-transparent.png",
     introCharacter: "/personas/clean/photographer-solo.png",
@@ -105,32 +134,6 @@ const identities = [
         title: "城市的安静时刻",
         result: "预留横版、竖版照片和项目背景的灵活组合。",
         media: "照片组图 / 出版物",
-      },
-    ],
-  },
-  {
-    name: "AI Builder",
-    shortName: "AI Builder",
-    english: "AI BUILDER",
-    statement: "把 AI 做成\n能被使用的东西。",
-    intro:
-      "从面向真实用户的 App、可复用 Skill，到团队协作系统，我用 AI、设计与代码把想法变成真实体验。",
-    skills: "AI 原型 / 快速开发 / 实验迭代",
-    character: "/personas/ai-builder-transparent.png",
-    introCharacter: "/personas/clean/ai-builder-solo.png",
-    tone: "ink",
-    projects: [
-      {
-        type: "独立构建 · 示例项目",
-        title: "一周一个 AI 原型",
-        result: "放置可体验链接、构建过程、技术选择与学习结论。",
-        media: "产品演示 / 代码仓库",
-      },
-      {
-        type: "交互实验 · 示例项目",
-        title: "与模型一起思考",
-        result: "记录一次新交互方式从想法到被使用的完整路径。",
-        media: "交互录屏 / 实验数据",
       },
     ],
   },
@@ -156,13 +159,9 @@ export default function Home() {
 
         <nav className="desktop-nav" aria-label="主要导航">
           <a href="#about">关于我</a>
-          <a href="#identities">五个身份</a>
+          <IdentityNavMenu />
           <a href="#contact">联系我</a>
         </nav>
-
-        <a className="header-year" href="#identities">
-          2026 作品集
-        </a>
       </header>
 
       <HeroCover />
@@ -173,16 +172,15 @@ export default function Home() {
       />
 
       <section className="identity-intro" id="about">
+        <IdentityPhotoReveal />
         <div className="identity-intro-copy">
-          <p>一个人 · 五种视角</p>
+          <p></p>
           <h2>
             五个身份，
             <br />
-            同一个好奇的人。
+            组成一个好奇的人。
           </h2>
-          <span>
-            每个身份都不是标签，而是一种理解世界、解决问题和创造作品的方式。
-          </span>
+          <span></span>
         </div>
         <nav className="identity-intro-personas" aria-label="选择一个身份继续浏览">
           {identities.map((identity) => (
@@ -212,7 +210,7 @@ export default function Home() {
 
       <section className="capability-strip" aria-label="能力关键词">
         <div className="capability-track">
-          {[...capabilities, ...capabilities].map((capability, index) => (
+          {[...capabilities, ...capabilities, ...capabilities, ...capabilities].map((capability, index) => (
             <span key={`${capability}-${index}`}>
               {capability}
               <i aria-hidden="true" />
@@ -221,32 +219,62 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="personal-note">
-        <div>
-          <p>我的路径</p>
-          <h2>路径不是直线，视角却越来越完整。</h2>
-        </div>
-        <div>
-          <p>
-            传播让我理解人，旅行让我保持开放，摄影让我看见细节，产品与构建让我把这些能力连接起来。
-          </p>
-          <span>这里可以继续替换为个人经历、教育背景与当前关注。</span>
-        </div>
-      </section>
-
       <section className="contact-section" id="contact">
-        <p>一起做点有意义的事</p>
-        <h2>一起做点值得记住的事。</h2>
-        <span>正在寻找 AI 产品相关机会，也欢迎研究、内容、旅行与摄影方向的合作。</span>
-        <a href="mailto:hello@example.com">hello@example.com</a>
+        <ContactSpotlight />
+        <div className="contact-background" aria-hidden="true">
+          <span className="contact-orb contact-orb-blue" />
+          <span className="contact-orb contact-orb-yellow" />
+          <span className="contact-orb contact-orb-center" />
+        </div>
+
+        <div className="contact-layout">
+          <div className="contact-copy">
+            <h2>
+              如果你在找一个<br />
+              <span>能自己把想法做出来</span>的产品人
+            </h2>
+            <p className="contact-lead">
+              <strong>AI native 的产品人</strong>，持续学习，对 AI 和新技术保持兴趣。
+              <br />
+              <strong>正在寻找 AI 产品方向的机会，也欢迎有意思的合作。</strong>
+            </p>
+
+            <div className="contact-traits" aria-label="个人特点">
+              <span>好奇，边做边学</span>
+              <span>懂得AI能力边界</span>
+              <span>AI 的答案不是终点</span>
+              <span>保有自己的判断</span>
+              <span>爱折腾，不随大流</span>
+            </div>
+
+            <div className="contact-actions">
+              <a
+                className="contact-secondary-action"
+                href="/documents/yixiao-zhang-resume.pdf"
+                target="_blank"
+                rel="noreferrer"
+              >
+                查看我的简历
+              </a>
+            </div>
+          </div>
+
+          <aside className="contact-card" aria-label="联系方式">
+            <h3>找到我</h3>
+            <div><strong>邮箱</strong><a href="mailto:172938960@qq.com">172938960@qq.com</a></div>
+            <div><strong>电话</strong><span>13868422320</span></div>
+            <div><strong>微信</strong><span>sunnyzyx1214</span></div>
+            <div><strong>个人简历</strong><span>待添加</span></div>
+          </aside>
+        </div>
       </section>
 
       <footer>
         <span>个人作品集 · 2026</span>
         <div>
-          <a href="mailto:hello@example.com">邮箱</a>
-          <span>LinkedIn · 待添加</span>
-          <span>摄影作品 · 待添加</span>
+          <a href="mailto:172938960@qq.com">邮箱</a>
+          <span>13868422320</span>
+          <span>sunnyzyx1214</span>
         </div>
       </footer>
     </main>
