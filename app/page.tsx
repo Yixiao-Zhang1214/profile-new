@@ -204,6 +204,14 @@ export default function Home() {
             </a>
           ))}
         </nav>
+        <a
+          className="identity-intro-scroll-cue"
+          href={`#identity-${identities[0].tone}`}
+          aria-label={`向下查看${identities[0].name}`}
+        >
+          <span>向下探索身份</span>
+          <i aria-hidden="true" />
+        </a>
       </section>
 
       <IdentityShowcase identities={identities} />
@@ -230,8 +238,10 @@ export default function Home() {
         <div className="contact-layout">
           <div className="contact-copy">
             <h2>
-              如果你在找一个<br />
-              <span>能自己把想法做出来</span>的产品人
+              <span className="contact-title-line">如果你在找一个</span>
+              <span className="contact-title-line">
+                <span className="contact-title-accent">能自己把想法做出来</span>的产品人
+              </span>
             </h2>
             <p className="contact-lead">
               <strong>AI native 的产品人</strong>，持续学习，对 AI 和新技术保持兴趣。
@@ -264,7 +274,12 @@ export default function Home() {
             <div><strong>邮箱</strong><a href="mailto:172938960@qq.com">172938960@qq.com</a></div>
             <div><strong>电话</strong><span>13868422320</span></div>
             <div><strong>微信</strong><span>sunnyzyx1214</span></div>
-            <div><strong>个人简历</strong><span>待添加</span></div>
+            <div>
+              <strong>个人简历</strong>
+              <a href="/documents/yixiao-zhang-resume.pdf" target="_blank" rel="noreferrer">
+                查看简历
+              </a>
+            </div>
           </aside>
         </div>
       </section>

@@ -704,6 +704,29 @@ main {
   line-height: 1.7;
 }
 
+.hero-resume-link {
+  display: inline-flex;
+  min-height: 38px;
+  margin-top: 14px;
+  padding: 0 18px;
+  border: 1px solid rgba(32, 33, 28, 0.2);
+  border-radius: 999px;
+  align-items: center;
+  justify-content: center;
+  color: var(--deep-moss);
+  background: rgba(255, 255, 255, 0.58);
+  font-size: 12px;
+  font-weight: 620;
+  backdrop-filter: blur(10px);
+  transition: transform 180ms ease, background 180ms ease, box-shadow 180ms ease;
+}
+
+.hero-resume-link:hover {
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 10px 24px rgba(32, 33, 28, 0.1);
+  transform: translateY(-2px);
+}
+
 .scroll-cue {
   position: absolute;
   bottom: 0;
@@ -922,6 +945,41 @@ main {
 
 .identity-intro-personas > a:focus-visible > span {
   box-shadow: 0 3px 0 -1px var(--clay);
+}
+
+.identity-intro-scroll-cue {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  z-index: 6;
+  display: grid;
+  justify-items: center;
+  gap: 9px;
+  color: rgba(32, 33, 28, 0.5);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  transform: translateX(-50%);
+  transition: color 180ms ease;
+}
+
+.identity-intro-scroll-cue i {
+  display: block;
+  width: 1px;
+  height: 42px;
+  background: currentColor;
+  transform-origin: top;
+  animation: identity-scroll-line 1.8s ease-in-out infinite;
+}
+
+.identity-intro-scroll-cue:hover,
+.identity-intro-scroll-cue:focus-visible {
+  color: var(--clay);
+}
+
+@keyframes identity-scroll-line {
+  0%, 100% { transform: scaleY(0.55); opacity: 0.45; }
+  50% { transform: scaleY(1); opacity: 1; }
 }
 
 .persona-particle-canvas {
@@ -4561,10 +4619,12 @@ button.builder-creative-item:focus-visible {
 .traveler-next-cue > div {
   display: flex;
   margin-top: 4px;
-  gap: 5px;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .traveler-next-cue b {
+  width: max-content;
   padding: 2px 4px;
   border: 0;
   border-bottom: 1px solid rgba(113, 82, 48, 0.22);
@@ -4572,6 +4632,7 @@ button.builder-creative-item:focus-visible {
   font-size: 6px;
   font-weight: 620;
   letter-spacing: 0.02em;
+  white-space: nowrap;
 }
 
 .traveler-next-cue em {
@@ -5790,15 +5851,20 @@ main .contact-section::after {
 }
 
 .contact-copy h2 {
-  max-width: 12ch;
+  max-width: none;
   margin: 0 0 24px;
-  font-size: clamp(48px, 5vw, 72px);
+  font-size: clamp(42px, 3.7vw, 56px);
   font-weight: 660;
   letter-spacing: -0.075em;
   line-height: 1.08;
 }
 
-.contact-copy h2 span {
+.contact-title-line {
+  display: block;
+  white-space: nowrap;
+}
+
+.contact-copy h2 .contact-title-accent {
   color: #2b6cff;
   background: linear-gradient(90deg, #2b6cff, #7c5cff, #2b6cff);
   background-size: 200% auto;
@@ -6029,7 +6095,7 @@ footer a {
 
 @media (min-width: 900px) {
   html {
-    scroll-snap-type: y proximity;
+    scroll-snap-type: none;
   }
 
   .poster-hero,
@@ -6038,7 +6104,7 @@ footer a {
   .personal-note,
   .contact-section {
     min-height: 100svh;
-    scroll-snap-align: start;
+    scroll-snap-align: none;
     scroll-snap-stop: normal;
   }
 
@@ -6186,7 +6252,7 @@ footer a {
 
 @media (min-width: 721px) and (max-width: 1020px) {
   html {
-    scroll-snap-type: y proximity;
+    scroll-snap-type: none;
   }
 
   .poster-hero,
@@ -6195,7 +6261,7 @@ footer a {
   .personal-note,
   .contact-section {
     min-height: 100svh;
-    scroll-snap-align: start;
+    scroll-snap-align: none;
     scroll-snap-stop: normal;
   }
 
@@ -8984,16 +9050,118 @@ footer a {
 }
 
 .builder-dialog.is-gallery .builder-gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 26px 18px;
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto !important;
+  max-height: none !important;
+  columns: 4;
+  column-gap: 16px;
+  column-fill: balance;
+  overflow: visible;
+}
+
+.builder-project-card h4 {
+  font-size: clamp(11px, 0.95vw, 15px) !important;
+  line-height: 1.25;
+}
+
+.builder-project-card p {
+  font-size: 11px !important;
+  line-height: 1.5;
+}
+
+/* AI Builder project cards: warm, substantial frosted glass. */
+.builder-project-card {
+  border: 1px solid rgba(255, 255, 255, 0.9) !important;
+  background:
+    radial-gradient(circle at 16% 4%, rgba(255, 255, 255, 0.96), transparent 34%),
+    radial-gradient(circle at 88% 92%, rgba(238, 224, 194, 0.2), transparent 38%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.76), rgba(247, 244, 235, 0.56)) !important;
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.98),
+    inset 2px 0 0 rgba(255, 255, 255, 0.56),
+    inset 0 -7px 12px rgba(151, 132, 96, 0.12),
+    inset -2px 0 0 rgba(152, 137, 108, 0.07),
+    0 2px 0 rgba(187, 172, 142, 0.2),
+    0 10px 18px rgba(72, 66, 53, 0.08),
+    0 26px 48px rgba(72, 66, 53, 0.1) !important;
+  backdrop-filter: blur(22px) saturate(1.16);
+  -webkit-backdrop-filter: blur(22px) saturate(1.16);
+}
+
+.builder-project-card::before {
+  inset: 1px 1px auto !important;
+  width: auto;
+  height: 48%;
+  border: 0 !important;
+  border-radius: 15px 15px 42% 42% !important;
+  background:
+    linear-gradient(112deg, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.06) 42%, transparent 64%),
+    radial-gradient(ellipse at 72% 0%, rgba(255, 255, 255, 0.56), transparent 55%) !important;
+  opacity: 0.82;
+  transform: translate3d(0, 0, 0);
+  transition: opacity 240ms ease, transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.builder-project-card::after {
+  position: absolute;
+  right: 8px;
+  bottom: 1px;
+  left: 8px;
+  z-index: 1;
+  height: 8px;
+  border-radius: 0 0 12px 12px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0), rgba(151, 132, 96, 0.15));
+  box-shadow: inset 0 -1px 0 rgba(121, 105, 77, 0.12);
+  content: "";
+  pointer-events: none;
+}
+
+.builder-project-card.has-visual {
+  border-color: rgba(255, 255, 255, 0.9) !important;
+  background:
+    linear-gradient(108deg, rgba(255, 255, 255, 0.82), rgba(250, 247, 238, 0.42) 62%, rgba(255, 255, 255, 0.2)) !important;
+}
+
+.builder-project-card:hover,
+.builder-project-card:focus-visible {
+  border-color: rgba(255, 255, 255, 0.98) !important;
+  background:
+    radial-gradient(circle at 20% 2%, rgba(255, 255, 255, 1), transparent 38%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.86), rgba(248, 244, 233, 0.66)) !important;
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 1),
+    inset 2px 0 0 rgba(255, 255, 255, 0.68),
+    inset 0 -8px 14px rgba(151, 132, 96, 0.14),
+    0 3px 0 rgba(187, 172, 142, 0.18),
+    0 16px 24px rgba(72, 66, 53, 0.1),
+    0 34px 60px rgba(72, 66, 53, 0.14) !important;
+  transform: translateY(-4px);
+}
+
+.builder-project-card:hover::before,
+.builder-project-card:focus-visible::before {
+  opacity: 1;
+  transform: translate3d(7px, -2px, 0);
+}
+
+.builder-project-card:active {
+  transform: translateY(-2px) scale(0.995);
+}
+
+.builder-dialog.is-gallery > .builder-gallery {
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .builder-dialog.is-gallery .builder-gallery-grid figure {
-  display: grid;
+  display: inline-grid;
+  width: 100%;
   min-width: 0;
   gap: 10px;
-  margin: 0;
+  margin: 0 0 20px;
+  break-inside: avoid;
 }
 
 .builder-gallery-open {
@@ -9002,9 +9170,9 @@ footer a {
   overflow: hidden;
   width: 100%;
   padding: 0;
-  border: 1px solid rgba(32, 33, 28, 0.12);
-  border-radius: 13px;
-  background: #eef1f3;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
   cursor: zoom-in;
 }
 
@@ -9012,8 +9180,9 @@ footer a {
   display: block;
   width: 100%;
   height: auto;
-  aspect-ratio: 16 / 9;
-  object-fit: contain;
+  aspect-ratio: auto;
+  object-fit: initial;
+  border-radius: 10px;
   transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1), filter 180ms ease;
 }
 
@@ -9147,7 +9316,7 @@ footer a {
 
 @media (min-width: 721px) and (max-width: 1020px) {
   .builder-dialog.is-gallery .builder-gallery-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    columns: 2;
   }
 }
 
@@ -9171,6 +9340,10 @@ footer a {
   .builder-dialog.is-gallery .builder-dialog-explain-sections,
   .builder-dialog.is-gallery .builder-gallery-grid {
     grid-template-columns: 1fr;
+  }
+
+  .builder-dialog.is-gallery .builder-gallery-grid {
+    columns: 1;
   }
 
   .builder-dialog.is-gallery .builder-gallery-intro {

@@ -442,6 +442,7 @@ const projectGroups: Array<{ title: string; english: string; projects: BuilderPr
         summary: "AI产品经理必备的标注平台！效率提升N倍！",
         video: {
           src: "/ai-builder/badcase-management-platform.mp4",
+          poster: "/ai-builder/badcase-01-tool-home.png",
           alt: "Badcase评测与管理平台操作演示",
         },
         description:
@@ -1286,9 +1287,13 @@ export default function AiBuilderExperience() {
                       className="builder-project-visual builder-project-video-preview"
                       aria-hidden="true"
                     >
-                      <video autoPlay muted loop playsInline preload="metadata">
-                        <source src={project.video.src} type="video/mp4" />
-                      </video>
+                      <Image
+                        src={project.video.poster}
+                        alt=""
+                        fill
+                        unoptimized
+                        sizes="(max-width: 640px) 46vw, 220px"
+                      />
                     </span>
                   )}
                   {project.preview === "comment" && (
@@ -1398,15 +1403,13 @@ export default function AiBuilderExperience() {
               <em></em>
             </span>
             <span className="builder-video-preview" aria-hidden="true">
-              <video
-                muted
-                loop
-                playsInline
-                preload="metadata"
-                poster={aigcVideoProject.video?.poster}
-              >
-                <source src={aigcVideoProject.video?.src} type="video/mp4" />
-              </video>
+              <Image
+                src="/ai-builder/aigc-video-poster.jpg"
+                alt=""
+                fill
+                unoptimized
+                sizes="(max-width: 640px) 46vw, 320px"
+              />
               <i>▶</i>
             </span>
           </button>
