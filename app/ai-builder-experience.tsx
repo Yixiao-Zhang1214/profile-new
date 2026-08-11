@@ -80,7 +80,7 @@ const aigcGallery = [
 
 const aigcImageProject: BuilderProject = {
   number: "A",
-  kind: "AIGC IMAGE",
+  kind: "AIGC 图像",
   title: "AIGC 生图作品",
   summary: "人物、场景与超现实概念探索",
   description: "围绕人物情绪、电影感场景与超现实意象进行的视觉探索。",
@@ -91,11 +91,11 @@ const aigcImageProject: BuilderProject = {
 
 const aigcVideoProject: BuilderProject = {
   number: "B",
-  kind: "AIGC VIDEO · LAB COLLABORATION",
+  kind: "AIGC 视频 · 实验室合作",
   title: "《黄河捞尸人》宣传片",
-  summary: "实验室合作项目 · 项目负责人",
+  summary: "爱奇艺 × 硕士院校实验室合作 · 项目负责人",
   description:
-    "恐怖短片《黄河捞尸人》的宣传片，由实验室合作完成。我担任项目负责人，统筹前期资产准备、视觉生成与视频制作流程。",
+    "《黄河捞尸人》宣传片是爱奇艺与我硕士就读院校实验室的合作项目。我担任项目负责人，统筹前期资产准备、视觉生成与视频制作流程。",
   focus: ["项目负责人", "AIGC 工作流", "一致性控制"],
   video: {
     src: "/ai-builder/aigc-video.mp4",
@@ -146,11 +146,11 @@ const commentSuggestions = [
 const projectGroups: Array<{ title: string; english: string; projects: BuilderProject[] }> = [
   {
     title: "轻量产品实验",
-    english: "LIGHTWEIGHT PRODUCT EXPERIMENTS",
+    english: "轻量产品实验",
     projects: [
       {
         number: "01",
-        kind: "COMMENT INSIGHT",
+        kind: "评论洞察",
         title: "大家补充了什么",
         summary: "评论区划重点 · 点击可回到原评论",
         description:
@@ -205,7 +205,7 @@ const projectGroups: Array<{ title: string; english: string; projects: BuilderPr
       },
       {
         number: "02",
-        kind: "WEB",
+        kind: "网页产品",
         title: "Memento",
         summary: "把普通瞬间生成私人纪念卡",
         description:
@@ -217,7 +217,7 @@ const projectGroups: Array<{ title: string; english: string; projects: BuilderPr
       },
       {
         number: "03",
-        kind: "ACCESSIBLE APP",
+        kind: "无障碍应用",
         title: "行无碍 App",
         summary: "无障碍地图 · 共建标注 · 互助社区",
         description:
@@ -251,11 +251,20 @@ const projectGroups: Array<{ title: string; english: string; projects: BuilderPr
   },
   {
     title: "工作实践",
-    english: "WORK PRACTICE",
+    english: "工作实践",
     projects: [
       {
         number: "04",
-        kind: "INTERNAL SKILL",
+        kind: "内部 Skill",
+        title: "面试复盘成长助手",
+        summary: "把面试记录转成可执行的复盘与成长建议",
+        description:
+          "整理面试过程中的问题、回答与反馈，识别表达和能力短板，并生成清晰的改进建议与下一步练习计划。",
+        focus: ["结构化复盘", "能力诊断", "行动计划"],
+      },
+      {
+        number: "05",
+        kind: "内部 Skill",
         title: "解释 Skill 的 Skill",
         summary: "把陌生 Skill 变成看得懂的离线说明书",
         tagline: "把一个陌生 Agent Skill，翻译成任何人都能看懂的可视化说明书。",
@@ -281,16 +290,16 @@ const projectGroups: Array<{ title: string; english: string; projects: BuilderPr
         },
       },
       {
-        number: "05",
-        kind: "WORK SYSTEM",
+        number: "06",
+        kind: "工作系统",
         title: "标注协作平台 A",
         summary: "任务流转与团队协作",
         description: "围绕任务分发、标注流转与多人协作，组织内部工作系统的核心路径。",
         focus: ["流程设计", "多人协作", "系统搭建"],
       },
       {
-        number: "06",
-        kind: "WORK SYSTEM",
+        number: "07",
+        kind: "工作系统",
         title: "标注协作平台 B",
         summary: "反馈、质量与进度管理",
         description: "围绕反馈收集、质量检查与进度同步，设计更清晰的协作闭环。",
@@ -351,88 +360,98 @@ function BuilderCommentDemo() {
   );
 }
 
-const mementoProcess = [
-  ["放入瞬间", "照片、文字或语音"],
-  ["讲一句来历", "说明它为什么值得留下"],
-  ["补一个细节", "系统只追问一个关键问题"],
-  ["选择表达方式", "真实回忆、私人展签等语气"],
-  ["生成纪念卡", "标题、故事与馆员评语"],
+const mementoSamples = [
+  {
+    id: "cup",
+    frontMeta: "Card 01 · 概要",
+    backMeta: "Card 02 · 完整故事",
+    title: "第一份工作的杯子",
+    line: "它不是杯子，是那段夜晚留给我的把手。",
+    image: "/ai-builder/memento-cup-sample.jpg",
+    imageAlt: "手绘杯子和旧物小插图",
+    story: [
+      "这只杯子没有昂贵的来历，只是在第一份工作开始后不久，被我从公司楼下的便利店买下。它有一点笨重，杯口也不算好看，但很适合在夜里接一杯咖啡，放在电脑旁边，陪我把一句又一句“再改一下”熬到凌晨。",
+      "那时候我总觉得自己不够好，怕问错问题，怕交不出东西，也怕第二天醒来还是同样的疲惫。很多个办公室只剩下键盘声的晚上，我没有什么可以证明自己正在努力，只有这只杯子一直在桌角，安静地冒着一点热气。",
+      "后来那份工作结束了，文件被清掉，聊天记录被删除，委屈也慢慢不再具体。搬走那天，我还是把它放进了纸箱。它不像奖杯，也不像纪念品，更像一个小小的证人，提醒我那段日子确实很难，但我也确实撑过来了。",
+    ],
+    curator: "馆员评语：它替你保存的不是加班的苦，而是那个一边害怕、一边没有停下来的自己。",
+  },
+  {
+    id: "travel",
+    frontMeta: "18 · Summer after exam",
+    backMeta: "Card 04 · 完整故事",
+    title: "十八岁的第一场日落",
+    line: "那天太阳落下去，我第一次觉得人生真的要开始了。",
+    image: "/ai-builder/memento-travel-sample.jpg",
+    imageAlt: "福建平潭长江澳海岸的日落",
+    location: "定位：福建平潭 · 长江澳海岸",
+    date: "高考后的第一次旅行 · 海边黄昏",
+    story: [
+      "高考结束后的那个夏天，我第一次没有带着试卷、错题本和倒计时出门。车窗外的树影一直往后退，我坐在靠窗的位置，忽然发现自己已经很久没有这样认真看过一片天空了。",
+      "那是我第一次真正意义上的旅行。目的地并不远，行程也谈不上特别，但傍晚走到海边时，夕阳正好落在水面上，像有人把一整罐橘色颜料慢慢倒开。身边的人在拍照、说笑，我却突然安静下来，好像过去三年紧绷着的那根线，在那一刻终于松开了。",
+      "我记得风很热，汽水很甜，鞋子里进了一点沙。也记得自己站在那里，第一次不是为了考试、排名或某个确定的目标，而只是为了看完一场日落。后来很多旅行都更远、更漂亮，但十八岁那天的太阳一直留在心里，像一枚告诉我“你可以往前走了”的印章。",
+    ],
+    curator: "馆员评语：那不是一场普通的日落，是十八岁的你终于从答案里抬起头，看见了远方。",
+  },
 ] as const;
 
-function MementoDemo() {
+function MementoSampleCard({ sample }: { sample: (typeof mementoSamples)[number] }) {
   const [showStory, setShowStory] = useState(false);
+  const isTravel = sample.id === "travel";
 
   return (
-    <div className="memento-demo">
-      <div className="memento-output-stage">
-        <button
-          className={`memento-specimen${showStory ? " is-flipped" : ""}`}
-          type="button"
-          aria-pressed={showStory}
-          aria-label={showStory ? "返回纪念卡概要" : "查看纪念卡完整故事"}
-          onClick={() => setShowStory((current) => !current)}
+    <button
+      className={`memento-sample-card${showStory ? " is-flipped" : ""}`}
+      type="button"
+      aria-pressed={showStory}
+      aria-label={showStory ? `返回${sample.title}概要` : `查看${sample.title}完整故事`}
+      onClick={() => setShowStory((current) => !current)}
+    >
+      <span className="memento-sample-card-inner">
+        <span
+          className={`memento-sample-face is-front${isTravel ? " is-travel" : ""}`}
+          style={isTravel ? { backgroundImage: `linear-gradient(180deg, rgba(20,21,20,0.02) 0%, rgba(20,21,20,0.12) 42%, rgba(20,21,20,0.82) 100%), url("${sample.image}")` } : undefined}
         >
-          <span className="memento-specimen-inner">
-            <span className="memento-specimen-face is-front">
-              <span className="memento-specimen-meta">
-                <b>MEMENTO</b>
-                MEMORY 001
-              </span>
-              <span className="memento-specimen-object" aria-hidden="true">
-                <i />
-                <em>11:43 PM</em>
-              </span>
-              <span className="memento-specimen-copy">
-                <small>第一份工作的杯子</small>
-                <strong>
-                  它不是杯子，<br />是那段夜晚留给我的把手。
-                </strong>
-                <span>深夜书桌 · 第一份工作</span>
-              </span>
-              <span className="memento-specimen-hint">点击翻到故事页 →</span>
-            </span>
-
-            <span className="memento-specimen-face is-back">
-              <span className="memento-specimen-meta">
-                <b>完整故事</b>
-                CARD 02
-              </span>
-              <span className="memento-story-copy">
-                <strong>第一份工作的杯子</strong>
-                <p>
-                  它很便宜，杯沿有一点磕碰。夜里十一点以后，办公室的灯一盏一盏暗下去，它还在电脑旁边，接住一杯又一杯快凉掉的咖啡。
-                </p>
-                <p>
-                  离开那家公司时，我本来想把它丢掉，最后还是放进纸箱。看见它，我会想起那个很想逃走、却还是一天一天走下来的自己。
-                </p>
-              </span>
-              <span className="memento-curator-note">
-                馆员评语：它保存的不是一份工作的辛苦，而是你第一次学会在没人鼓掌的夜里，把自己带回明天。
-              </span>
-              <span className="memento-specimen-hint">← 返回概要页</span>
-            </span>
+          <span className="memento-sample-meta">{sample.frontMeta}</span>
+          {!isTravel && (
+            <span
+              className="memento-sample-art"
+              role="img"
+              aria-label={sample.imageAlt}
+              style={{ backgroundImage: `url("${sample.image}")` }}
+            />
+          )}
+          <span className="memento-sample-front-copy">
+            <strong>{sample.title}</strong>
+            <span>{sample.line}</span>
+            {"location" in sample && <small>{sample.location}</small>}
+            {"date" in sample && <small>{sample.date}</small>}
           </span>
-        </button>
-        <p>产物预览 · 点击卡片翻面</p>
-      </div>
+          <span className="memento-sample-hint">点击查看完整故事 →</span>
+        </span>
 
-      <section className="memento-process" aria-labelledby="memento-process-title">
-        <div>
-          <h3 id="memento-process-title">一次轻记录的生成过程</h3>
-          <p>重点不是写长文，而是把一个瞬间变成可以保存的纪念物。</p>
-        </div>
-        <ol>
-          {mementoProcess.map(([title, detail], index) => (
-            <li key={title}>
-              <span>{String(index + 1).padStart(2, "0")}</span>
-              <div>
-                <strong>{title}</strong>
-                <p>{detail}</p>
-              </div>
-            </li>
-          ))}
-        </ol>
-      </section>
+        <span className="memento-sample-face is-back">
+          <span className="memento-sample-meta">{sample.backMeta}</span>
+          <span className="memento-sample-story">
+            <strong>{sample.title}</strong>
+            {sample.story.map((paragraph) => (
+              <span key={paragraph}>{paragraph}</span>
+            ))}
+          </span>
+          <span className="memento-sample-curator">{sample.curator}</span>
+          <span className="memento-sample-hint">← 返回概要</span>
+        </span>
+      </span>
+    </button>
+  );
+}
+
+function MementoDemo() {
+  return (
+    <div className="memento-samples" aria-label="Memento 示范卡片">
+      {mementoSamples.map((sample) => (
+        <MementoSampleCard key={sample.id} sample={sample} />
+      ))}
     </div>
   );
 }
@@ -577,7 +596,7 @@ function BuilderProjectDialog({
                 >
                   <source src={project.video.src} type="video/mp4" />
                 </video>
-                <figcaption>《黄河捞尸人》宣传片 · 作品节选 12 SEC</figcaption>
+                <figcaption>《黄河捞尸人》宣传片 · 作品节选 12 秒</figcaption>
               </figure>
             </div>
 
@@ -680,7 +699,7 @@ function BuilderProjectDialog({
             {project.link && (
               <div className="builder-dialog-repo-bar">
                 <div>
-                  <span>CODE REPOSITORY · INSTALL PATH</span>
+                  <span>代码仓库 · 安装位置</span>
                   <a href={project.link.href} target="_blank" rel="noreferrer">
                     {project.link.href.replace("https://", "")}
                   </a>
@@ -759,7 +778,7 @@ export default function AiBuilderExperience({ identity }: { identity: BuilderIde
     <section className="builder-experience" aria-labelledby="builder-title">
       <header className="builder-copy">
         <p>
-          {identity.english} <span aria-hidden="true">·</span> 06 PROJECTS + 02 AIGC STUDIES
+          AI 构建 · 06 个项目 · 02 个 AIGC 研究
         </p>
         <h2 id="builder-title">
           把 AI 做成能被使用的东西。
@@ -773,9 +792,7 @@ export default function AiBuilderExperience({ identity }: { identity: BuilderIde
         {projectGroups.map((group) => (
           <section className="builder-project-group" key={group.english}>
             <h3>
-              <span>{group.english}</span>
-              <i aria-hidden="true">·</i>
-              {group.title}
+              <span>{group.title}</span>
             </h3>
             <div className="builder-project-grid">
               {group.projects.map((project) => (
@@ -839,9 +856,7 @@ export default function AiBuilderExperience({ identity }: { identity: BuilderIde
 
       <section className="builder-creative-lab" aria-labelledby="builder-creative-title">
         <h3 id="builder-creative-title">
-          <span>AIGC CREATIVE LAB</span>
-          <i aria-hidden="true">·</i>
-          创作实验
+          <span>AIGC 创作实验</span>
         </h3>
         <div className="builder-creative-grid">
           <button
@@ -852,7 +867,7 @@ export default function AiBuilderExperience({ identity }: { identity: BuilderIde
             onClick={() => setSelectedProject(aigcImageProject)}
           >
             <span>
-              <small>13 WORKS</small>
+              <small>13 件作品</small>
               <strong>AIGC 生图</strong>
               <em>打开作品集 ↗</em>
             </span>
@@ -891,7 +906,7 @@ export default function AiBuilderExperience({ identity }: { identity: BuilderIde
             onClick={() => setSelectedProject(aigcVideoProject)}
           >
             <span>
-              <small>VIDEO STUDIES</small>
+              <small>视频实验</small>
               <strong>AIGC 生视频</strong>
               <em>《黄河捞尸人》宣传片 ↗</em>
             </span>

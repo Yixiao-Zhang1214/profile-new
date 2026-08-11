@@ -200,50 +200,23 @@ const thePaperWorks = [
 ];
 
 function WorkCardContent({ work }: { work: (typeof interviewWorks)[number] }) {
-  if (work.format === "video") {
-    return (
-      <>
-        <div className="work-video-frame" aria-hidden="true">
-          <span className="work-video-label">VIDEO INTERVIEW</span>
-          <span className="work-video-play">▶</span>
-        </div>
-        <div className="work-video-copy">
-          <h4>{work.title}</h4>
-          <p>{work.description}</p>
-        </div>
-        <span className="work-corner-arrow" aria-hidden="true">↗</span>
-      </>
-    );
-  }
-
-  if (work.format === "archive") {
-    return (
-      <>
-        <div className="work-archive-heading">
-          <span>THE PAPER</span>
-          <strong>13</strong>
-        </div>
-        <div className="work-archive-copy">
-          <p>{work.type}</p>
-          <h4>{work.title}</h4>
-          <span>2023 · 署名作品</span>
-        </div>
-        <span className="work-corner-arrow" aria-hidden="true">↗</span>
-      </>
-    );
-  }
-
   return (
     <>
-      <div className="work-magazine-heading">
-        <span>{work.type}</span>
-        <span>FEATURE</span>
+      <div className={`work-editorial-preview is-${work.number}`} aria-hidden="true">
       </div>
-      <div className="work-magazine-copy">
+      <div className="work-editorial-copy">
+        <span className="work-editorial-meta">{work.number} / {work.type}</span>
         <h4>{work.title}</h4>
-        <p>{work.description}</p>
+        {work.archive ? (
+          <div className="work-editorial-count">
+            <strong>13</strong>
+            <span>篇作品</span>
+          </div>
+        ) : (
+          <p>{work.description}</p>
+        )}
       </div>
-      <span className="work-corner-arrow" aria-hidden="true">↗</span>
+      <span className="work-corner-arrow" aria-hidden="true">→</span>
     </>
   );
 }
@@ -300,7 +273,7 @@ function ThePaperArchiveDialog({ onClose }: { onClose: () => void }) {
       >
         <header className="journalism-dialog-header">
           <div>
-            <p>THE PAPER · INTERNATIONAL</p>
+            <p>澎湃新闻 · 国际报道</p>
             <span>2023 / 13 篇署名作品</span>
           </div>
           <button ref={closeButtonRef} type="button" onClick={onClose}>
@@ -309,7 +282,7 @@ function ThePaperArchiveDialog({ onClose }: { onClose: () => void }) {
         </header>
 
         <div className="journalism-dialog-intro">
-          <span>NEWSROOM ARCHIVE</span>
+          <span>新闻作品档案</span>
           <h2 id="the-paper-archive-title">澎湃新闻国际部</h2>
           <p>在国际新闻现场中训练信息核验、快速研究与清晰表达。</p>
         </div>
@@ -352,7 +325,6 @@ export default function JournalismExperience({ identity }: { identity: Journalis
   return (
     <div className="journalism-experience">
       <header className="journalism-copy">
-        <p>{identity.english}</p>
         <div>
           <h2>新闻与传播</h2>
           <small>{identity.skills}</small>
@@ -417,9 +389,12 @@ export default function JournalismExperience({ identity }: { identity: Journalis
       </div>
 
       <section className="interview-section" aria-labelledby="interview-title">
-        <h3 className="journalism-section-title" id="interview-title">
-          采访与报道
-        </h3>
+        <div className="interview-heading">
+          <h3 className="journalism-section-title" id="interview-title">
+            采访与报道
+          </h3>
+          <p>SELECTED STORIES / 04</p>
+        </div>
         <div className="interview-list">
           {interviewWorks.map((work) =>
             work.archive ? (

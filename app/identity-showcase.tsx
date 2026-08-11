@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import AiBuilderExperience from "./ai-builder-experience";
 import JournalismExperience from "./journalism-experience";
+import PhotographerExperience from "./photographer-experience";
 import ProductManagerExperience from "./product-manager-experience";
 import TravelerExperience from "./traveler-experience";
 
@@ -34,7 +35,7 @@ function CharacterSlot({ index }: { index: number }) {
         <span className="silhouette-body" />
       </div>
       <div className="character-slot-label">
-        <span>PERSONA {String(index).padStart(2, "0")}</span>
+        <span>角色 {String(index).padStart(2, "0")}</span>
         <strong>放置角色形象</strong>
         <small>建议透明底 · 竖版全身</small>
       </div>
@@ -53,7 +54,7 @@ function ProjectModule({ project }: { project: IdentityProject }) {
         <p>{project.type}</p>
         <h3>{project.title}</h3>
         <span>{project.result}</span>
-        <small>CASE STUDY · 待添加</small>
+        <small>项目案例 · 待添加</small>
       </div>
     </article>
   );
@@ -72,6 +73,10 @@ function IdentityDetails({ identity }: { identity: Identity }) {
     return <ProductManagerExperience identity={identity} />;
   }
 
+  if (identity.name === "摄影师") {
+    return <PhotographerExperience identity={identity} />;
+  }
+
   if (identity.name === "AI Builder") {
     return <AiBuilderExperience identity={identity} />;
   }
@@ -79,7 +84,6 @@ function IdentityDetails({ identity }: { identity: Identity }) {
   return (
     <>
       <div className="identity-heading">
-        <p>{identity.english}</p>
         <h2>{identity.name}</h2>
         <h3>{identity.statement}</h3>
         <span>{identity.intro}</span>
@@ -99,6 +103,7 @@ function getPanelClass(identity: Identity) {
   if (identity.name === "新闻与传播学生") return " journalism-panel";
   if (identity.name === "旅行家") return " traveler-panel";
   if (identity.name === "AI 产品经理") return " product-manager-panel";
+  if (identity.name === "摄影师") return " photographer-panel";
   if (identity.name === "AI Builder") return " builder-panel";
   return "";
 }

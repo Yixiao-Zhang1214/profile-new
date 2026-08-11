@@ -137,12 +137,12 @@ const identities = [
 ];
 
 const capabilities = [
-  "USER RESEARCH",
-  "PRODUCT STRATEGY",
-  "AI PROTOTYPING",
-  "STORYTELLING",
-  "PHOTOGRAPHY",
-  "RAPID BUILDING",
+  "用户研究",
+  "产品策略",
+  "AI 原型",
+  "叙事表达",
+  "摄影",
+  "快速构建",
 ];
 
 export default function Home() {
@@ -150,18 +150,18 @@ export default function Home() {
     <main>
       <header className="site-header">
         <a className="wordmark" href="#top" aria-label="返回首页">
-          <strong>Your Name</strong>
-          <span>Creative Technologist</span>
+          <strong>个人作品集</strong>
+          <span>AI 产品经理 · 创作者</span>
         </a>
 
         <nav className="desktop-nav" aria-label="主要导航">
-          <a href="#about">About</a>
-          <a href="#identities">Five Sides</a>
-          <a href="#contact">Contact</a>
+          <a href="#about">关于我</a>
+          <a href="#identities">五个身份</a>
+          <a href="#contact">联系我</a>
         </nav>
 
         <a className="header-year" href="#identities">
-          Portfolio — 2026
+          2026 作品集
         </a>
       </header>
 
@@ -174,7 +174,7 @@ export default function Home() {
 
       <section className="identity-intro" id="about">
         <div className="identity-intro-copy">
-          <p>ONE PERSON · FIVE PERSPECTIVES</p>
+          <p>一个人 · 五种视角</p>
           <h2>
             五个身份，
             <br />
@@ -223,7 +223,7 @@ export default function Home() {
 
       <section className="personal-note">
         <div>
-          <p>MY PATH</p>
+          <p>我的路径</p>
           <h2>路径不是直线，视角却越来越完整。</h2>
         </div>
         <div>
@@ -235,18 +235,18 @@ export default function Home() {
       </section>
 
       <section className="contact-section" id="contact">
-        <p>LET&apos;S MAKE SOMETHING MEANINGFUL</p>
+        <p>一起做点有意义的事</p>
         <h2>一起做点值得记住的事。</h2>
         <span>正在寻找 AI 产品相关机会，也欢迎研究、内容、旅行与摄影方向的合作。</span>
         <a href="mailto:hello@example.com">hello@example.com</a>
       </section>
 
       <footer>
-        <span>Your Name · Portfolio 2026</span>
+        <span>个人作品集 · 2026</span>
         <div>
-          <a href="mailto:hello@example.com">Email</a>
+          <a href="mailto:hello@example.com">邮箱</a>
           <span>LinkedIn · 待添加</span>
-          <span>Photography · 待添加</span>
+          <span>摄影作品 · 待添加</span>
         </div>
       </footer>
     </main>

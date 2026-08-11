@@ -28,20 +28,112 @@ const routeLinks = [
   },
 ];
 
-const travelFrames = [
-  { place: "冰岛", note: "北纬 64°" },
-  { place: "意大利", note: "街巷与日常" },
-  { place: "埃及", note: "沿尼罗河" },
-  { place: "泰国", note: "热带旅程" },
-  { place: "日本", note: "城市观察" },
+const travelFrames = Array.from({ length: 11 }, (_, index) => ({
+    place: `旅行影像 ${String(index + 1).padStart(2, "0")}`,
+    note: "Inspiration",
+  image: `/travel/inspiration/full/photo-${String(index + 1).padStart(2, "0")}.jpg`,
+}));
+
+const swipeStackPlaceholders = [
+  { src: "/travel/inspiration/stack-01.jpg", alt: "Inspiration 竖版旅行照片 1" },
+  { src: "/travel/inspiration/stack-02.jpg", alt: "Inspiration 竖版旅行照片 2" },
+  { src: "/travel/inspiration/stack-03.jpg", alt: "Inspiration 竖版旅行照片 3" },
+  { src: "/travel/inspiration/stack-04.jpg", alt: "Inspiration 竖版旅行照片 4" },
 ];
+
+function TravelSwipeStack() {
+  const [cards, setCards] = useState(() => swipeStackPlaceholders.map((_, index) => index));
+  const [drag, setDrag] = useState({ x: 0, y: 0, active: false });
+  const [expanded, setExpanded] = useState(false);
+  const pointerStart = useRef<{ x: number; y: number } | null>(null);
+
+  const finishDrag = (target: HTMLButtonElement, pointerId: number) => {
+    const distance = Math.hypot(drag.x, drag.y);
+    if (distance > 50) {
+      setCards(([first, ...rest]) => [...rest, first]);
+    }
+    pointerStart.current = null;
+    setDrag({ x: 0, y: 0, active: false });
+    if (target.hasPointerCapture(pointerId)) target.releasePointerCapture(pointerId);
+  };
+
+  return (
+    <div
+      className="travel-swipe-stack"
+      aria-label="可拖拽切换的旅行图片"
+      onMouseEnter={() => setExpanded(true)}
+      onMouseLeave={() => setExpanded(false)}
+    >
+      <div className="travel-swipe-stack-stage">
+        {cards.map((imageIndex, index) => {
+          const image = swipeStackPlaceholders[imageIndex];
+          const isTop = index === 0;
+          const hoverPositions = [
+            { x: 0, y: 0, rotate: 0 },
+            { x: -122, y: -96, rotate: -14 },
+            { x: 118, y: -84, rotate: 13 },
+            { x: -132, y: 92, rotate: -18 },
+          ];
+          const restingPositions = [
+            { x: 0, y: 0, rotate: 0 },
+            { x: -8, y: -9, rotate: -3 },
+            { x: 10, y: -15, rotate: 4 },
+            { x: -14, y: -21, rotate: -6 },
+          ];
+          const restingPosition = restingPositions[index];
+          const position = expanded ? hoverPositions[index] : restingPosition;
+          const x = isTop && drag.active ? drag.x : position.x;
+          const y = isTop && drag.active ? drag.y : position.y;
+          const rotation = isTop && drag.active ? 0 : position.rotate;
+          const scale = isTop && drag.active ? 1.04 : 1 - index * 0.045;
+
+          return (
+            <button
+              type="button"
+              className={`travel-swipe-card${isTop ? " is-top" : ""}${drag.active && isTop ? " is-dragging" : ""}`}
+              key={imageIndex}
+              aria-label={isTop ? "拖动这张图片切换下一张" : image.alt}
+              tabIndex={isTop ? 0 : -1}
+              style={{
+                zIndex: cards.length - index,
+                transform: `translate3d(${x}px, ${y}px, ${index * -10}px) rotate(${rotation}deg) scale(${scale})`,
+              }}
+              onPointerDown={isTop ? (event) => {
+                pointerStart.current = { x: event.clientX, y: event.clientY };
+                event.currentTarget.setPointerCapture(event.pointerId);
+                setDrag({ x: 0, y: 0, active: true });
+              } : undefined}
+              onPointerMove={isTop ? (event) => {
+                if (!pointerStart.current) return;
+                setDrag({
+                  x: event.clientX - pointerStart.current.x,
+                  y: event.clientY - pointerStart.current.y,
+                  active: true,
+                });
+              } : undefined}
+              onPointerUp={isTop ? (event) => finishDrag(event.currentTarget, event.pointerId) : undefined}
+              onPointerCancel={isTop ? (event) => finishDrag(event.currentTarget, event.pointerId) : undefined}
+              onKeyDown={isTop ? (event) => {
+                if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+                event.preventDefault();
+                setCards(([first, ...rest]) => [...rest, first]);
+              } : undefined}
+            >
+              <img src={image.src} alt={image.alt} draggable={false} />
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 function TravelFrame({ index, compact = false }: { index: number; compact?: boolean }) {
   const frame = travelFrames[index % travelFrames.length];
 
   return (
     <figure className={`travel-frame travel-frame-${(index % 5) + 1}${compact ? " is-compact" : ""}`}>
-      <img src="/travel/world-map-handdrawn.png" alt="" aria-hidden="true" />
+      <img src={frame.image} alt="" aria-hidden="true" />
       <div aria-hidden="true" />
       {!compact && (
         <figcaption>
@@ -254,7 +346,7 @@ export default function TravelerExperience({ identity }: { identity: TravelerIde
           <header className="traveler-copy">
             <div>
               <h2>{identity.name}</h2>
-              <span><strong>16</strong> COUNTRIES</span>
+              <span><strong>16</strong> 个国家</span>
             </div>
             <h3>{identity.statement}</h3>
             <p>
@@ -267,13 +359,13 @@ export default function TravelerExperience({ identity }: { identity: TravelerIde
             <img src="/travel/world-map-handdrawn.png" alt="标有十六个到访国家的手绘世界地图" />
             <button type="button" className="traveler-next-cue" onClick={() => changePage(1)}>
               <span>旅行创业实践 · 2023.11 至今</span>
-              <strong>Inspiration 旅行实验室</strong>
+              <strong>旅行实验室</strong>
               <small>创始人 &amp; 产品负责人</small>
               <div>
                 <b>30+ 次旅行项目</b>
                 <b>4000+ 活跃成员</b>
               </div>
-              <em>向左滑查看项目 →</em>
+              <em className="traveler-click-hint">点击进入项目 →</em>
             </button>
           </div>
 
@@ -287,12 +379,35 @@ export default function TravelerExperience({ identity }: { identity: TravelerIde
           <div className="travel-project-top">
             <header className="travel-project-copy">
               <div className="travel-project-title-row">
-                <h2>Inspiration<br />旅行实验室</h2>
+                <h2>Inspiration 旅行实验室</h2>
                 <span>青年旅行社群</span>
               </div>
-              <p>
-                由沪上高校领队与户外爱好者发起，我们从真实旅行经验出发，组织户外、非遗、瑜伽与禅修等多种体验，探索不同于标准行程的青年旅行方式。
-              </p>
+              <div className="travel-detail-summary">
+                <p className="travel-detail-lead">
+                  由沪上高校领队与户外爱好者发起，我们从真实旅行经验出发，组织户外、非遗、瑜伽与禅修等多种体验，探索不同于标准行程的青年旅行方式。
+                </p>
+                <div className="travel-detail-role">
+                  <strong>创始人 · 主要产品经理</strong>
+                  <span>战略制定 / 市场调研 / 产品规划 / 社群运营 / AI 开发</span>
+                </div>
+                <div className="travel-detail-metrics" aria-label="项目核心成果">
+                  <div>
+                    <strong>5k+</strong>
+                    <span>旅行小精灵使用次数</span>
+                  </div>
+                  <div>
+                    <strong>4000+</strong>
+                    <span>四个月社群成员</span>
+                  </div>
+                  <div>
+                    <strong>50w+</strong>
+                    <span>项目累计流水</span>
+                  </div>
+                </div>
+                <p className="travel-detail-reach">
+                  以上海为中心辐射全国，为年轻人提供「轻户外」精品旅行服务，影响力覆盖十余所高校及企业。
+                </p>
+              </div>
               <nav className="travel-route-links" aria-label="精彩旅行线路">
                 {routeLinks.map((route) => (
                   <a
@@ -313,17 +428,18 @@ export default function TravelerExperience({ identity }: { identity: TravelerIde
               </nav>
             </header>
 
-            <figure className="travel-project-visual">
-              <img src="/travel/inspiration-qr.png" alt="Inspiration 旅行实验室公众号二维码" />
-              <figcaption>微信公众号 · 长按或扫码关注</figcaption>
-            </figure>
+            <div className="travel-project-visual">
+              <TravelSwipeStack />
+            </div>
 
             <button type="button" className="traveler-back-cue" onClick={() => changePage(0)} aria-label="返回旅行者介绍">
               ← 返回旅行者介绍
             </button>
           </div>
 
-          <TravelCarousel active={page === 1} />
+          <div className="traveler-intro-carousel">
+            <TravelIntroRail active={page === 1} />
+          </div>
         </article>
       </div>
     </section>

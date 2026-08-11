@@ -161,9 +161,7 @@ export default function PersonaParticleTransition({
     };
 
     const draw = (progress: number) => {
-      const sourceFade = smoothstep(0.035, 0.17, progress);
-
-      heroImage.style.opacity = String(1 - sourceFade);
+      heroImage.style.opacity = progress < 0.045 ? "1" : "0";
       targetImages.forEach((image, index) => {
         const reveal = smoothstep(0.73 + index * 0.018, 0.965, progress);
         const link = image.closest<HTMLElement>("a");
@@ -183,7 +181,7 @@ export default function PersonaParticleTransition({
         liveSourceRect.height,
       );
       const targetRects = targetImages.map(getContainedImageRect);
-      const movement = smoothstep(0.29, 0.95, progress);
+      const movement = smoothstep(0.42, 0.95, progress);
       const dissolve = smoothstep(0.025, 0.16, progress);
       const settleFade = smoothstep(0.88, 0.992, progress);
       const particleOpacity = dissolve * (1 - settleFade);
@@ -198,11 +196,11 @@ export default function PersonaParticleTransition({
           Math.abs(particle.source.u - 0.5) * 1.45 +
             Math.abs(particle.source.v - 0.5) * 0.82,
         );
-        const releaseStart = 0.11 + (1 - edgeDistance) * 0.12 + particle.seed * 0.035;
-        const release = smoothstep(releaseStart, releaseStart + 0.26, progress);
+        const releaseStart = 0.065 + (1 - edgeDistance) * 0.07 + particle.seed * 0.025;
+        const release = smoothstep(releaseStart, releaseStart + 0.2, progress);
         const driftEnvelope =
-          Math.sin(Math.PI * smoothstep(0.1, 0.86, progress)) * release;
-        const driftDistance = 12 + particle.seed * 54 + edgeDistance * 18;
+          Math.sin(Math.PI * smoothstep(0.04, 0.88, progress)) * release;
+        const driftDistance = 72 + particle.seed * 148 + edgeDistance * 92;
         const drift = driftDistance * driftEnvelope;
         const x =
           sourceX + (targetX - sourceX) * movement + particle.directionX * drift;
@@ -210,7 +208,7 @@ export default function PersonaParticleTransition({
           sourceY +
           (targetY - sourceY) * movement +
           particle.directionY * drift -
-          driftEnvelope * (8 + particle.seed * 18);
+          driftEnvelope * (18 + particle.seed * 42);
         const red = Math.round(
           particle.source.color[0] +
             (particle.target.color[0] - particle.source.color[0]) * movement,
@@ -223,7 +221,7 @@ export default function PersonaParticleTransition({
           particle.source.color[2] +
             (particle.target.color[2] - particle.source.color[2]) * movement,
         );
-        const radius = particle.radius * (1 + driftEnvelope * 0.18);
+        const radius = particle.radius * (1 + driftEnvelope * 0.58);
         const opacity = particleOpacity * (0.7 + particle.seed * 0.3);
 
         context.fillStyle = `rgba(${red}, ${green}, ${blue}, ${opacity})`;
@@ -275,7 +273,7 @@ export default function PersonaParticleTransition({
     Promise.all([loadImage(source), ...targets.map(loadImage)])
       .then(([sourceImage, ...targetSources]) => {
         if (disposed) return;
-        const particleCount = window.innerWidth <= 720 ? 650 : 1450;
+        const particleCount = window.innerWidth <= 720 ? 3800 : 9000;
         const targetCount = Math.floor(particleCount / targetSources.length);
         const sourceSamples = sampleImage(sourceImage, targetCount * targetSources.length);
         const targetSamples = targetSources.flatMap((image) => sampleImage(image, targetCount));
@@ -294,7 +292,7 @@ export default function PersonaParticleTransition({
             seed,
             directionX: Math.cos(angle),
             directionY: Math.sin(angle),
-            radius: 0.75 + Math.pow(randomFrom(index + 83), 1.55) * 3.8,
+            radius: 0.65 + Math.pow(randomFrom(index + 83), 1.55) * 1.85,
           };
         });
         assetsReady = true;

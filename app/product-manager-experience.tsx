@@ -17,6 +17,7 @@ type ProductExperience = {
   id: string;
   company: string;
   logo: string;
+  cardImage: string;
   team: string;
   role: string;
   period: string;
@@ -37,6 +38,7 @@ const experiences: ProductExperience[] = [
     id: "bytedance-ai-commerce",
     company: "字节跳动",
     logo: "/companies/bytedance.svg",
+    cardImage: "/product-experience/bytedance-commerce.png",
     team: "中国电商 AI 应用",
     role: "AI 应用产品经理实习",
     period: "2026.06 - 至今",
@@ -70,6 +72,7 @@ const experiences: ProductExperience[] = [
     id: "douyin-selected",
     company: "字节跳动",
     logo: "/companies/bytedance.svg",
+    cardImage: "/product-experience/douyin-selected.png",
     team: "抖音精选",
     role: "AI 产品经理实习",
     period: "2026.01 - 2026.06",
@@ -108,6 +111,7 @@ const experiences: ProductExperience[] = [
     id: "xiaomi-xiaoai",
     company: "小米科技",
     logo: "/companies/xiaomi.svg",
+    cardImage: "/product-experience/xiaomi-ai.png",
     team: "小爱",
     role: "大模型产品经理实习",
     period: "2025.08 - 2026.01",
@@ -254,10 +258,264 @@ export default function ProductManagerExperience({
 
   return (
     <div className="product-manager-experience">
+      <style>{`
+        .product-manager-experience .pm-experience-list {
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          padding-left: 0;
+          align-items: start;
+          gap: clamp(10px, 1.2vw, 18px);
+        }
+        .product-manager-experience .pm-experience-list::before {
+          display: none;
+        }
+        .product-manager-experience .pm-experience-card {
+          --card-accent: #4e42ff;
+          display: grid;
+          width: 100%;
+          min-width: 0;
+          padding: 0;
+          overflow: hidden;
+          border: 1px solid rgba(71, 80, 255, 0.2);
+          border-radius: 18px;
+          background: #f8f9ff;
+          box-shadow: 0 12px 30px rgba(43, 50, 104, 0.09);
+          cursor: pointer;
+          aspect-ratio: 2 / 3;
+          grid-template-rows: 54% 46%;
+          scroll-snap-align: center;
+          transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 280ms ease, border-color 280ms ease;
+        }
+        .product-manager-experience .pm-experience-card:nth-child(2) {
+          --card-accent: #155cff;
+        }
+        .product-manager-experience .pm-experience-card:nth-child(3) {
+          --card-accent: #f56a00;
+        }
+        .product-manager-experience .pm-experience-card-visual {
+          display: block !important;
+          width: 100%;
+          height: 100%;
+          min-height: 0;
+          overflow: hidden;
+          border-radius: 17px 17px 0 0;
+        }
+        .product-manager-experience .pm-experience-card-visual .pm-experience-card-image {
+          display: block;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: top center;
+        }
+        .product-manager-experience .pm-experience-card-body {
+          position: relative;
+          display: flex !important;
+          min-height: 0;
+          padding: 10px 12px 11px;
+          flex-direction: column;
+          color: #263247;
+          background: rgba(255, 255, 255, 0.98);
+          border-radius: 0 0 17px 17px;
+          text-align: left;
+        }
+        .product-manager-experience .pm-experience-card-company {
+          order: 1;
+          min-height: 25px;
+          display: flex;
+          min-width: 0;
+          align-items: center;
+          gap: 8px;
+        }
+        .product-manager-experience .pm-experience-card-company > img {
+          width: 25px;
+          height: 25px;
+          flex: none;
+          object-fit: contain;
+        }
+        .product-manager-experience .pm-experience-card-company > span {
+          display: grid;
+          min-width: 0;
+          gap: 1px;
+        }
+        .product-manager-experience .pm-experience-card-company strong {
+          color: #101217;
+          font-size: 11px;
+          line-height: 1.1;
+        }
+        .product-manager-experience .pm-experience-card-company small {
+          color: #5c6880;
+          font-size: 8px;
+          line-height: 1.1;
+        }
+        .product-manager-experience .pm-experience-card-role {
+          order: 2;
+          min-height: 1.1em;
+          margin: 8px 0 0;
+          overflow: hidden;
+          color: var(--card-accent);
+          font-size: 16px;
+          font-weight: 760;
+          line-height: 1.15;
+          letter-spacing: -0.025em;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        .product-manager-experience .pm-experience-card-period {
+          order: 3;
+          margin-top: 6px;
+          color: #526078;
+          font-family: var(--font-geist-mono), monospace;
+          font-size: 8.5px;
+          letter-spacing: 0.015em;
+        }
+        .product-manager-experience .pm-experience-card-summary {
+          order: 4;
+          display: -webkit-box;
+          margin: 7px 0 0;
+          overflow: hidden;
+          color: #46536a;
+          font-size: 10.5px;
+          line-height: 1.45;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 2;
+        }
+        .product-manager-experience .pm-experience-card-footer {
+          position: absolute;
+          right: 12px;
+          bottom: 11px;
+          order: 6;
+          display: flex;
+          min-width: 0;
+          align-items: center;
+          justify-content: space-between;
+          gap: 7px;
+          margin-top: auto;
+        }
+        .product-manager-experience .pm-experience-card-tags {
+          order: 5;
+          display: flex;
+          width: calc(100% - 32px);
+          min-width: 0;
+          align-items: center;
+          justify-content: flex-start;
+          gap: 5px;
+          margin-top: auto;
+        }
+        .product-manager-experience .pm-experience-card-tags span {
+          padding: 5px 9px;
+          overflow: hidden;
+          border: 1px solid color-mix(in srgb, var(--card-accent) 24%, transparent);
+          border-radius: 999px;
+          color: var(--card-accent);
+          background: color-mix(in srgb, var(--card-accent) 6%, white);
+          box-shadow: 0 4px 10px color-mix(in srgb, var(--card-accent) 10%, transparent);
+          font-size: 10.5px;
+          line-height: 1;
+          text-overflow: ellipsis;
+          transform: translate3d(0, 0, 0) rotate(0deg);
+          transform-origin: center;
+          transition:
+            transform 460ms cubic-bezier(0.16, 1.28, 0.3, 1),
+            box-shadow 300ms ease,
+            background-color 300ms ease;
+          will-change: transform;
+          white-space: nowrap;
+        }
+        .product-manager-experience .pm-experience-card-arrow {
+          display: grid;
+          width: 25px;
+          height: 25px;
+          flex: none;
+          border: 1px solid color-mix(in srgb, var(--card-accent) 20%, transparent);
+          border-radius: 50%;
+          place-items: center;
+          color: var(--card-accent);
+          background: white;
+          font-size: 16px;
+          line-height: 1;
+        }
+        .product-manager-experience .pm-experience-card:hover {
+          z-index: 1;
+          overflow: visible;
+          border-color: rgba(71, 80, 255, 0.42);
+          box-shadow: 0 20px 44px rgba(43, 50, 104, 0.16);
+          transform: translateY(-7px);
+        }
+        @media (hover: hover) and (pointer: fine) {
+          .product-manager-experience .pm-experience-card:hover .pm-experience-card-tags span {
+            color: white;
+            background: var(--card-accent);
+            box-shadow: 0 12px 24px color-mix(in srgb, var(--card-accent) 30%, transparent);
+          }
+          .product-manager-experience .pm-experience-card:hover .pm-experience-card-tags span:nth-child(1) {
+            transform: translate3d(-22px, 3px, 34px) rotate(-8deg) scale(1.12);
+          }
+          .product-manager-experience .pm-experience-card:hover .pm-experience-card-tags span:nth-child(2) {
+            transform: translate3d(22px, 5px, 46px) rotate(8deg) scale(1.12);
+            transition-delay: 35ms;
+          }
+        }
+        .product-manager-experience .pm-experience-card:focus-visible {
+          outline: 2px solid #4456ff;
+          outline-offset: 4px;
+        }
+        @media (max-width: 720px) {
+          .product-manager-experience .pm-experience-list {
+            grid-template-columns: none;
+            grid-auto-columns: min(82vw, 340px);
+            grid-auto-flow: column;
+            padding: 8px 9vw 18px 0;
+            overflow-x: auto;
+            gap: 14px;
+            scroll-padding-inline: 0 9vw;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+          }
+          .product-manager-experience .pm-experience-list::-webkit-scrollbar {
+            display: none;
+          }
+          .product-manager-experience .pm-experience-card-body {
+            padding: 16px 18px 18px;
+          }
+          .product-manager-experience .pm-experience-card-company > img {
+            width: 38px;
+            height: 38px;
+          }
+          .product-manager-experience .pm-experience-card-company strong {
+            font-size: 16px;
+          }
+          .product-manager-experience .pm-experience-card-company small,
+          .product-manager-experience .pm-experience-card-period,
+          .product-manager-experience .pm-experience-card-summary {
+            font-size: 12px;
+          }
+          .product-manager-experience .pm-experience-card-role {
+            margin-top: 12px;
+            font-size: 23px;
+          }
+          .product-manager-experience .pm-experience-card-tags span {
+            padding: 6px 10px;
+            font-size: 11px;
+          }
+          .product-manager-experience .pm-experience-card-arrow {
+            width: 38px;
+            height: 38px;
+            font-size: 22px;
+          }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .product-manager-experience .pm-experience-card,
+          .product-manager-experience .pm-experience-card-tags span {
+            transition: none;
+          }
+          .product-manager-experience .pm-experience-card:hover .pm-experience-card-tags span {
+            transform: none;
+          }
+        }
+      `}</style>
       <header className="pm-copy">
         <div className="pm-copy-meta">
           <h2>{identity.name}</h2>
-          <span>{identity.english}</span>
         </div>
         <h3>{identity.statement.replace("\n", " ")}</h3>
         <p>{identity.intro}</p>
@@ -272,36 +530,34 @@ export default function ProductManagerExperience({
         <div className="pm-experience-list">
           {experiences.map((experience) => (
             <button
-              className="pm-experience-row"
+              className="pm-experience-card"
               type="button"
               key={experience.id}
               aria-haspopup="dialog"
               onClick={() => setSelectedExperience(experience)}
             >
-              <span className="pm-timeline-logo" aria-hidden="true">
-                <img src={experience.logo} alt="" />
+              <span className="pm-experience-card-visual" aria-hidden="true">
+                <img className="pm-experience-card-image" src={experience.cardImage} alt="" />
               </span>
-              <time>{experience.period}</time>
-              <div className="pm-role-copy">
-                <div className="pm-company-line">
-                  <div>
-                    <h4>{experience.company}</h4>
-                    <span>{experience.team}</span>
-                  </div>
-                </div>
-                <div className="pm-role-title-line">
-                  <strong>{experience.role}</strong>
-                  <div className="pm-experience-tags" aria-label="经历关键词">
-                    {experience.tags.map((tag) => (
-                      <span key={tag}>{tag}</span>
-                    ))}
-                  </div>
-                </div>
-                <p>{experience.summary}</p>
-              </div>
-              <span className="pm-row-action" aria-hidden="true">
-                <span>详情</span>
-                <i>→</i>
+              <span className="pm-experience-card-body">
+                <span className="pm-experience-card-company">
+                  <img src={experience.logo} alt="" aria-hidden="true" />
+                  <span>
+                    <strong>{experience.company}</strong>
+                    <small>{experience.team}</small>
+                  </span>
+                </span>
+                <strong className="pm-experience-card-role">{experience.role}</strong>
+                <span className="pm-experience-card-tags">
+                  {experience.tags.map((tag) => (
+                    <span key={tag}>{tag}</span>
+                  ))}
+                </span>
+                <time className="pm-experience-card-period">{experience.period}</time>
+                <span className="pm-experience-card-summary">{experience.summary}</span>
+                <span className="pm-experience-card-footer">
+                  <span className="pm-experience-card-arrow" aria-hidden="true">→</span>
+                </span>
               </span>
             </button>
           ))}
