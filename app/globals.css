@@ -540,7 +540,7 @@ main {
   --hero-rotate-y: 0deg;
   --hero-brush-x: 50%;
   --hero-brush-y: 50%;
-  --hero-brush-opacity: 0;
+  --hero-brush-opacity: 0.22;
   position: relative;
   min-height: 100svh;
   overflow: hidden;
@@ -591,14 +591,14 @@ main {
   mix-blend-mode: multiply;
   opacity: var(--hero-brush-opacity);
   -webkit-mask-image: radial-gradient(
-    ellipse 190px 120px at var(--hero-brush-x) var(--hero-brush-y),
+    ellipse 270px 170px at var(--hero-brush-x) var(--hero-brush-y),
     rgba(0, 0, 0, 0.96) 0%,
     rgba(0, 0, 0, 0.72) 34%,
     rgba(0, 0, 0, 0.2) 68%,
     transparent 100%
   );
   mask-image: radial-gradient(
-    ellipse 190px 120px at var(--hero-brush-x) var(--hero-brush-y),
+    ellipse 270px 170px at var(--hero-brush-x) var(--hero-brush-y),
     rgba(0, 0, 0, 0.96) 0%,
     rgba(0, 0, 0, 0.72) 34%,
     rgba(0, 0, 0, 0.2) 68%,

@@ -874,7 +874,9 @@ function BuilderProjectDialog({
                         alt={work.alt}
                         width={work.width}
                         height={work.height}
-                        unoptimized
+                        loading={index === 0 ? "eager" : "lazy"}
+                        fetchPriority={index === 0 ? "high" : "auto"}
+                        quality={78}
                         sizes="(max-width: 720px) 100vw, 560px"
                       />
                       <span>查看大图</span>
@@ -962,7 +964,9 @@ function BuilderProjectDialog({
                 src={project.visual.src}
                 alt={project.visual.alt}
                 fill
-                unoptimized
+                loading="eager"
+                fetchPriority="high"
+                quality={76}
                 sizes="(max-width: 640px) 100vw, 290px"
               />
             </figure>
@@ -1201,7 +1205,9 @@ function BuilderProjectDialog({
                   alt={project.gallery[activeGalleryIndex].alt}
                   width={project.gallery[activeGalleryIndex].width}
                   height={project.gallery[activeGalleryIndex].height}
-                  unoptimized
+                  loading="eager"
+                  fetchPriority="high"
+                  quality={82}
                   sizes="96vw"
                 />
                 <figcaption>
@@ -1277,7 +1283,7 @@ export default function AiBuilderExperience() {
                         src={project.visual.src}
                         alt=""
                         fill
-                        unoptimized
+                        quality={62}
                         sizes="(max-width: 640px) 46vw, 220px"
                       />
                     </span>
@@ -1291,7 +1297,7 @@ export default function AiBuilderExperience() {
                         src={project.video.poster!}
                         alt=""
                         fill
-                        unoptimized
+                        quality={62}
                         sizes="(max-width: 640px) 46vw, 220px"
                       />
                     </span>
@@ -1302,7 +1308,7 @@ export default function AiBuilderExperience() {
                         src="/ai-builder/xhs-comment-prototype.jpg"
                         alt=""
                         fill
-                        unoptimized
+                        quality={62}
                         sizes="96px"
                       />
                     </span>
@@ -1313,7 +1319,7 @@ export default function AiBuilderExperience() {
                         src="/ai-builder/memento-original-card.jpg"
                         alt=""
                         fill
-                        unoptimized
+                        quality={62}
                         sizes="110px"
                       />
                     </span>
@@ -1324,7 +1330,7 @@ export default function AiBuilderExperience() {
                         src={project.visual.src}
                         alt=""
                         fill
-                        unoptimized
+                        quality={62}
                         sizes="110px"
                       />
                     </span>
@@ -1370,7 +1376,7 @@ export default function AiBuilderExperience() {
                     src={`/ai-builder/aigc/work-${work}.webp`}
                     alt=""
                     fill
-                    unoptimized
+                    quality={62}
                     sizes="90px"
                   />
                 </i>
@@ -1407,7 +1413,7 @@ export default function AiBuilderExperience() {
                 src="/ai-builder/aigc-video-poster.jpg"
                 alt=""
                 fill
-                unoptimized
+                quality={62}
                 sizes="(max-width: 640px) 46vw, 320px"
               />
               <i>▶</i>

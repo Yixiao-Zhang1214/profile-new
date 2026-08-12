@@ -40,7 +40,7 @@ export default function HeroCover() {
       hero.style.setProperty("--hero-copy-y", `${y * -3}px`);
       hero.style.setProperty("--hero-brush-x", `${(x + 0.5) * 100}%`);
       hero.style.setProperty("--hero-brush-y", `${(y + 0.5) * 100}%`);
-      hero.style.setProperty("--hero-brush-opacity", revealBrush ? "0.72" : "0");
+      hero.style.setProperty("--hero-brush-opacity", revealBrush ? "0.78" : "0.22");
     });
   };
 

@@ -491,7 +491,6 @@ document.querySelector('#panel-toggle').addEventListener('click', event => {
 
 syncControls();
 updateCompass();
-canvas.dataset.ready = 'true';
 
 const startedAt = performance.now();
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -527,6 +526,7 @@ function render(now) {
   gl.uniform1f(uniforms.uRain, current.rain);
   gl.uniform3fv(uniforms.uWaterColor, current.waterColor);
   gl.drawArrays(gl.TRIANGLES, 0, 3);
+  if (!canvas.dataset.ready) canvas.dataset.ready = 'true';
   requestAnimationFrame(render);
 }
 

@@ -134,6 +134,7 @@ function IdentityCharacter({ identity, index }: { identity: Identity; index: num
 
 export default function IdentityShowcase({ identities }: { identities: Identity[] }) {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isDesktop, setIsDesktop] = useState<boolean | null>(null);
   const triggerRefs = useRef<Array<HTMLElement | null>>([]);
 
   useEffect(() => {
@@ -147,6 +148,7 @@ export default function IdentityShowcase({ identities }: { identities: Identity[
 
     const startObserving = () => {
       stopObserving();
+      setIsDesktop(desktopQuery.matches);
       if (!desktopQuery.matches) {
         setActiveIndex(0);
         return;
@@ -200,11 +202,13 @@ export default function IdentityShowcase({ identities }: { identities: Identity[
           aria-label={identity.name}
         >
           <IdentityCharacter identity={identity} index={index} />
-          <div
-            className={`identity-content identity-mobile-content${getPanelClass(identity)}`}
-          >
-            <IdentityDetails identity={identity} />
-          </div>
+          {isDesktop === false && (
+            <div
+              className={`identity-content identity-mobile-content${getPanelClass(identity)}`}
+            >
+              <IdentityDetails identity={identity} />
+            </div>
+          )}
         </article>
       ))}
 
@@ -227,21 +231,16 @@ export default function IdentityShowcase({ identities }: { identities: Identity[
             ))}
           </div>
           <div className="identity-stage-right">
-            {identities.map((identity, index) => {
-              const isActive = index === activeIndex;
-              return (
-                <div
-                  className={`identity-content identity-stage-panel${getPanelClass(identity)}${
-                    isActive ? " is-active" : ""
-                  }`}
-                  key={identity.name}
-                  aria-hidden={!isActive}
-                  inert={!isActive}
-                >
-                  <IdentityDetails identity={identity} />
-                </div>
-              );
-            })}
+            {isDesktop === true && (
+              <div
+                className={`identity-content identity-stage-panel${getPanelClass(
+                  identities[activeIndex],
+                )} is-active`}
+                key={identities[activeIndex].name}
+              >
+                <IdentityDetails identity={identities[activeIndex]} />
+              </div>
+            )}
           </div>
         </div>
       </div>

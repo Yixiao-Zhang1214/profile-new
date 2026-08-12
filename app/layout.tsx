@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Noto_Sans_SC } from "next/font/google";
+import { ResourcePreheater } from "./resource-preheater";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -33,6 +34,7 @@ export default function RootLayout({
     <html lang="zh-CN">
       <body className={`${geistSans.variable} ${geistMono.variable} ${sourceHanSans.variable}`}>
         {children}
+        <ResourcePreheater />
       </body>
     </html>
   );
