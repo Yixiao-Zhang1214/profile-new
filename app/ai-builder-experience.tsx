@@ -276,7 +276,7 @@ const projectGroups: Array<{ title: string; english: string; projects: BuilderPr
         ],
         note: "产品材料来自《行无碍》路演方案与移动端原型。",
         download: {
-          href: "/downloads/xingwua-roadshow.pptx",
+          href: "/downloads/xingwua-roadshow.pdf",
           label: "下载路演 PPT · 187 MB",
         },
       },

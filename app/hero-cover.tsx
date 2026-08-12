@@ -237,15 +237,6 @@ export default function HeroCover() {
           type="button"
           aria-label="跳过欢迎动画"
           onClick={() => requestWelcomeAssembly(true)}
-          onPointerMove={(event) => {
-            if (event.pointerType !== "mouse") return;
-            event.currentTarget.style.setProperty("--pointer-x", `${event.clientX}px`);
-            event.currentTarget.style.setProperty("--pointer-y", `${event.clientY}px`);
-          }}
-          onPointerLeave={(event) => {
-            event.currentTarget.style.setProperty("--pointer-x", "50vw");
-            event.currentTarget.style.setProperty("--pointer-y", "38vh");
-          }}
         >
           <span className="welcome-ribbon welcome-ribbon-back" aria-hidden="true" />
           <span className="welcome-ribbon welcome-ribbon-middle" aria-hidden="true" />
