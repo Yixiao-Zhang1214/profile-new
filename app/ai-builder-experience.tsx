@@ -277,7 +277,7 @@ const projectGroups: Array<{ title: string; english: string; projects: BuilderPr
         note: "产品材料来自《行无碍》路演方案与移动端原型。",
         download: {
           href: "/downloads/xingwua-roadshow.pdf",
-          label: "下载路演 PPT · 187 MB",
+          label: "下载路演 PDF · 18 MB",
         },
       },
     ],
@@ -437,6 +437,78 @@ const projectGroups: Array<{ title: string; english: string; projects: BuilderPr
       },
       {
         number: "07",
+        kind: "个人提效skill",
+        title: "直播带货达人引擎",
+        productName: "Streamer Skill",
+        summary: "从真实直播语料中提炼转化逻辑，再生成更像本人的带货话术",
+        description:
+          "给它达人画像、受众信息和直播 ASR，Streamer Skill 会先从真实语料中提炼说话节奏、紧迫感、赠品表达与转化逻辑，形成可复用的达人模型。换到新商品时，它再按八段式结构生成直播带货话术，并完成质量评测与合规自检。",
+        highlightLead: "它不只是生成",
+        highlightTitle: "「一段听起来像主播的话术」",
+        highlights: [
+          "从直播 ASR 中还原达人的表达节奏、互动方式和转化逻辑，而不是只模仿几个口头禅",
+          "把反常识钩子、使用场景、价值对比、材质手感、痛点反击、身份背书、互动决策和限时窗口组织成八段式话术",
+          "先沉淀可复用的达人模型，再将同一套表达逻辑迁移到不同商品",
+          "自动检查话术的完整度、说服力与风险点，并区分 P0、P1 级问题",
+          "保留达人自己的表达习惯，同时让每一段话都承担明确的转化任务",
+        ],
+        comparisonTitle: "它和普通直播文案生成有什么不同",
+        comparisonNote: "差别不在于把文案写得更热闹，而在于是否真正理解达人为什么这样说、这一段要完成什么转化任务。",
+        comparisonLabels: {
+          common: "普通直播文案生成",
+          project: "Streamer Skill",
+        },
+        comparison: [
+          {
+            dimension: "从哪里开始",
+            common: "输入商品卖点和简单人设，直接生成一版通用话术。",
+            project: "结合达人画像、目标受众和真实直播 ASR，先建立可复用的达人模型。",
+          },
+          {
+            dimension: "如何理解风格",
+            common: "模仿口头禅、语气词和表面的语言风格。",
+            project: "从语料中提炼说话节奏、紧迫感、赠品表达和七阶段 Selling Flow。",
+          },
+          {
+            dimension: "如何组织话术",
+            common: "按商品卖点自由展开，结构和转化目标不一定清晰。",
+            project: "使用八段式结构，让钩子、场景、价值、背书、互动和收口各自承担任务。",
+          },
+          {
+            dimension: "如何检查质量",
+            common: "主要依靠人工判断是否顺口、是否足够有感染力。",
+            project: "生成后继续做质量评测和合规自检，标出 P0、P1 风险并给出调整方向。",
+          },
+          {
+            dimension: "如何持续使用",
+            common: "每换一个商品就重新写一次，达人经验难以沉淀。",
+            project: "将表达和转化逻辑保存为达人模型，后续可以迁移到不同商品继续迭代。",
+          },
+        ],
+        sections: [
+          {
+            title: "先从真实语料里认识达人",
+            body: "读取达人画像、受众信息和直播 ASR，拆解说话节奏、互动方式、紧迫感设计、赠品语言与成交推进方式，形成一份可复用的达人表达模型。",
+          },
+          {
+            title: "再为新商品组织完整话术",
+            body: "围绕新商品的卖点和目标人群，按八段式结构安排每一段内容。生成结果不只追求像本人说话，也要求钩子、价值证明、互动决策和限时收口彼此衔接。",
+          },
+          {
+            title: "最后检查质量与风险",
+            body: "对完整度、说服力和合规风险进行自检，区分必须处理的 P0 问题与建议优化的 P1 问题，方便在正式直播前继续修改。",
+          },
+        ],
+        focus: ["ASR 风格蒸馏", "八段式带货话术", "质量与合规自检"],
+        link: {
+          href: "https://github.com/Yixiao-Zhang1214/Streamer-skill",
+          label: "查看 Streamer Skill 代码仓 ↗",
+          installHref:
+            "请安装这个仓库中的 Streamer Skill：\nhttps://github.com/Yixiao-Zhang1214/Streamer-skill",
+        },
+      },
+      {
+        number: "08",
         kind: "工作提效平台",
         title: "Badcase评测&管理平台",
         summary: "AI产品经理必备的标注平台！效率提升N倍！",
@@ -506,7 +578,7 @@ const projectGroups: Array<{ title: string; english: string; projects: BuilderPr
         ],
       },
       {
-        number: "08",
+        number: "09",
         kind: "工作提效平台",
         title: "业务评测平台",
         summary: "AI产品经理心疼标注人员的产物！效率提升N倍！",
@@ -1244,7 +1316,7 @@ export default function AiBuilderExperience() {
       <header className="builder-copy">
         <strong className="builder-role-label">AI Builder</strong>
         <p>
-          AI 构建 · 08 个项目 · 02 个 AIGC 研究
+          AI 构建 · 09 个项目 · 02 个 AIGC 研究
         </p>
         <h2 id="builder-title">
           成为合格的AI builder，快乐玩AI
@@ -1269,7 +1341,7 @@ export default function AiBuilderExperience() {
                   aria-label={`${project.title}，${project.externalHref ? "进入在线模拟器" : "查看项目详情"}`}
                   onClick={() => {
                     if (project.externalHref) {
-                      window.open(project.externalHref, "_blank", "noopener,noreferrer");
+                      window.location.assign(project.externalHref);
                       return;
                     }
 
