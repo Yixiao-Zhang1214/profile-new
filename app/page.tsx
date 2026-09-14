@@ -1,5 +1,7 @@
 import Image from "next/image";
 import ContactSpotlight from "./contact-spotlight";
+import Guestbook from "./guestbook";
+import "./contact-card.css";
 import HeroCover from "./hero-cover";
 import IdentityNavMenu from "./identity-nav-menu";
 import IdentityPhotoReveal from "./identity-photo-reveal";
@@ -269,17 +271,23 @@ export default function Home() {
             </div>
           </div>
 
-          <aside className="contact-card" aria-label="联系方式">
-            <h3>找到我</h3>
-            <div><strong>邮箱</strong><a href="mailto:172938960@qq.com">172938960@qq.com</a></div>
-            <div><strong>电话</strong><span>13868422320</span></div>
-            <div><strong>微信</strong><span>sunnyzyx1214</span></div>
-            <div>
-              <strong>个人简历</strong>
-              <a href="/documents/yixiao-zhang-resume.pdf" target="_blank" rel="noreferrer">
-                查看简历
-              </a>
-            </div>
+          <aside className="contact-panel" aria-labelledby="contact-panel-title">
+            <header className="contact-panel-heading">
+              <h3 id="contact-panel-title">找到我</h3>
+              <p>聊聊产品，也聊聊新想法。</p>
+            </header>
+            <a className="contact-email" href="mailto:172938960@qq.com">
+              <span className="contact-detail-label">邮箱</span>
+              <span className="contact-email-address">172938960@qq.com <span aria-hidden="true">↗</span></span>
+            </a>
+            <dl className="contact-details">
+              <div><dt>电话</dt><dd><a href="tel:13868422320">13868422320</a></dd></div>
+              <div><dt>微信</dt><dd>sunnyzyx1214</dd></div>
+            </dl>
+            <a className="contact-resume" href="/documents/yixiao-zhang-resume.pdf" target="_blank" rel="noreferrer">
+              <span>个人简历</span><span>查看简历 <span aria-hidden="true">↗</span></span>
+            </a>
+            <Guestbook />
           </aside>
         </div>
       </section>

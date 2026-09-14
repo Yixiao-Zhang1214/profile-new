@@ -1,0 +1,24 @@
+.contact-panel .guestbook {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+  margin: 4px -28px 0;
+  padding: 24px 28px;
+  border-top: 1px solid #e8ecf4;
+  background: #f2f5fb;
+  scroll-margin-top: 110px;
+}
+.guestbook-intro h4 { margin: 0 0 7px; color: #252938; font-size: 19px; font-weight: 650; line-height: 1.4; letter-spacing: -0.025em; }
+.guestbook-intro p { margin: 0; color: #666e80; font-size: 12px; line-height: 1.8; }
+.contact-panel .guestbook-link { display: flex; gap: 16px; align-items: center; justify-content: space-between; min-height: 46px; padding: 12px 18px; border-radius: 10px; background: #2e3d68; color: #fff; font-size: 14px; font-weight: 550; text-decoration: none; transition: background 150ms ease; }
+.contact-panel .guestbook-link span { color: #fff; font-size: 20px; line-height: 1; }
+.contact-panel .guestbook-link:hover { background: #203158; }
+@media (max-width: 420px) {
+  .contact-panel .guestbook { margin-inline: -22px; padding: 22px; }
+}
+@media (max-width: 760px) {
+  main .contact-section { grid-template-columns: minmax(0, 1fr); }
+  .contact-section .contact-layout { min-width: 0; grid-template-columns: minmax(0, 1fr); }
+  .contact-section .contact-title-line { white-space: normal; }
+  .contact-section .contact-traits { display: flex; flex-wrap: wrap; width: auto; }
+}

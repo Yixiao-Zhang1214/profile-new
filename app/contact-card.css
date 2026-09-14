@@ -1,0 +1,42 @@
+.contact-section .contact-panel {
+  --contact-muted: #727684;
+  min-width: 0;
+  width: 100%;
+  max-width: 380px;
+  justify-self: end;
+  overflow: hidden;
+  padding: 28px 28px 0;
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  border-radius: 24px;
+  background: #fdfdfd;
+  box-shadow: 0 16px 48px rgba(38, 45, 72, 0.08), 0 2px 5px rgba(38, 45, 72, 0.025);
+  color: #252938;
+}
+.contact-panel-heading { margin-bottom: 26px; }
+.contact-panel-heading h3 { margin: 0 0 8px; font-size: 25px; line-height: 1.2; font-weight: 650; letter-spacing: -0.04em; }
+.contact-panel-heading p { margin: 0; color: var(--contact-muted); font-size: 13px; line-height: 1.6; }
+.contact-panel a { text-decoration: none; }
+.contact-panel a:focus-visible { outline: 2px solid #2b6cff; outline-offset: 5px; border-radius: 4px; }
+.contact-panel .contact-email { display: grid; gap: 8px; min-height: 56px; color: #3158ce; }
+.contact-detail-label, .contact-details dt { color: var(--contact-muted); font-size: 12px; line-height: 1.5; }
+.contact-email-address { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: clamp(16px, 1.45vw, 19px); line-height: 1.4; font-weight: 550; letter-spacing: -0.025em; }
+.contact-email-address > span { font-size: 18px; }
+.contact-panel .contact-details { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0; }
+.contact-details dt { margin-bottom: 6px; }
+.contact-details dd { margin: 0; font-size: 14px; line-height: 1.6; overflow-wrap: anywhere; }
+.contact-details a { display: inline-flex; align-items: center; min-height: 28px; color: inherit; }
+.contact-panel .contact-resume { display: flex; justify-content: space-between; align-items: center; gap: 16px; min-height: 58px; border-top: 1px solid #eceef2; color: #555c6f; font-size: 13px; }
+.contact-resume > span:last-child { color: #3158ce; }
+.contact-panel .contact-email:hover, .contact-resume:hover > span:last-child { color: #193caa; }
+@media (min-width: 901px) {
+  .contact-section .contact-layout { grid-template-columns: minmax(0, 1fr) 350px !important; gap: clamp(32px, 4vw, 62px) !important; }
+  .contact-section .contact-copy .contact-title-line { white-space: normal; }
+}
+@media (max-width: 900px) {
+  .contact-section .contact-panel { justify-self: start; max-width: 480px; }
+}
+@media (max-width: 420px) {
+  .contact-section .contact-panel { padding: 24px 22px 0; border-radius: 20px; }
+  .contact-email-address { font-size: 18px; }
+  .contact-panel .contact-details { gap: 12px; }
+}

@@ -35,6 +35,9 @@ test("server-renders the portfolio homepage", async () => {
   assert.match(html, /教育信息/);
   assert.match(html, /AI 项目/);
   assert.match(html, /联系我/);
+  assert.match(html, /id="guestbook"/);
+  assert.match(html, /href="https:\/\/bytedance\.larkoffice\.com\/share\/base\/form\/shrcn6WdJH02jhcG05ybwwtQ5Lf"/);
+  assert.match(html, /给我留言/);
   assert.doesNotMatch(html, /Your site is taking shape|Building your site/);
 });
 
